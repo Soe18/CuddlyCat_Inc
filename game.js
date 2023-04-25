@@ -32,7 +32,6 @@ function ready() {
     remainingTimeBlack = startingTime;
     remainingTimeWhite = startingTime;
     turn = 'white';
-
     writeOnH1();
 }
 
@@ -68,23 +67,39 @@ function timeFormatter(time) {
     return Math.floor(time/60)+":"+secs;
 }
 
+
+function descoveryTypeOfPieces(){
+
+
+
+}
+
 // Funzione chiamata ogni volta che viene premuto un elemento nella scacchiera
 function movePawn(pawn) {
+    
     // Scelta della pedina
     if (movingPawnState == 'ready' && choosenRightPawn(pawn)) {
-        console.log(pawn);
-        currentSelection = pawn;
-        movingPawnState = 'waiting';
-    }
+        //coloro la casella del figlio di puttana che ho selezionato
+          $(pawn).css("background-color", "purple");
 
+        console.log(pawn);
+        currentSelection = pawn;    
+        movingPawnState = 'waiting';
+       
+    }
     // Scelta del movimento
     else if (movingPawnState == 'waiting') {
         console.log(pawn);
         var tmp = pawn;
         if (checkMove(pawn)) {
+            // la ricoloro del colore originario
+            // currentSelection per riferirsi alla casella della pedina prima della mossa 
+             $(currentSelection).css("background-color", "antiquewhite");
+             
             // Mossa legale, procedo allo scambio
             swapper(currentSelection, tmp);
-
+            
+            
             // Faccio ripartire il prossimo turno
             movingPawnState = 'ready'
             if (turn == 'white') {
@@ -97,7 +112,9 @@ function movePawn(pawn) {
             }
             // Dai il turno all'altro player
         }
+        
     }
+    
 }
 
 // Funzione per capire se e' stata scelta all'inizio una pedina del player corretto
@@ -133,6 +150,7 @@ function checkMove(pawn) {
     }
 
     // Impossibile andare sopra ad un altro pedone dello stesso colore
+    // si pero c'e una condizione specifica in cui tu puoi scambiare il re e la torre 
     if(pawn.className == currentSelection.className) {
         console.log("Vietato scambiare pedine");
         return false;
