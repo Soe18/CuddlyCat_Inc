@@ -8,6 +8,7 @@ function swapper(a, b)
     a.before(tmp);
     b.before(a);
     tmp.replaceWith(b);
+    // bisogna fare in modo che l'id non cambi mi serve che l'id sia statico
 }
 
 // VARIABILI
@@ -23,6 +24,7 @@ var movingPawnState = 'ready';
 var currentSelection;
 var turn;
 
+
 chronometer = setInterval(timer, 1000);
 
 function ready() {
@@ -33,6 +35,7 @@ function ready() {
     remainingTimeWhite = startingTime;
     turn = 'white';
     writeOnH1();
+  
 }
 
 // Funzione temporanea per mostrare informazioni partita
@@ -68,7 +71,8 @@ function timeFormatter(time) {
 }
 
 
-function descoveryTypeOfPieces(){
+
+function descoveryTypeOfPieces(pawn){
 
 
 
@@ -92,9 +96,8 @@ function movePawn(pawn) {
         console.log(pawn);
         var tmp = pawn;
         if (checkMove(pawn)) {
-            // la ricoloro del colore originario
-            // currentSelection per riferirsi alla casella della pedina prima della mossa 
-             $(currentSelection).css("background-color", "antiquewhite");
+            
+             
              
             // Mossa legale, procedo allo scambio
             swapper(currentSelection, tmp);
@@ -128,6 +131,10 @@ function choosenRightPawn(pawn) {
 
 // Controlla che tipo di mossa e' stata fatta
 function checkMove(pawn) {
+
+            // la ricoloro del colore originario
+            // currentSelection per riferirsi alla casella della pedina prima della mossa 
+    $(currentSelection).css("background-color", "antiquewhite");
     // Reset mossa
     if(pawn == currentSelection) {
         console.log("Reset mossa");
@@ -139,13 +146,13 @@ function checkMove(pawn) {
     if(turn == 'white') {
         if(pawn.className == 'blackPawn') {
             console.log("Pedina nera mangiata");
-            document.getElementById(pawn.id).innerHTML = '<td onclick="movePawn(this)">&nbsp;</td>';
+            document.getElementById(pawn.id).innerHTML = '<td id="'+pawn.id+'";onclick="movePawn(this)">&nbsp;</td>';
         }
     }
     else if(turn == 'black') {
         if(pawn.className == 'whitePawn') {
             console.log("Pedina bianca mangiata");
-            document.getElementById(pawn.id).innerHTML = '<td onclick="movePawn(this)">&nbsp;</td>';
+            document.getElementById(pawn.id).innerHTML = '<td id="'+pawn.id+'"; onclick="movePawn(this)">&nbsp;</td>';
         }
     }
 
@@ -159,3 +166,4 @@ function checkMove(pawn) {
     // Movimento a vuoto, accettabile.
     return true;
 }
+
