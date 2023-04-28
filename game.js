@@ -1,15 +1,23 @@
 // NON CAMBIARE NULLA SU swapper(a, b), cambia piuttosto le altre funzioni
+//fabiano zitto dai 
 function swapper(a, b)
 {
     console.log("Start swap");
+    var idA =a.id;
+    var idB =b.id;
+    //scambio gli id spoiler dovrebbero essere statici
+    b.id=idA;
+    a.id=idB; 
+
     a = $(a);
     b = $(b);
     var tmp = $('<span>').hide();
+    console.log(tmp);
     a.before(tmp);
     b.before(a);
     tmp.replaceWith(b);
-    // bisogna fare in modo che l'id non cambi mi serve che l'id sia statico
 }
+
 
 // VARIABILI
 
@@ -23,8 +31,7 @@ var remainingTimeBlack;
 var movingPawnState = 'ready';
 var currentSelection;
 var turn;
-
-
+var chessBoard = document.getElementById("chessBoard");
 chronometer = setInterval(timer, 1000);
 
 function ready() {
@@ -35,7 +42,6 @@ function ready() {
     remainingTimeWhite = startingTime;
     turn = 'white';
     writeOnH1();
-  
 }
 
 // Funzione temporanea per mostrare informazioni partita
@@ -83,14 +89,15 @@ function movePawn(pawn) {
     
     // Scelta della pedina
     if (movingPawnState == 'ready' && choosenRightPawn(pawn)) {
-        //coloro la casella del figlio di puttana che ho selezionato
-          $(pawn).css("background-color", "purple");
+        //coloro la casella del  che ho selezionato
+          $(pawn).css("background-color", "purple");//COLORE
 
         console.log(pawn);
         currentSelection = pawn;    
         movingPawnState = 'waiting';
        
     }
+
     // Scelta del movimento
     else if (movingPawnState == 'waiting') {
         console.log(pawn);
@@ -134,7 +141,7 @@ function checkMove(pawn) {
 
             // la ricoloro del colore originario
             // currentSelection per riferirsi alla casella della pedina prima della mossa 
-    $(currentSelection).css("background-color", "antiquewhite");
+    $(currentSelection).css("background-color", "antiquewhite");//COLORE
     // Reset mossa
     if(pawn == currentSelection) {
         console.log("Reset mossa");
@@ -158,7 +165,8 @@ function checkMove(pawn) {
 
     // Impossibile andare sopra ad un altro pedone dello stesso colore
     // si pero c'e una condizione specifica in cui tu puoi scambiare il re e la torre 
-    if(pawn.className == currentSelection.className) {
+    // slice per vedere solo il colore della pedina 
+    if(pawn.className.slice(0,5) == currentSelection.className.slice(0,5)) {
         console.log("Vietato scambiare pedine");
         return false;
     }
@@ -167,3 +175,8 @@ function checkMove(pawn) {
     return true;
 }
 
+function bishopMove (pawn){
+
+
+
+}

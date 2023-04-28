@@ -13,9 +13,47 @@
 .blackPawn {
     font-weight: bold;
 }
+
+.blackQueen {
+    font-weight: bold;
+}
+
+.blackKing {
+    font-weight: bold;
+}
+
+.blackKnight {
+    font-weight: bold;
+}
+
+.blackBishop {
+    font-weight: bold;
+}
+
+.blackRook {
+    font-weight: bold;
+}
+
 .whitePawn {
     font-weight: lighter;
 }
+
+.whiteRook{
+    font-weight: lighter;
+}
+
+.whiteKnight{
+    font-weight: lighter;
+}
+
+.whiteKing{
+    font-weight: lighter;
+}
+
+.whiteQueen{
+    font-weight: lighter;
+}
+
 .chessBoard {
 
     border: 1px solid;
@@ -36,9 +74,9 @@ th, td {
 }
 </style>
 <body onload="ready()">
-    <h1 id="cipolla"> Hello world! </h1>
+    <h1 id="cipolla"> SWsS </h1>
     <div style="align-items: center;">
-        <table class="chessBoard">
+        <table id="chessBoard" class="chessBoard">
             <!--  
             W=White      
             B=Black
@@ -51,14 +89,14 @@ th, td {
             -->
             <tr>
                 <td class="whitePawn; supp">8</td>
-                <td id="a8" class="blackPawn" onclick="movePawn(this)">Br</td>
-                <td id="b8" class="blackPawn" onclick="movePawn(this)">Bkn</td>
-                <td id="c8" class="blackPawn" onclick="movePawn(this)">Bbs</td>
-                <td id="d8" class="blackPawn" onclick="movePawn(this)">Bq</td>
-                <td id="e8" class="blackPawn" onclick="movePawn(this)">BK</td>
-                <td id="f8" class="blackPawn" onclick="movePawn(this)">Bbs</td>
-                <td id="g8" class="blackPawn" onclick="movePawn(this)">Bkn</td>
-                <td id="h8" class="blackPawn" onclick="movePawn(this)">Br</td>
+                <td id="a8" class="blackRook" onclick="movePawn(this)">Br</td>
+                <td id="b8" class="blackKnight" onclick="movePawn(this)">Bkn</td>
+                <td id="c8" class="blackBishop" onclick="movePawn(this)">Bbs</td>
+                <td id="d8" class="blackQueen" onclick="movePawn(this)">Bq</td>
+                <td id="e8" class="blackKing" onclick="movePawn(this)">BK</td>
+                <td id="f8" class="blackBishop" onclick="movePawn(this)">Bbs</td>
+                <td id="g8" class="blackKnight" onclick="movePawn(this)">Bkn</td>
+                <td id="h8" class="blackRook" onclick="movePawn(this)">Br</td>
             </tr>
             <tr>
                 
@@ -129,14 +167,14 @@ th, td {
             </tr>
             <tr>
                 <td class="whitePawn; supp">1</td>
-                <td id="a1" class="whitePawn" onclick="movePawn(this)">Wr</td>
-                <td id="b1" class="whitePawn" onclick="movePawn(this)">Wkn</td>
-                <td id="c1" class="whitePawn" onclick="movePawn(this)">Wbs</td>
-                <td id="d1" class="whitePawn" onclick="movePawn(this)">Wq</td>
-                <td id="e1" class="whitePawn" onclick="movePawn(this)">WK</td>
-                <td id="f1" class="whitePawn" onclick="movePawn(this)">Wbs</td>
-                <td id="g1" class="whitePawn" onclick="movePawn(this)">Wkn</td>
-                <td id="h1"class="whitePawn" onclick="movePawn(this)">Wr</td>
+                <td id="a1" class="whiteRook" onclick="movePawn(this)">Wr</td>
+                <td id="b1" class="whiteKnight" onclick="movePawn(this)">Wkn</td>
+                <td id="c1" class="whiteBishop" onclick="movePawn(this)">Wbs</td>
+                <td id="d1" class="whiteKing" onclick="movePawn(this)">Wq</td>
+                <td id="e1" class="whiteQueen" onclick="movePawn(this)">WK</td>
+                <td id="f1" class="whiteBishop" onclick="movePawn(this)">Wbs</td>
+                <td id="g1" class="whiteKnight" onclick="movePawn(this)">Wkn</td>
+                <td id="h1" class="whiteRook" onclick="movePawn(this)">Wr</td>
             </tr>
             
         </table>
