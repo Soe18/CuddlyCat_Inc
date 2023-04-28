@@ -3,9 +3,9 @@
 function swapper(a, b)
 {
     console.log("Start swap");
+    //scambio gli id spoiler dovrebbero essere statici
     var idA =a.id;
     var idB =b.id;
-    //scambio gli id spoiler dovrebbero essere statici
     b.id=idA;
     a.id=idB; 
 
@@ -31,8 +31,9 @@ var remainingTimeBlack;
 var movingPawnState = 'ready';
 var currentSelection;
 var turn;
-var chessBoard = document.getElementById("chessBoard");
 chronometer = setInterval(timer, 1000);
+
+var chessBoard;
 
 function ready() {
     movesWhite = 0;
@@ -41,6 +42,8 @@ function ready() {
     remainingTimeBlack = startingTime;
     remainingTimeWhite = startingTime;
     turn = 'white';
+    chessBoard = document.getElementById("chessBoard");
+    console.log(chessBoard);
     writeOnH1();
 }
 
@@ -77,16 +80,28 @@ function timeFormatter(time) {
 }
 
 
-
+//funzione per capire di che tipo di pedina si tratta
 function descoveryTypeOfPieces(pawn){
-
-
+    if(pawn.className.slice(5,9)=="Rook"){
+        return 1;
+    }else if(pawn.className.slice(5,9)=="Bish"){
+        return 2;
+    }else if(pawn.className.slice(5,9)=="Knig"){
+        return 3;
+    }else if(pawn.className.slice(5,9)=="Quee"){
+        return 4;
+    }else if(pawn.className.slice(5,9)=="King"){
+        return 5;
+    }else if(pawn.className.slice(5,9)=="Pawn"){
+        return 6;
+    }
 
 }
 
 // Funzione chiamata ogni volta che viene premuto un elemento nella scacchiera
 function movePawn(pawn) {
-    
+    console.log(chessBoard.rows[1]);
+    descoveryTypeOfPieces(pawn);
     // Scelta della pedina
     if (movingPawnState == 'ready' && choosenRightPawn(pawn)) {
         //coloro la casella del  che ho selezionato
@@ -130,8 +145,8 @@ function movePawn(pawn) {
 // Funzione per capire se e' stata scelta all'inizio una pedina del player corretto
 function choosenRightPawn(pawn) {
     console.log(pawn.className);
-    if(pawn.className == 'whitePawn' && turn == 'white') return true;
-    if(pawn.className == 'blackPawn' && turn == 'black') return true;
+    if(pawn.className.slice(0,5) == 'white' && turn == 'white') return true;
+    if(pawn.className.slice(0,5) == 'black' && turn == 'black') return true;
     console.log("Non e' una tua pedina");
     return false;
 }
@@ -174,9 +189,77 @@ function checkMove(pawn) {
     // Movimento a vuoto, accettabile.
     return true;
 }
-
-function bishopMove (pawn){
-
-
-
+function numToChar(num){
+    var xEE=[1,2,3,4,5,6,7,8];
+    var xE=[a,b,c,d,e,f,g,h];
+    var cha;
+    for (let i = 0; i < 8; i++) {
+    if(num==xEE[i]){cha=xE[i]}}
+    return cha;    
 }
+
+
+function MoveBishop (pawn){
+    var row;//riga della scacchiera in cui si trova il ciclo
+    var idBishop=pawn.id;
+    var x=idBishop.slice(0,1);//parte letteraria
+    var y=idBishop.slice(1,2);//parte numerica
+    var xE=[a,b,c,d,e,f,g,h];
+    var xN;// posizione tradotta in numero
+    var xUso;
+    var validMove =[];
+    var sup;
+
+    for (let i = 0; i < 8; i++) {
+    if(x==xE[i]){xN=xE[i]}
+    }
+
+    xUso=xN+1;
+    for (let i = y+1; i < 8; i++){//+1 perche parto direttamente dalla riga sucessiva e non dalla attuale
+        row=chessBoard.rows[i];
+        sup =numToChar(xUso)+i; //creo l'id della casella in cui puo andare
+        validMove.push(sup);
+        if(row.cells[j].className!=null|| xUso>=8){
+            i=9;
+        }
+        xUso++;
+    }
+
+    xUso=xN-1;
+    for (let i = y+1; i < 8; i++){//+1 perche parto direttamente dalla riga sucessiva e non dalla attuale
+    row=chessBoard.rows[i];
+    sup =numToChar(xUso)+i; //creo l'id della casella in cui puo andare
+    validMove.push(sup);
+    if(row.cells[j].className!=null|| xUso<=0){
+        i=9;
+    }
+    xUso--;
+    } 
+
+    xUso=xN+1;
+    for (let i = y-1; i >0; i-- ){//-1 perche parto direttamente dalla riga che c'e sotto e non dalla attuale
+    row=chessBoard.rows[i];
+    sup =numToChar(xUso)+i; //creo l'id della casella in cui puo andare
+    validMove.push(sup);
+    if(row.cells[j].className!=null|| xUso>=8){
+        i=9;
+    }
+    xUso++;
+} 
+
+xUso=xN-1;
+for (let i = y-1; i >0; i-- ){//-1 perche parto direttamente dalla riga che c'e sotto e non dalla attuale
+    row=chessBoard.rows[i];
+    sup =numToChar(xUso)+i; //creo l'id della casella in cui puo andare
+    validMove.push(sup);
+    if(row.cells[j].className!=null|| xUso<=0){
+        i=9;
+    }
+    xUso--;
+} 
+
+
+
+
+  }
+
