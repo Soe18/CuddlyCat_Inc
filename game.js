@@ -100,6 +100,7 @@ function descoveryTypeOfPieces(pawn){
 
 // Funzione chiamata ogni volta che viene premuto un elemento nella scacchiera
 function movePawn(pawn) {
+    MoveBishop(pawn);
     console.log(chessBoard.rows[1]);
     descoveryTypeOfPieces(pawn);
     // Scelta della pedina
@@ -191,7 +192,7 @@ function checkMove(pawn) {
 }
 function numToChar(num){
     var xEE=[1,2,3,4,5,6,7,8];
-    var xE=[a,b,c,d,e,f,g,h];
+    var xE=['a','b','c','d','e','f','g','h'];
     var cha;
     for (let i = 0; i < 8; i++) {
     if(num==xEE[i]){cha=xE[i]}}
@@ -204,7 +205,7 @@ function MoveBishop (pawn){
     var idBishop=pawn.id;
     var x=idBishop.slice(0,1);//parte letteraria
     var y=idBishop.slice(1,2);//parte numerica
-    var xE=[a,b,c,d,e,f,g,h];
+    var xE=['a','b','c','d','e','f','g','h'];
     var xN;// posizione tradotta in numero
     var xUso;
     var validMove =[];
@@ -213,15 +214,17 @@ function MoveBishop (pawn){
     for (let i = 0; i < 8; i++) {
     if(x==xE[i]){xN=xE[i]}
     }
-
+   console.log[row.cells[j]];
     xUso=xN+1;
     for (let i = y+1; i < 8; i++){//+1 perche parto direttamente dalla riga sucessiva e non dalla attuale
         row=chessBoard.rows[i];
         sup =numToChar(xUso)+i; //creo l'id della casella in cui puo andare
         validMove.push(sup);
+        for (let j = 0; j < 8; j++){/*
         if(row.cells[j].className!=null|| xUso>=8){
             i=9;
-        }
+        }*/
+    }
         xUso++;
     }
 
@@ -230,9 +233,12 @@ function MoveBishop (pawn){
     row=chessBoard.rows[i];
     sup =numToChar(xUso)+i; //creo l'id della casella in cui puo andare
     validMove.push(sup);
-    if(row.cells[j].className!=null|| xUso<=0){
+    for (let j = 0; j < 8; j++){
+    /*if(row.cells[j].className!=null|| xUso<=0){
         i=9;
-    }
+    }*/
+}
+
     xUso--;
     } 
 
@@ -241,9 +247,11 @@ function MoveBishop (pawn){
     row=chessBoard.rows[i];
     sup =numToChar(xUso)+i; //creo l'id della casella in cui puo andare
     validMove.push(sup);
-    if(row.cells[j].className!=null|| xUso>=8){
+    for (let j = 0; j < 8; j++){
+    /*if(row.cells[j].className!=null|| xUso>=8){
         i=9;
-    }
+    }*/
+}
     xUso++;
 } 
 
@@ -252,14 +260,27 @@ for (let i = y-1; i >0; i-- ){//-1 perche parto direttamente dalla riga che c'e 
     row=chessBoard.rows[i];
     sup =numToChar(xUso)+i; //creo l'id della casella in cui puo andare
     validMove.push(sup);
-    if(row.cells[j].className!=null|| xUso<=0){
+    for (let j = 0; j < 8; j++){
+    /*if(row.cells[j].className!=null|| xUso<=0){
         i=9;
-    }
+    }*/
+}
     xUso--;
 } 
 
+for (let i = 0; i < 8; i++){
+    row=chessBoard.rows[i];
+    for (let j = 0; j < 8; j++){
+        for (let k = 0; k < validMove.length; k++) {
+                if(row.cells[j]==validMove[k]){
+                    $(row.cells[j]).css("background-color", "purple");
+                }
+            
+        }
+        
+}
 
+}
 
-
-  }
+}
 
