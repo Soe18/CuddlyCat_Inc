@@ -187,7 +187,7 @@ function checkMove(pawn) {
         return false;
     }
 
-    if(pawn.className.slice(0, 5)=='black'){ resetChessBoard('white');}
+    if(turn=='black'){resetChessBoard('white');}
     else{resetChessBoard('black');}
     // Movimento a vuoto, accettabile.
     return true;
@@ -276,8 +276,11 @@ function MoveBishop(pawn) {
             row = chessBoard.rows[yUso];//prendo la riga partendo da quella dopo del pezzo
             sup = numToChar(xUso + 1) + shambleV2(yUso + 1); //creo l'id della casella in cui puo andare
             validMove.push(sup);
+            console.log(sup)
+            console.log(row.cells[xUso].className)
             if (row.cells[xUso].className != 'empty') {
                 i = 9;
+                console.log('polkaholica')
             }
             yUso++;
             xUso++;  //lo faccio muovere in diagonale 
@@ -295,8 +298,11 @@ function MoveBishop(pawn) {
             row = chessBoard.rows[yUso - 1];
             sup = numToChar(xUso) + shambleV2(yUso); //creo l'id della casella in cui puo andare
             validMove.push(sup);
+            console.log(sup)
+            console.log(row.cells[xUso].className)
             if (row.cells[yUso].className != 'empty') {
                 i = 9;
+                console.log('polkaholica')
             }
             yUso--;
             xUso++;
@@ -310,8 +316,11 @@ function MoveBishop(pawn) {
             row = chessBoard.rows[yUso];
             sup = numToChar(xUso) + shambleV2(yUso + 1); //creo l'id della casella in cui puo andare
             validMove.push(sup);
+            console.log(sup)
+            console.log(row.cells[xUso].className)
             if (row.cells[xUso].className != 'empty') {
                 i = 9;
+                console.log('polkaholica')
             }
             yUso++;
             xUso--;
@@ -327,8 +336,11 @@ function MoveBishop(pawn) {
             row = chessBoard.rows[yUso - 1];
             sup = numToChar(xUso) + shambleV2(yUso); //creo l'id della casella in cui puo andare
             validMove.push(sup);
+            console.log(sup)
+            console.log(row.cells[xUso].className)
             if (row.cells[yUso].className != 'empty') {
                 i = 9;
+                console.log('polkaholica')
             }
             yUso--;
             xUso--;
@@ -343,7 +355,6 @@ function MoveBishop(pawn) {
                     $(row.cells[j]).css("pointer-events", "auto");
                     $(row.cells[j]).css("background-color", "grey");//COLORE
                 }
-
             }
 
         }
