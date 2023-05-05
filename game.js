@@ -99,14 +99,13 @@ function descoveryTypeOfPieces(pawn) {
 
 // Funzione chiamata ogni volta che viene premuto un elemento nella scacchiera
 function movePawn(pawn) {
-    moveRook(pawn);
+        MoveBishop(pawn);
 
     descoveryTypeOfPieces(pawn);
     // Scelta della pedina
     if (movingPawnState == 'ready' && choosenRightPawn(pawn)) {
         //coloro la casella del  che ho selezionato
         $(pawn).css("background-color", "purple");//COLORE
-
         console.log(pawn);
         currentSelection = pawn;
         movingPawnState = 'waiting';
