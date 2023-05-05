@@ -1,0 +1,441 @@
+// NON CAMBIARE NULLA SU swapper(a, b), cambia piuttosto le altre funzioni
+function swapper(a, b) {
+    console.log("Start swap");
+    //scambio gli id spoiler dovrebbero essere statici
+    var idA = a.id;
+    var idB = b.id;
+    b.id = idA;
+    a.id = idB;
+
+    a = $(a);
+    b = $(b);
+    var tmp = $('<span>').hide();
+    console.log(tmp);
+    a.before(tmp);
+    b.before(a);
+    tmp.replaceWith(b);
+}
+
+// VARIABILI
+
+// Dettagli della partita
+var movesWhite;
+var movesBlack;
+var startingTime;
+var remainingTimeWhite;
+var remainingTimeBlack;
+// Movimento pedina
+var movingPawnState = 'ready';
+var currentSelection;
+var turn;
+
+// Matrice della scacchiera, build iniziale che verra' subito cambiata
+var boardMatrixPosition = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],
+[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],];
+
+var boardMatrixTypeOfPawn = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],
+[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],];
+
+chronometer = setInterval(timer, 1000);
+
+function ready() {
+    movesWhite = 0;
+    movesBlack = 0;
+    startingTime = 300;
+    remainingTimeBlack = startingTime;
+    remainingTimeWhite = startingTime;
+    turn = 'white';
+
+    writeOnH1();
+    matrixBuilderPosition();
+    matrixBuilderTypeOfPawn();
+}
+
+// Funzione temporanea per mostrare informazioni partita
+function writeOnH1() {
+    document.getElementById("cipolla").innerHTML = "Tempo d'inizio: " + timeFormatter(startingTime) +
+        ", Tempo rimanente nero: " + timeFormatter(remainingTimeBlack) + ", Tempo rimanente bianco: " +
+        timeFormatter(remainingTimeWhite) + ", Mosse bianco: " + movesWhite + ", Mosse nero: " + movesBlack;
+}
+
+// Timer del tempo di gioco
+function timer() {
+    if (!remainingTimeBlack <= 0 && turn == 'black') {
+        remainingTimeBlack -= 1;
+    }
+    else if (remainingTimeBlack <= 0) {
+        console.log("Vince bianco per fine tempo di nero!");
+    }
+    if (!remainingTimeWhite <= 0 && turn == 'white') {
+        remainingTimeWhite -= 1;
+    }
+    else if (remainingTimeWhite <= 0) {
+        console.log("Vince nero per fine tempo di bianco!");
+    }
+
+    // Inserisci qui gli elementi che necessitano di ricaricarsi ogni secondo
+    writeOnH1();
+}
+
+// Formattatore del tempo, ritorna con il formato ==> mm:ss
+function timeFormatter(time) {
+    let secs = time % 60; if (secs <= 9) secs = "0" + secs;
+    return Math.floor(time / 60) + ":" + secs;
+}
+
+
+// Creatore della matrice, da ricostruire ad ogni fine movePawn()
+// Questa ci consentira' di gestire i movimenti
+function matrixBuilderPosition() {
+    console.log("reloading board");
+    // getID ci servira' per salvare i valori dell'id
+    var getID;
+    for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            getID = getLetterGivenAxisX(j) + getLetterGivenAxisY(i);
+            boardMatrixPosition[i][j] = document.getElementById(getID).id;
+        }
+    }
+}
+
+function matrixBuilderTypeOfPawn() {
+    console.log("reloading board");
+    // getID ci servira' per salvare i valori dell'id
+    var getID;
+    for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            getID = getLetterGivenAxisX(j) + getLetterGivenAxisY(i);
+            boardMatrixTypeOfPawn[i][j] = document.getElementById(getID).className;
+        }
+    }
+}
+
+// Per ottenere lettera dell'asse x
+function getLetterGivenAxisY(axisY) {
+    switch (axisY) {
+        case 0:
+            return '1';
+        case 1:
+            return '2';
+        case 2:
+            return '3';
+        case 3:
+            return '4';
+        case 4:
+            return '5';
+        case 5:
+            return '6';
+        case 6:
+            return '7';
+        case 7:
+            return '8';
+    }
+}
+
+function reversedGetLetterGivenAxisY(axisY) {
+    switch (axisY) {
+        case '1':
+            return 0;
+        case '2':
+            return 1;
+        case '3':
+            return 2;
+        case '4':
+            return 3;
+        case '5':
+            return 4;
+        case '6':
+            return 5;
+        case '7':
+            return 6;
+        case '8':
+            return 7;
+    }
+}
+
+// Per ottenere lettera dell'asse x
+function getLetterGivenAxisX(axisX) {
+    switch (axisX) {
+        case 0:
+            return 'a';
+        case 1:
+            return 'b';
+        case 2:
+            return 'c';
+        case 3:
+            return 'd';
+        case 4:
+            return 'e';
+        case 5:
+            return 'f';
+        case 6:
+            return 'g';
+        case 7:
+            return 'h';
+    }
+}
+
+function reversedGetLetterGivenAxisX(axisX) {
+    switch (axisX) {
+        case 'a':
+            return 0;
+        case 'b':
+            return 1;
+        case 'c':
+            return 2;
+        case 'd':
+            return 3;
+        case 'e':
+            return 4;
+        case 'f':
+            return 5;
+        case 'g':
+            return 6;
+        case 'h':
+            return 7;
+    }
+}
+
+
+// Funzione chiamata ogni volta che viene premuto un elemento nella scacchiera
+function movePawn(pawn) {
+    MoveBishop(pawn);
+    // Scelta della pedina
+    if (movingPawnState == 'ready' && choosenRightPawn(pawn)) {
+        console.log(pawn);
+        currentSelection = pawn;
+        movingPawnState = 'waiting';
+        highLightChoices(pawn);
+    }
+
+    // Scelta del movimento
+    else if (movingPawnState == 'waiting') {
+        console.log(pawn);
+        var tmp = pawn;
+        if (checkMove(pawn)) {
+            // Mossa legale, procedo allo scambio
+            swapper(currentSelection, tmp);
+
+            // Faccio ripartire il prossimo turno
+            movingPawnState = 'ready'
+            if (turn == 'white') {
+                movesWhite += 1;
+                turn = 'black';
+            }
+            else {
+                movesBlack += 1;
+                turn = 'white';
+            }
+            // Dai il turno all'altro player
+        }
+    }
+    matrixBuilderPosition();
+    matrixBuilderTypeOfPawn();
+    console.log(boardMatrixPosition);
+    console.log(boardMatrixTypeOfPawn);
+}
+
+// Funzione per capire se e' stata scelta all'inizio una pedina del player corretto
+function choosenRightPawn(pawn) {
+    console.log(pawn.className);
+    if (pawn.className.slice(0,5) == 'white' && turn == 'white') return true;
+    if (pawn.className.slice(0,5) == 'black' && turn == 'black') return true;
+    console.log("Non e' una tua pedina");
+    return false;
+}
+
+// Controlla che tipo di mossa e' stata fatta
+function checkMove(pawn) {
+    // Reset mossa
+    if (pawn == currentSelection) {
+        console.log("Reset mossa");
+        currentSelection = null;
+        movingPawnState = 'ready';
+        return false;
+    }
+
+    // Mangio pedina
+    if (turn == 'white') {
+        if (pawn.className == 'black') {
+            console.log("Pedina nera mangiata");
+            document.getElementById(pawn.id).innerHTML = '&nbsp;';
+            document.getElementById(pawn.id).className = 'empty';
+        }
+    }
+    else if (turn == 'black') {
+        if (pawn.className == 'white') {
+            console.log("Pedina bianca mangiata");
+            document.getElementById(pawn.id).innerHTML = '&nbsp;';
+            document.getElementById(pawn.id).className = 'empty';
+        }
+    }
+
+    // Impossibile andare sopra ad un altro pedone dello stesso colore
+    if (pawn.className == currentSelection.className) {
+        console.log("Vietato scambiare pedine");
+        resetChessBoard();
+        return false;
+    }
+    resetChessBoard();
+    // Movimento a vuoto, accettabile.
+    return true;
+}
+
+
+
+
+/*
+    Lo scopo di questi metodi e' quello di evidenziare
+    al giocatore le mosse utili. Si puo' volendo attuare
+    una misura per la quale BLOCCA le altre mosse non
+    evidenziate, dando poi meno controlli dopo
+*/
+
+function highLightChoices(pawn) {
+    switch (pawn.className) {
+        case 'whitePawn':
+            moveWhitePawn(pawn);
+            break;
+        case 'blackPawn':
+            moveBlackPawn(pawn);
+            break;
+        default:
+            break;
+    }
+}
+
+// Movimento pedoni
+// Bianche
+function moveWhitePawn(pawn) {
+    // CONTROLLA CHE AITA AITA SONO ADDORMENTATO E NON CAPISCO NULLA SUGLI ASSI GRAZIE.
+    let yOfPawn = reversedGetLetterGivenAxisX(pawn.id.substring(0, 1));
+    let xOfPawn = reversedGetLetterGivenAxisY(pawn.id.substring(1, 2));
+
+    console.log(xOfPawn + " " + yOfPawn);
+    console.log("Move white: " + boardMatrixPosition[xOfPawn][yOfPawn]);
+    console.log("Move white: " + boardMatrixTypeOfPawn[xOfPawn][yOfPawn]);
+
+    let hypoteticMoveInX = xOfPawn += 1;
+    let tmpString = getLetterGivenAxisX(yOfPawn) + "" + getLetterGivenAxisY(hypoteticMoveInX);
+
+    if (document.getElementById(tmpString).classList.contains("empty")) {
+        console.log("muovi");
+    }
+
+}
+
+// Nere
+function moveBlackPawn(pawn) {
+
+}
+function resetChessBoard() {
+    for (let i = 0; i < 8; i++) {
+        row = chessBoard.rows[i];
+        for (let j = 0; j < 8; j++) {
+            $(row.cells[j]).css("background-color", "antiquewhite");//COLORE
+           
+        }
+
+    }
+
+}
+
+
+function MoveBishop(pawn) {
+    var row;//riga della scacchiera in cui si trova il ciclo
+    var idBishop = pawn.id;
+    var x = reversedGetLetterGivenAxisX(idBishop.slice(0, 1));//parte letteraria
+    var y = reversedGetLetterGivenAxisY(idBishop.slice(1, 2));//parte numerica
+    
+    var xUso = 0;
+    var validMove = [];
+    var sup;
+  
+
+    xUso = x+1;//prendo le posizioni attuali
+    yUso = y+1;
+
+    for (let i = 0; i < 8; i++) {
+        if (xUso == 8 || yUso == 8) { i = 9; } else {//controllo che le mosse siano fattibili per la pedina
+            row = chessBoard.rows[yUso];//prendo la riga partendo da quella dopo del pezzo
+            sup = getLetterGivenAxisX(xUso ) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
+            validMove.push(sup);
+            console.log(sup)
+            if (row.cells[xUso].className != 'empty') {
+                i = 9;
+                console.log('polkaholica')
+            }
+            
+            yUso++;
+            xUso++;  //lo faccio muovere in diagonale 
+        }
+    }
+
+    // il resto si appplica per per le altre 3 casistiche
+
+    xUso = x+1;
+    yUso = y-1;
+    for (let i = 0; i < 8; i++) {
+        if (xUso > 8 || yUso == 0) {
+            i = 9
+        } else {
+            row = chessBoard.rows[yUso];
+            sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
+            validMove.push(sup);
+            console.log(sup)
+            if (row.cells[yUso].className != 'empty') {
+                i = 9;
+                console.log('polkaholica')
+            }
+            yUso--;
+            xUso++;
+        }
+    }
+
+    xUso =x-1;
+    yUso = y+1;
+    for (var i = y; i < 8; i++) {
+        if (xUso < 0 || yUso == 8) { i = 9; } else {
+            row = chessBoard.rows[yUso];
+            sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
+            validMove.push(sup);
+            console.log(sup)
+            if (row.cells[xUso].className != 'empty') {
+                i = 9;
+                console.log('polkaholica')
+            }
+            yUso++;
+            xUso--;
+        }
+    }
+
+    xUso = x - 1;
+    yUso = y- 1;
+    for (let i = 0; i < 8; i++) {
+        if (xUso < 0 || yUso <=0) { i = 9 } else {
+            row = chessBoard.rows[yUso - 1];
+            sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
+            validMove.push(sup);
+            console.log(sup)
+            if (row.cells[yUso].className != 'empty') {
+                i = 9;
+                console.log('polkaholica')
+            }
+            yUso--;
+            xUso--;
+        }
+    }
+    // ciclo che mi permette di colorare le caselle in cui puoi andare e di non poter cliccare le altre
+    for (let i = 0; i < 8; i++) {
+        row = chessBoard.rows[i];
+        for (let j = 0; j < 8; j++) {
+            for (let k = 0; k < validMove.length; k++) {
+                if (row.cells[j].id == validMove[k] && row.cells[j].className.slice(0, 5) != pawn.className.slice(0, 5)) {
+                    $(row.cells[j]).css("pointer-events", "auto");
+                    $(row.cells[j]).css("background-color", "grey");//COLORE
+                }
+            
+            }
+        }
+    }
+}
