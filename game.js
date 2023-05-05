@@ -99,7 +99,7 @@ function descoveryTypeOfPieces(pawn) {
 
 // Funzione chiamata ogni volta che viene premuto un elemento nella scacchiera
 function movePawn(pawn) {
-    MoveBishop(pawn);
+    moveRook(pawn);
 
     descoveryTypeOfPieces(pawn);
     // Scelta della pedina
@@ -184,11 +184,13 @@ function checkMove(pawn) {
     // slice per vedere solo il colore della pedina 
     if (pawn.className.slice(0, 5) == currentSelection.className.slice(0, 5)) {
         console.log("Vietato scambiare pedine");
+        resetChessBoard(pawn.className.slice(0, 5));
+        movingPawnState = 'ready';
         return false;
     }
 
-    if(turn=='black'){resetChessBoard('white');}
-    else{resetChessBoard('black');}
+    if (turn == 'black') { resetChessBoard('white'); }
+    else { resetChessBoard('black'); }
     // Movimento a vuoto, accettabile.
     return true;
 }
@@ -277,7 +279,6 @@ function MoveBishop(pawn) {
             sup = numToChar(xUso + 1) + shambleV2(yUso + 1); //creo l'id della casella in cui puo andare
             validMove.push(sup);
             console.log(sup)
-            console.log(row.cells[xUso].className)
             if (row.cells[xUso].className != 'empty') {
                 i = 9;
                 console.log('polkaholica')
@@ -299,7 +300,6 @@ function MoveBishop(pawn) {
             sup = numToChar(xUso) + shambleV2(yUso); //creo l'id della casella in cui puo andare
             validMove.push(sup);
             console.log(sup)
-            console.log(row.cells[xUso].className)
             if (row.cells[yUso].className != 'empty') {
                 i = 9;
                 console.log('polkaholica')
@@ -317,7 +317,6 @@ function MoveBishop(pawn) {
             sup = numToChar(xUso) + shambleV2(yUso + 1); //creo l'id della casella in cui puo andare
             validMove.push(sup);
             console.log(sup)
-            console.log(row.cells[xUso].className)
             if (row.cells[xUso].className != 'empty') {
                 i = 9;
                 console.log('polkaholica')
@@ -330,14 +329,11 @@ function MoveBishop(pawn) {
     xUso = xN - 1;
     yUso = parseInt(y) - 1;
     for (let i = 0; i < 8; i++) {
-        if (xUso <= 0 || yUso <= 0) {
-            i = 9
-        } else {
+        if (xUso <= 0 || yUso <= 0) { i = 9 } else {
             row = chessBoard.rows[yUso - 1];
             sup = numToChar(xUso) + shambleV2(yUso); //creo l'id della casella in cui puo andare
             validMove.push(sup);
             console.log(sup)
-            console.log(row.cells[xUso].className)
             if (row.cells[yUso].className != 'empty') {
                 i = 9;
                 console.log('polkaholica')
@@ -356,9 +352,60 @@ function MoveBishop(pawn) {
                     $(row.cells[j]).css("background-color", "grey");//COLORE
                 }
             }
-
         }
+    }
+}
 
+function moveRook(pawn) {
+    var row;//riga della scacchiera in cui si trova il ciclo
+    var idBishop = pawn.id;
+    var x = idBishop.slice(0, 1);//parte letteraria
+    var y = idBishop.slice(1, 2);//parte numerica
+    y = shamble(y);
+    var xE = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+    var xN = 0;// posizione tradotta in numero
+    var xUso = 0;
+    var yUso = y + 1;
+    var validMove = [];
+    var sup;
+    for (let i = 0; i < 8; i++) {
+        if (x == xE[i]) {
+            xN = i + 1
+        }
     }
 
+    xUso = xN;//prendo la posizine vicino alla mia
+    yUso = parseInt(y)-1;
+
+    for (let i = 0; i <= 8; i++) {
+        if (xUso <= 0 || yUso <0) { i = 9 } else {
+            row = chessBoard.rows[yUso];
+            console.log(row)
+            sup = numToChar(xUso) + shambleV2(yUso)
+            validMove.push(sup);
+            console.log(sup);
+            if (row.cells[xUso].className != 'empty') {
+                i = 9;
+                console.log('polkaholica')
+            }
+            yUso--;
+        }
+    }
+
+    for (let i = 0; i < 8; i++) {
+        row = chessBoard.rows[i];
+        for (let j = 0; j < 8; j++) {
+            for (let k = 0; k < validMove.length; k++) {
+                if (row.cells[j].id == validMove[k] && row.cells[j].className.slice(0, 5) != pawn.className.slice(0, 5)) {
+                    $(row.cells[j]).css("pointer-events", "auto");
+                    $(row.cells[j]).css("background-color", "grey");//COLORE
+                }
+            }
+        }
+    }
 }
+
+
+
+
+
