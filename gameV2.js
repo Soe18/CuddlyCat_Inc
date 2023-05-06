@@ -197,6 +197,7 @@ function reversedGetLetterGivenAxisX(axisX) {
 }
 //funzione per capire di che tipo di pedina si tratta
 function descoveryTypeOfPieces(pawn) {
+    console.log(pawn.className.slice(5, 9) )
     if (pawn.className.slice(5, 9) == "Rook") {
         return 1;
     } else if (pawn.className.slice(5, 9) == "Bish") {
@@ -207,7 +208,7 @@ function descoveryTypeOfPieces(pawn) {
         return 4;
     } else if (pawn.className.slice(5, 9) == "King") {
         return 5;
-    } else if (pawn.className.slice(5, 9) == "Pawn") {
+    } else if (pawn.className.slice(5, 9) == "Pawn"||pawn.className.slice(5, 9) == "pawn") {
         return 6;
     }
 
@@ -215,12 +216,26 @@ function descoveryTypeOfPieces(pawn) {
 
 // Funzione chiamata ogni volta che viene premuto un elemento nella scacchiera
 function move(pawn) {
-    MovePawn(pawn);
+    //Problema a trovare il tipo del pe4zzo
+    switch (descoveryTypeOfPieces(pawn)) {
+        case 1:
+            moveRook(pawn)
+        case 2:
+           moveBishop(pawn)
+        case 3:
+           moveKnight(pawn)
+        case 4:
+           moveQueen(pawn)
+        case 5:
+           moveKing(pawn)
+        case 6:
+            movePawn(pawn)
+    }
+
     // Scelta della pedina
     if (movingPawnState == 'ready' && choosenRightPawn(pawn)) {
         //coloro la casella del  che ho selezionato
         $(pawn).css("background-color", "purple");//COLORE
-        console.log(pawn);
         currentSelection = pawn;
         movingPawnState = 'waiting';
         //highLightChoices(pawn);
@@ -280,12 +295,15 @@ function checkMove(pawn) {
     if (turn == 'white') {
         if (pawn.className.slice(0, 5) == 'black') {
             console.log("Pedina nera mangiata");
-            document.getElementById(pawn.id).innerHTML = '<td id="' + currentSelection.id + '"; class="empty" onclick="movePawn(this)">&nbsp;</td>';
+            $(pawn).removeClass(pawn.className).addClass('empty');
+            document.getElementById(pawn.id).innerHTML = '<td id="' + pawn.id + '"; class="empty" onclick="move(this)">&nbsp;</td>';
+
         }
     }
     else if (turn == 'black') {
         if (pawn.className.slice(0, 5) == 'white') {
             console.log("Pedina bianca mangiata");
+            $(pawn).removeClass(pawn.className).addClass('empty');
             document.getElementById(pawn.id).innerHTML = '<td id="' + pawn.id + '"; class="empty" onclick="movePawn(this)">&nbsp;</td>';
 
         }
@@ -302,10 +320,7 @@ function checkMove(pawn) {
     else { resetChessBoard('black'); }
     // Movimento a vuoto, accettabile.
 
-    //PROBLEMA DA RISOLVERE
-    var tipo= currentSelection.className;
-    $(currentSelection).removeClass('empty').addClass(pawn.className)
-    $(pawn).removeClass(pawn.className).addClass(tipo)
+
     return true;
 }
 
@@ -372,7 +387,7 @@ function resetChessBoard(colorPawn) {
 }
 
 
-function vvalidMove(arrayWithValidMove, pawn){
+function vvalidMove(arrayWithValidMove, pawn) {
     var row;//riga della scacchiera in cui si trova il ciclo
     for (let i = 0; i < 8; i++) {
         row = chessBoard.rows[i];
@@ -388,7 +403,7 @@ function vvalidMove(arrayWithValidMove, pawn){
     }
 }
 
-function MoveBishop(pawn) {
+function moveBishop(pawn) {
     var idBishop = pawn.id;
     var x = reversedGetLetterGivenAxisX(idBishop.slice(0, 1));//parte letteraria
     var y = reversedGetLetterGivenAxisY(idBishop.slice(1, 2));//parte numerica
@@ -465,11 +480,11 @@ function MoveBishop(pawn) {
             xUso--;
         }
     }
-    vvalidMove(validMove,pawn)
-    
+    vvalidMove(validMove, pawn)
+
 }
 
-function MoveRook(pawn) {
+function moveRook(pawn) {
     var row;//riga della scacchiera in cui si trova il ciclo
     var idRook = pawn.id;
     var x = reversedGetLetterGivenAxisX(idRook.slice(0, 1));//parte letteraria
@@ -548,65 +563,134 @@ function MoveRook(pawn) {
         }
     }
 
-    vvalidMove(validMove,pawn)
+    vvalidMove(validMove, pawn)
 }
 
-function MovePawn(pawn){
+function movePawn(pawn) {
     var idRook = pawn.id;
     var x = reversedGetLetterGivenAxisX(idRook.slice(0, 1));//parte letteraria
     var y = reversedGetLetterGivenAxisY(idRook.slice(1, 2));//parte numerica
     var validMove = [];
     var sup;
 
-if(pawn.className.slice(0,5)=='white'){//controllo il colore
-    if(pawn.className.slice(5,9)=='Pawn'){// controll che sia la sua prima mossa
-        $(pawn).removeClass('whitePawn').addClass('whitepawn');// cambio nome cosi sono sicuro che il prossimo turno puo muoversi di solo una casella
-        sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y+1);// prendo le 2 caselle che dopo faro colorare e rendere disponibile per il movimento
-        validMove.push(sup);
-        if (boardMatrixTypeOfPawn[y+1][x] == 'empty') {
-          sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y+2);
-        validMove.push(sup);  
-        }
+    if (pawn.className.slice(0, 5) == 'white') {//controllo il colore
+        if (pawn.className.slice(5, 9) == 'Pawn') {// controll che sia la sua prima mossa
+            $(pawn).removeClass('whitePawn').addClass('whitepawn');// cambio nome cosi sono sicuro che il prossimo turno puo muoversi di solo una casella
+            sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 1);// prendo le 2 caselle che dopo faro colorare e rendere disponibile per il movimento
+            validMove.push(sup);
+            if (boardMatrixTypeOfPawn[y + 1][x] == 'empty') {
+                sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 2);
+                validMove.push(sup);
+            }
 
-    }else{//prendo solo una casella se non è la sua prima mossa
-        sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y+1);
-        validMove.push(sup);
-    }
-
-    if(boardMatrixTypeOfPawn[y+1][x+1]!= 'empty'){// controllo se posso mangiare o meno
-        sup = getLetterGivenAxisX(x+1) + getLetterGivenAxisY(y+1);
-        validMove.push(sup);
-    }
-    if(boardMatrixTypeOfPawn[y+1][x-1]!= 'empty'){
-        sup = getLetterGivenAxisX(x-1) + getLetterGivenAxisY(y+1);
-        validMove.push(sup)
-    }}
-    else{// stessa cosa del ciclo sopra
-        if(pawn.className.slice(5,9)=='Pawn'){
-        sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y-1);
-        validMove.push(sup);
-        if (boardMatrixTypeOfPawn[y-1][x] == 'empty') {
-          sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y-2);
-        validMove.push(sup);  
-        }
-        }else{
-            sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y-1);
+        } else {//prendo solo una casella se non è la sua prima mossa
+            sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 1);
             validMove.push(sup);
         }
-    
-        if(boardMatrixTypeOfPawn[y-1][x+1]!= 'empty'){
-            sup = getLetterGivenAxisX(x+1) + getLetterGivenAxisY(y-1);
+
+        if (boardMatrixTypeOfPawn[y + 1][x + 1] != 'empty') {// controllo se posso mangiare o meno tramite il classname
+            sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y + 1);
             validMove.push(sup);
         }
-        if(boardMatrixTypeOfPawn[y-1][x-1]!= 'empty'){
-            sup = getLetterGivenAxisX(x-1) + getLetterGivenAxisY(y-1);
+        if (boardMatrixTypeOfPawn[y + 1][x - 1] != 'empty') {
+            sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y + 1);
             validMove.push(sup)
+        }
     }
+    else {// stessa cosa del ciclo sopra
+        if (pawn.className.slice(5, 9) == 'Pawn') {
+            sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 1);
+            validMove.push(sup);
+            if (boardMatrixTypeOfPawn[y - 1][x] == 'empty') {
+                sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 2);
+                validMove.push(sup);
+            }
+        } else {
+            sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 1);
+            validMove.push(sup);
+        }
+
+        if (boardMatrixTypeOfPawn[y - 1][x + 1] != 'empty') {
+            sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y - 1);
+            validMove.push(sup);
+        }
+        if (boardMatrixTypeOfPawn[y - 1][x - 1] != 'empty') {
+            sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y - 1);
+            validMove.push(sup)
+        }
     }
-    vvalidMove(validMove,pawn)
+    vvalidMove(validMove, pawn)
 }
 
 
-function moveKnight(pawn){
+function moveKnight(pawn) {
+    var idRook = pawn.id;
+    var x = reversedGetLetterGivenAxisX(idRook.slice(0, 1));//parte letteraria
+    var y = reversedGetLetterGivenAxisY(idRook.slice(1, 2));//parte numerica
+    var validMove = [];
+    var sup;
+    if (x <= 7) {//essendo che si muove ad L ho calcolato manualmente le sue 8 posizioni e ho controllato che non andassero fuori dalla scacchiera 
+        sup = getLetterGivenAxisX(x + 2) + getLetterGivenAxisY(y - 1);
+        validMove.push(sup)
+        sup = getLetterGivenAxisX(x + 2) + getLetterGivenAxisY(y + 1);
+        validMove.push(sup)
+    }
+    if (y <= 7) {
+        sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y + 2);
+        validMove.push(sup)
+        sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y + 2);
+        validMove.push(sup)
+    }
+    if (x >= 2) {
+        sup = getLetterGivenAxisX(x - 2) + getLetterGivenAxisY(y - 1);
+        validMove.push(sup)
+        sup = getLetterGivenAxisX(x - 2) + getLetterGivenAxisY(y + 1);
+        validMove.push(sup)
+    }
+    if (y >= 2) {
+        sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y - 2);
+        validMove.push(sup)
+        sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y - 2);
+        validMove.push(sup)
+    }
+    vvalidMove(validMove, pawn)
+}
 
+function moveQueen(pawn){
+    moveBishop(pawn)
+    moveRook(pawn)
+}
+function moveKing(pawn){
+    var idRook = pawn.id;
+    var x = reversedGetLetterGivenAxisX(idRook.slice(0, 1));//parte letteraria
+    var y = reversedGetLetterGivenAxisY(idRook.slice(1, 2));//parte numerica
+    var validMove = [];
+    var sup;
+    //controllo se il re non si trovi ai confini della scacchiera per vedere le mosse disponibile poi le metto una a una 
+    if(x>1){
+        sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y - 1);
+        validMove.push(sup)
+        sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y + 1);
+        validMove.push(sup)
+        sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y);
+        validMove.push(sup)
+    }
+    if(y>1){
+        sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y-1);
+        validMove.push(sup)
+        sup = getLetterGivenAxisX(x ) + getLetterGivenAxisY(y-1);
+        validMove.push(sup)
+    }
+    if (y<8){
+        sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y+1);
+        validMove.push(sup)
+        sup = getLetterGivenAxisX(x ) + getLetterGivenAxisY(y+1);
+        validMove.push(sup)
+    }
+    if(x<8){
+        sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y);
+        validMove.push(sup)
+    }
+
+    vvalidMove(validMove, pawn)
 }
