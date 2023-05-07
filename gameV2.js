@@ -197,7 +197,7 @@ function reversedGetLetterGivenAxisX(axisX) {
 }
 //funzione per capire di che tipo di pedina si tratta
 function descoveryTypeOfPieces(pawn) {
-    console.log(pawn.className.slice(5, 9) )
+    console.log(pawn.className.slice(5, 9))
     if (pawn.className.slice(5, 9) == "Rook") {
         return 1;
     } else if (pawn.className.slice(5, 9) == "Bish") {
@@ -208,7 +208,7 @@ function descoveryTypeOfPieces(pawn) {
         return 4;
     } else if (pawn.className.slice(5, 9) == "King") {
         return 5;
-    } else if (pawn.className.slice(5, 9) == "Pawn"||pawn.className.slice(5, 9) == "pawn") {
+    } else if (pawn.className.slice(5, 9) == "Pawn" || pawn.className.slice(5, 9) == "pawn") {
         return 6;
     }
 
@@ -217,20 +217,25 @@ function descoveryTypeOfPieces(pawn) {
 // Funzione chiamata ogni volta che viene premuto un elemento nella scacchiera
 function move(pawn) {
     //Problema a trovare il tipo del pe4zzo
-    switch (descoveryTypeOfPieces(pawn)) {
-        case 1:
-            moveRook(pawn)
-        case 2:
-           moveBishop(pawn)
-        case 3:
-           moveKnight(pawn)
-        case 4:
-           moveQueen(pawn)
-        case 5:
-           moveKing(pawn)
-        case 6:
-            movePawn(pawn)
+    if (descoveryTypeOfPieces(pawn) == 1) {
+        moveRook(pawn)
     }
+    if (descoveryTypeOfPieces(pawn) == 2) {
+        moveBishop(pawn)
+    }
+    if (descoveryTypeOfPieces(pawn) == 3) {
+        moveKnight(pawn)
+    }
+    if (descoveryTypeOfPieces(pawn) == 4) {
+        moveQueen(pawn)
+    }
+    if (descoveryTypeOfPieces(pawn) == 5) {
+        moveKing(pawn)
+    }
+    if (descoveryTypeOfPieces(pawn) == 6) {
+        movePawn(pawn)
+    }
+
 
     // Scelta della pedina
     if (movingPawnState == 'ready' && choosenRightPawn(pawn)) {
@@ -416,7 +421,7 @@ function moveBishop(pawn) {
     yUso = y + 1;
 
     for (let i = 0; i < 8; i++) {
-        if (xUso == 8 || yUso == 8) { i = 9; } else {//controllo che le mosse siano fattibili per la pedina 
+        if (xUso >= 8 || yUso >= 8) { i = 9; } else {//controllo che le mosse siano fattibili per la pedina 
             sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
             validMove.push(sup);
             if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') {
@@ -452,7 +457,7 @@ function moveBishop(pawn) {
     xUso = x - 1;
     yUso = y + 1;
     for (var i = y; i < 8; i++) {
-        if (xUso < 0 || yUso == 8) { i = 9; } else {
+        if (xUso < 0 || yUso >= 8) { i = 9; } else {
             sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
             validMove.push(sup);
             console.log(sup)
@@ -467,8 +472,8 @@ function moveBishop(pawn) {
 
     xUso = x - 1;
     yUso = y - 1;
-    for (let i = 0; i < 8; i++) {
-        if (xUso < 0 || yUso <= 0) { i = 9 } else {
+    for (var i = y; i < 8; i++) {
+        if (xUso < 0 || yUso < 0) { i = 9; } else {
             sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
             validMove.push(sup);
             console.log(sup)
@@ -480,6 +485,7 @@ function moveBishop(pawn) {
             xUso--;
         }
     }
+
     vvalidMove(validMove, pawn)
 
 }
@@ -550,7 +556,7 @@ function moveRook(pawn) {
     yUso = y - 1;
 
     for (let i = 0; i < 8; i++) {
-        if (yUso == 0) { i = 9; } else {//controllo che le mosse siano fattibili per la pedina
+        if (yUso <= 0) { i = 9; } else {//controllo che le mosse siano fattibili per la pedina
             sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
             validMove.push(sup);
             console.log(sup);
@@ -599,6 +605,7 @@ function movePawn(pawn) {
     }
     else {// stessa cosa del ciclo sopra
         if (pawn.className.slice(5, 9) == 'Pawn') {
+            $(pawn).removeClass('blackPawn').addClass('blackpawn')
             sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 1);
             validMove.push(sup);
             if (boardMatrixTypeOfPawn[y - 1][x] == 'empty') {
@@ -656,18 +663,18 @@ function moveKnight(pawn) {
     vvalidMove(validMove, pawn)
 }
 
-function moveQueen(pawn){
+function moveQueen(pawn) {
     moveBishop(pawn)
     moveRook(pawn)
 }
-function moveKing(pawn){
+function moveKing(pawn) {
     var idRook = pawn.id;
     var x = reversedGetLetterGivenAxisX(idRook.slice(0, 1));//parte letteraria
     var y = reversedGetLetterGivenAxisY(idRook.slice(1, 2));//parte numerica
     var validMove = [];
     var sup;
     //controllo se il re non si trovi ai confini della scacchiera per vedere le mosse disponibile poi le metto una a una 
-    if(x>1){
+    if (x > 1) {
         sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y - 1);
         validMove.push(sup)
         sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y + 1);
@@ -675,19 +682,19 @@ function moveKing(pawn){
         sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y);
         validMove.push(sup)
     }
-    if(y>1){
-        sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y-1);
+    if (y > 1) {
+        sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y - 1);
         validMove.push(sup)
-        sup = getLetterGivenAxisX(x ) + getLetterGivenAxisY(y-1);
-        validMove.push(sup)
-    }
-    if (y<8){
-        sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y+1);
-        validMove.push(sup)
-        sup = getLetterGivenAxisX(x ) + getLetterGivenAxisY(y+1);
+        sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 1);
         validMove.push(sup)
     }
-    if(x<8){
+    if (y < 8) {
+        sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y + 1);
+        validMove.push(sup)
+        sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 1);
+        validMove.push(sup)
+    }
+    if (x < 8) {
         sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y);
         validMove.push(sup)
     }
