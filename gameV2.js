@@ -293,6 +293,14 @@ function checkMove(pawn) {
         currentSelection = null;
         movingPawnState = 'ready';
         resetChessBoard(pawn.className.slice(0, 5));
+        if(descoveryTypeOfPieces(pawn)==6){
+            if(pawn.className.slice(0, 5) == 'white'){
+                $(pawn).removeClass('whitepawn').addClass('whitePawn');
+            }else{
+                $(pawn).removeClass('blackpawn').addClass('blackPawn');
+            }
+            
+        }
         return false;
     }
 
@@ -319,6 +327,14 @@ function checkMove(pawn) {
         console.log("Vietato scambiare pedine");
         resetChessBoard(pawn.className.slice(0, 5));
         movingPawnState = 'ready';
+        if(descoveryTypeOfPieces(pawn)==6){
+            if(pawn.className.slice(0, 5) == 'white'){
+                $(pawn).removeClass('whitepawn').addClass('whitePawn');
+            }else{
+                $(pawn).removeClass('blackpawn').addClass('BlackPawn');
+            }
+            
+        }
         return false;
     }
     if (turn == 'black') { resetChessBoard('white'); }
@@ -487,7 +503,7 @@ function moveBishop(pawn) {
     }
 
     vvalidMove(validMove, pawn)
-
+    return validMove;
 }
 
 function moveRook(pawn) {
@@ -570,6 +586,7 @@ function moveRook(pawn) {
     }
 
     vvalidMove(validMove, pawn)
+    return validMove;
 }
 
 function movePawn(pawn) {
@@ -627,6 +644,7 @@ function movePawn(pawn) {
         }
     }
     vvalidMove(validMove, pawn)
+    return validMove;
 }
 
 
@@ -661,11 +679,16 @@ function moveKnight(pawn) {
         validMove.push(sup)
     }
     vvalidMove(validMove, pawn)
+    return validMove;
 }
 
 function moveQueen(pawn) {
-    moveBishop(pawn)
-    moveRook(pawn)
+    var validMoveV1=moveBishop(pawn)
+    var validMoveV2=moveRook(pawn)
+    for (let index = 0; index < validMoveV1.length; index++) {
+        validMoveV2.push(validMoveV1[index])
+    }
+    return validMoveV2
 }
 function moveKing(pawn) {
     var idRook = pawn.id;
@@ -700,4 +723,5 @@ function moveKing(pawn) {
     }
 
     vvalidMove(validMove, pawn)
+    return validMove;
 }
