@@ -2,81 +2,6 @@
 function reverseArray(array) {
     return array.slice().reverse();
 };
-// la matrice con i vari valori impostati in base alla posizione 
-var pawnEvalWhite =
-    [
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0],
-        [1.0, 1.0, 2.0, 3.0, 3.0, 2.0, 1.0, 1.0],
-        [0.5, 0.5, 1.0, 2.5, 2.5, 1.0, 0.5, 0.5],
-        [0.0, 0.0, 0.0, 2.0, 2.0, 0.0, 0.0, 0.0],
-        [0.5, -0.5, -1.0, 0.0, 0.0, -1.0, -0.5, 0.5],
-        [0.5, 1.0, 1.0, -2.0, -2.0, 1.0, 1.0, 0.5],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-    ];
-
-var pawnEvalBlack = reverseArray(pawnEvalWhite);
-
-var knightEval =
-    [
-        [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0],
-        [-4.0, -2.0, 0.0, 0.0, 0.0, 0.0, -2.0, -4.0],
-        [-3.0, 0.0, 1.0, 1.5, 1.5, 1.0, 0.0, -3.0],
-        [-3.0, 0.5, 1.5, 2.0, 2.0, 1.5, 0.5, -3.0],
-        [-3.0, 0.0, 1.5, 2.0, 2.0, 1.5, 0.0, -3.0],
-        [-3.0, 0.5, 1.0, 1.5, 1.5, 1.0, 0.5, -3.0],
-        [-4.0, -2.0, 0.0, 0.5, 0.5, 0.0, -2.0, -4.0],
-        [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0]
-    ];
-
-var bishopEvalWhite = [
-    [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0],
-    [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0],
-    [-1.0, 0.0, 0.5, 1.0, 1.0, 0.5, 0.0, -1.0],
-    [-1.0, 0.5, 0.5, 1.0, 1.0, 0.5, 0.5, -1.0],
-    [-1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, -1.0],
-    [-1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0],
-    [-1.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, -1.0],
-    [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0]
-];
-
-var bishopEvalBlack = reverseArray(bishopEvalWhite);
-
-var rookEvalWhite = [
-    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-    [0.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5],
-    [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-    [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-    [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-    [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-    [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-    [0.0, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0]
-];
-
-var rookEvalBlack = reverseArray(rookEvalWhite);
-
-var queenEval = [
-    [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0],
-    [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0],
-    [-1.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -1.0],
-    [-0.5, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -0.5],
-    [0.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -0.5],
-    [-1.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.0, -1.0],
-    [-1.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, -1.0],
-    [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0]
-];
-
-var kingEvalWhite = [
-    [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
-    [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
-    [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
-    [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
-    [-2.0, -3.0, -3.0, -4.0, -4.0, -3.0, -3.0, -2.0],
-    [-1.0, -2.0, -2.0, -2.0, -2.0, -2.0, -2.0, -1.0],
-    [2.0, 2.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0],
-    [2.0, 3.0, 1.0, 0.0, 0.0, 1.0, 3.0, 2.0]
-];
-
 // NON CAMBIARE NULLA SU swapper(a, b), cambia piuttosto le altre funzioni
 function swapper(a, b) {
     console.log("Start swap");
@@ -107,6 +32,8 @@ var remainingTimeBlack;
 var movingPawnState = 'ready';
 var currentSelection;
 var turn;
+var colorCpu='black'
+
 //imposto i vari valore che hanno le pedine
 var valueOfPawn = 10;
 var valueOfBishop = 30;
@@ -120,6 +47,7 @@ var boardMatrixPosition = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [
 
 var boardMatrixTypeOfPawn = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],
 [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],];
+
 // la matrice con i vari valori impostati in base alla posizione 
 var pawnEvalWhite =
     [
@@ -374,6 +302,7 @@ function descoveryTypeOfPieces(pawn) {
 }
 
 // Funzione chiamata ogni volta che viene premuto un elemento nella scacchiera
+// dedicata al giocatore
 function move(pawn) {
     //Problema a trovare il tipo del pe4zzo
     if (descoveryTypeOfPieces(pawn) == 1) {
@@ -394,8 +323,6 @@ function move(pawn) {
     if (descoveryTypeOfPieces(pawn) == 6) {
         movePawn(pawn)
     }
-
-
     // Scelta della pedina
     if (movingPawnState == 'ready' && choosenRightPawn(pawn)) {
         //coloro la casella del  che ho selezionato
@@ -404,7 +331,6 @@ function move(pawn) {
         movingPawnState = 'waiting';
         //highLightChoices(pawn);
     }
-
     // Scelta del movimento
     else if (movingPawnState == 'waiting') {
         //console.log(pawn);
@@ -432,6 +358,7 @@ function move(pawn) {
     console.log(boardMatrixTypeOfPawn);
 }
 
+// dedicata al giocatore
 // Funzione per capire se e' stata scelta all'inizio una pedina del player corretto
 function choosenRightPawn(pawn) {
     console.log(pawn.className);
@@ -441,6 +368,7 @@ function choosenRightPawn(pawn) {
     return false;
 }
 
+// dedicata al giocatore
 // Controlla che tipo di mossa e' stata fatta
 function checkMove(pawn) {
     // la ricoloro del colore originario
@@ -458,11 +386,9 @@ function checkMove(pawn) {
             } else {
                 $(pawn).removeClass('blackpawn').addClass('blackPawn');
             }
-
         }
         return false;
     }
-
     // Mangio pedina
     if (turn == 'white') {
         if (pawn.className.slice(0, 5) == 'black') {
@@ -492,66 +418,16 @@ function checkMove(pawn) {
             } else {
                 $(pawn).removeClass('blackpawn').addClass('BlackPawn');
             }
-
         }
         return false;
     }
     if (turn == 'black') { resetChessBoard('white'); }
     else { resetChessBoard('black'); }
     // Movimento a vuoto, accettabile.
-
-
     return true;
 }
 
-
-
-
-/*
-    Lo scopo di questi metodi e' quello di evidenziare
-    al giocatore le mosse utili. Si puo' volendo attuare
-    una misura per la quale BLOCCA le altre mosse non
-    evidenziate, dando poi meno controlli dopo
-*/
-
-function highLightChoices(pawn) {
-    switch (pawn.className) {
-        case 'whitePawn':
-            moveWhitePawn(pawn);
-            break;
-        case 'blackPawn':
-            moveBlackPawn(pawn);
-            break;
-        default:
-            break;
-    }
-}
-
-// Movimento pedoni
-// Bianche
-function moveWhitePawn(pawn) {
-    // CONTROLLA CHE AITA AITA SONO ADDORMENTATO E NON CAPISCO NULLA SUGLI ASSI GRAZIE.
-    let yOfPawn = reversedGetLetterGivenAxisX(pawn.id.substring(0, 1));
-    let xOfPawn = reversedGetLetterGivenAxisY(pawn.id.substring(1, 2));
-
-    console.log(xOfPawn + " " + yOfPawn);
-    console.log("Move white: " + boardMatrixPosition[xOfPawn][yOfPawn]);
-    console.log("Move white: " + boardMatrixTypeOfPawn[xOfPawn][yOfPawn]);
-
-    let hypoteticMoveInX = xOfPawn += 1;
-    let tmpString = getLetterGivenAxisX(yOfPawn) + "" + getLetterGivenAxisY(hypoteticMoveInX);
-
-    if (document.getElementById(tmpString).classList.contains("empty")) {
-        console.log("muovi");
-    }
-
-}
-
-// Nere
-function moveBlackPawn(pawn) {
-
-}
-
+// dedicata al giocatore
 function resetChessBoard(colorPawn) {
     for (let i = 0; i < 8; i++) {
         row = chessBoard.rows[i];
@@ -566,7 +442,7 @@ function resetChessBoard(colorPawn) {
 
 }
 
-
+// dedicata al giocatore
 function vvalidMove(arrayWithValidMove, pawn) {
     var row;//riga della scacchiera in cui si trova il ciclo
     for (let i = 0; i < 8; i++) {
@@ -885,4 +761,18 @@ function moveKing(pawn) {
     return validMove;
 }
 
+function cpuMove(){
+  for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            if(boardMatrixTypeOfPawn[i][j]== colorCpu){
+                 //ARRAY TRIDIMENSIONALE MI SA 
+                 //GREVE 
+                 //[TIPO_PEDINA]-[POSIZIONE ATTUALE]-[[MOSSA1,MOSSA2,MOSSA3,ETC]]-[[VALOREMOSSA1,VALOREMOSSA2,VALOREMOSSA3,ETC]]
+            }
+            
+        }
+  }
+
+
+}
 

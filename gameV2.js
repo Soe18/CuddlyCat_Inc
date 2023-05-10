@@ -348,50 +348,7 @@ function checkMove(pawn) {
 
 
 
-/*
-    Lo scopo di questi metodi e' quello di evidenziare
-    al giocatore le mosse utili. Si puo' volendo attuare
-    una misura per la quale BLOCCA le altre mosse non
-    evidenziate, dando poi meno controlli dopo
-*/
 
-function highLightChoices(pawn) {
-    switch (pawn.className) {
-        case 'whitePawn':
-            moveWhitePawn(pawn);
-            break;
-        case 'blackPawn':
-            moveBlackPawn(pawn);
-            break;
-        default:
-            break;
-    }
-}
-
-// Movimento pedoni
-// Bianche
-function moveWhitePawn(pawn) {
-    // CONTROLLA CHE AITA AITA SONO ADDORMENTATO E NON CAPISCO NULLA SUGLI ASSI GRAZIE.
-    let yOfPawn = reversedGetLetterGivenAxisX(pawn.id.substring(0, 1));
-    let xOfPawn = reversedGetLetterGivenAxisY(pawn.id.substring(1, 2));
-
-    console.log(xOfPawn + " " + yOfPawn);
-    console.log("Move white: " + boardMatrixPosition[xOfPawn][yOfPawn]);
-    console.log("Move white: " + boardMatrixTypeOfPawn[xOfPawn][yOfPawn]);
-
-    let hypoteticMoveInX = xOfPawn += 1;
-    let tmpString = getLetterGivenAxisX(yOfPawn) + "" + getLetterGivenAxisY(hypoteticMoveInX);
-
-    if (document.getElementById(tmpString).classList.contains("empty")) {
-        console.log("muovi");
-    }
-
-}
-
-// Nere
-function moveBlackPawn(pawn) {
-
-}
 
 function resetChessBoard(colorPawn) {
     for (let i = 0; i < 8; i++) {
