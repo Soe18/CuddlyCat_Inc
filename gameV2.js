@@ -45,7 +45,7 @@ function ready() {
     remainingTimeBlack = startingTime;
     remainingTimeWhite = startingTime;
     turn = 'white';
-
+    resetColor();
     writeOnH1();
     matrixBuilderPosition();
     matrixBuilderTypeOfPawn();
@@ -72,7 +72,6 @@ function timer() {
     else if (remainingTimeWhite <= 0) {
         console.log("Vince nero per fine tempo di bianco!");
     }
-
     // Inserisci qui gli elementi che necessitano di ricaricarsi ogni secondo
     writeOnH1();
 }
@@ -266,6 +265,7 @@ function move(pawn) {
             }
             // Dai il turno all'altro player
         }
+        resetColor();
     }
     matrixBuilderPosition();
     matrixBuilderTypeOfPawn();
@@ -345,16 +345,52 @@ function checkMove(pawn) {
     return true;
 }
 
-
-
-
-
+function resetColor(){
+    var whiteQuad=[];
+    var blackQuad=[];
+    var sup;
+    for (let i = 0; i < 8; i++) {
+        if(i%2==0){
+            for (let j = 0; j < 8 ;j++) {
+              if(j%2==0){
+                sup = getLetterGivenAxisX(i) + getLetterGivenAxisY(j)
+                blackQuad.push(sup);
+              }else{
+                sup = getLetterGivenAxisX(i) + getLetterGivenAxisY(j)
+                whiteQuad.push(sup);
+              }
+            }
+        }else{
+            for (let j = 0; j < 8 ;j++) {
+              if(j%2==0){
+                sup = getLetterGivenAxisX(i) + getLetterGivenAxisY(j)
+                whiteQuad.push(sup);
+              }else{
+                sup = getLetterGivenAxisX(i) + getLetterGivenAxisY(j) 
+                blackQuad.push(sup);
+              }
+            }
+        }
+    }
+    for (let i = 0; i < 8; i++) {
+        row = chessBoard.rows[i];
+        for (let j = 0; j < 8; j++) {
+            for (let k = 0; k < blackQuad.length; k++) {
+            if(row.cells[j].id == blackQuad[k]){
+                $(row.cells[j]).css("background-color", "green");//COLORE
+            }else if(row.cells[j].id==whiteQuad[k]){
+                $(row.cells[j]).css("background-color", "antiquewhite");//COLORE
+            } 
+            }
+            
+        }
+    }
+}
 
 function resetChessBoard(colorPawn) {
     for (let i = 0; i < 8; i++) {
         row = chessBoard.rows[i];
         for (let j = 0; j < 8; j++) {
-            $(row.cells[j]).css("background-color", "antiquewhite");//COLORE
             if (row.cells[j].className.slice(0, 5) == colorPawn) {
                 $(row.cells[j]).css("pointer-events", "auto");
             } else { $(row.cells[j]).css("pointer-events", "none"); }
@@ -375,7 +411,6 @@ function vvalidMove(arrayWithValidMove, pawn) {
                     $(row.cells[j]).css("pointer-events", "auto");
                     $(row.cells[j]).css("background-color", "grey");//COLORE
                 }
-
             }
         }
     }
