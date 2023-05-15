@@ -198,7 +198,9 @@ function matrixBuilderTypeOfPawn() {
         }
     }
 }
-
+function findTheOppositeColor(myColor){
+    if(myColor== 'white'){return 'black'}else{return 'white'}
+}
 // Per ottenere lettera dell'asse x
 function getLetterGivenAxisY(axisY) {
     switch (axisY) {
@@ -292,6 +294,16 @@ function descoveryTypeOfPieces(pawn) {
     else if (pawn.className.slice(5, 9) == "Quee") { return 4; }
     else if (pawn.className.slice(5, 9) == "King") { return 5; }
     else if (pawn.className.slice(5, 9) == "Pawn" || pawn.className.slice(5, 9) == "pawn") { return 6; }
+    else { return 0 }
+
+}
+function descoveryTypeOfPiecesWithClassName(className) {
+    if (className.slice(5, 9) == "Rook") { return 1; }
+    else if (className.slice(5, 9) == "Bish") { return 2; }
+    else if (className.slice(5, 9) == "Knig") { return 3; }
+    else if (className.slice(5, 9) == "Quee") { return 4; }
+    else if (className.slice(5, 9) == "King") { return 5; }
+    else if (className.slice(5, 9) == "Pawn" || className.slice(5, 9) == "pawn") { return 6; }
     else { return 0 }
 
 }
@@ -726,28 +738,40 @@ function moveKing(pawn) {
     var sup;
     //controllo se il re non si trovi ai confini della scacchiera per vedere le mosse disponibile poi le metto una a una 
     if (x > 1) {
-        sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y - 1);
-        validMove.push(sup)
         sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y + 1);
-        validMove.push(sup)
+        if (boardMatrixTypeOfPawn[x - 1][y+1] == 'empty' || boardMatrixTypeOfPawn[x - 1][y+1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
+        {validMove.push(sup)}
         sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y);
-        validMove.push(sup)
+        if (boardMatrixTypeOfPawn[x - 1][y] == 'empty' || boardMatrixTypeOfPawn[x - 1][y].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
+        {validMove.push(sup)}
+    }
+    if (x > 1 && y > 1) {
+        sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y - 1);
+        if (boardMatrixTypeOfPawn[x - 1][y-1] == 'empty' || boardMatrixTypeOfPawn[x - 1][y-1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
+        {validMove.push(sup)}
     }
     if (y > 1) {
         sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y - 1);
-        validMove.push(sup)
+        if (boardMatrixTypeOfPawn[x + 1][y] == 'empty' || boardMatrixTypeOfPawn[x - 1][y].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
+        {validMove.push(sup)}
         sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 1);
-        validMove.push(sup)
+        if (boardMatrixTypeOfPawn[x ][y-1] == 'empty' || boardMatrixTypeOfPawn[x ][y-1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
+        {validMove.push(sup)}
     }
     if (y < 8) {
-        sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y + 1);
-        validMove.push(sup)
         sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 1);
-        validMove.push(sup)
+        if (boardMatrixTypeOfPawn[x][y+1] == 'empty' || boardMatrixTypeOfPawn[x][y+1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
+        {validMove.push(sup)}
     }
     if (x < 8) {
         sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y);
-        validMove.push(sup)
+        if (boardMatrixTypeOfPawn[x + 1][y] == 'empty' || boardMatrixTypeOfPawn[x + 1][y].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
+        {validMove.push(sup)}
+    }
+    if (x < 8 && y < 8) {
+        sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y + 1);
+        if (boardMatrixTypeOfPawn[x + 1][y+1] == 'empty' || boardMatrixTypeOfPawn[x +1][y+1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
+        {validMove.push(sup)}
     }
 
     vvalidMove(validMove, pawn)
@@ -782,7 +806,7 @@ function valueOfOneMove(hypoteticalPosition, pawn) {
                 console.log(row.cells[j].id)
                 if (hypoteticalPosition == row.cells[j].id) {
                     sup = row.cells[j]
-                    
+
                     //in base al mio tipo di pedina cambiera il valore
                     if (descoveryTypeOfPieces(pawn) == 1) {
                         //in base da che pedina ha l'avversario in quella casella il valroe cambia
@@ -936,61 +960,97 @@ function valueOfOneMove(hypoteticalPosition, pawn) {
     }
 }
 
-    function cpuMove() {
-        //ARRAY TRIDIMENSIONALE MI SA 
-        //[TIPO_PEDINA]-[POSIZIONE ATTUALE]-[[MOSSA1,MOSSA2,MOSSA3,ETC]]-[[VALOREMOSSA1,VALOREMOSSA2,VALOREMOSSA3,ETC]]
-        var hypoteticalMove = [[[]]];
-        var typeOfPieces = [];
-        var idOfPieces = [];
-        var moveOfOnePieces = [];
-        var moves = [[]];
-        var indexOfMovesAndValueOfMove = 0;
-        var valueOfMove = [[]];
-
-        for (let i = 0; i < 8; i++) {
-            row = chessBoard.rows[i];
-            for (let j = 0; j < 8; j++) {
-                if (row.cells[j].className.slice(0, 5) == colorCpu) {
-                    console.log(descoveryTypeOfPieces(row.cells[j]))
-                    typeOfPieces.push(row.cells[j].className);
-                    idOfPieces.push(row.cells[j].id);
-                    if (descoveryTypeOfPieces(row.cells[j]) == 1) {
-                        moveOfOnePieces = moveRook(row.cells[j])
-                    }
-                    if (descoveryTypeOfPieces(row.cells[j]) == 2) {
-                        moveOfOnePieces = moveBishop(row.cells[j])
-                    }
-                    if (descoveryTypeOfPieces(row.cells[j]) == 3) {
-                        moveOfOnePieces = moveKnight(row.cells[j])
-                    }
-                    if (descoveryTypeOfPieces(row.cells[j]) == 4) {
-                        moveOfOnePieces = moveQueen(row.cells[j])
-                    }
-                    if (descoveryTypeOfPieces(row.cells[j]) == 5) {
-                        moveOfOnePieces = moveKing(row.cells[j])
-                    }
-                    if (descoveryTypeOfPieces(row.cells[j]) == 6) {
-                        for (let l = 0; l < movePawn(row.cells[j]).length; l++) {
-                            moveOfOnePieces.push(movePawn(row.cells[j])[l])
-                        }
-                      
-                    }
- 
-                    for (let k = 0; k < moveOfOnePieces.length; k++) {
-                        console.log(moveOfOnePieces[k])
-                        moves[indexOfMovesAndValueOfMove].push(moveOfOnePieces[k])
-                        valueOfMove[indexOfMovesAndValueOfMove].push(valueOfOneMove(moveOfOnePieces[k], row.cells[j]))
-                        console.log(typeof(valueOfOneMove(moveOfOnePieces[k], row.cells[j])))
-                        if (k == moveOfOnePieces.length - 1) {
-                            indexOfMovesAndValueOfMove++;
-                        }
-                    }
+function cpuMove() {
+    //ARRAY TRIDIMENSIONALE MI SA 
+    //[TIPO_PEDINA]-[POSIZIONE ATTUALE]-[[MOSSA1,MOSSA2,MOSSA3,ETC]]-[[VALOREMOSSA1,VALOREMOSSA2,VALOREMOSSA3,ETC]]
+    var hypoteticalMove = [[[]]];
+    var typeOfPieces = [];
+    var idOfPieces = [];
+    var moveOfOnePieces = [];
+    var moves = [[]];
+    var indexOfMovesAndValueOfMove = 0;
+    var valueOfMove = [[]];
+    var classOfBox
+        // PORCA DI QUELLA TROIA 
+        // RIGUARDARE GLI ALGORTMI GLI ARRAY DEVONO AVERE SOLO LE CASELLE IN CUI REALMENTE POSSONO ANDARE 
+        // Stesso problema tabella flippata
+    for (let i = 0; i < 8; i++) {
+        row = chessBoard.rows[i];
+        for (let j = 0; j < 8; j++) {
+            classOfBox = boardMatrixTypeOfPawn[i][j];
+            if (classOfBox.slice(0, 5) == colorCpu) {
+                typeOfPieces.push(classOfBox);
+                idOfPieces.push(boardMatrixPosition[i][j]);
+                console.log(classOfBox, boardMatrixPosition[i][j])
+                if (descoveryTypeOfPiecesWithClassName(classOfBox) == 1) {
+                    moveOfOnePieces = moveRook(row.cells[j])
                 }
+                if (descoveryTypeOfPiecesWithClassName(classOfBox) == 2) {
+                    moveOfOnePieces = moveBishop(row.cells[j])
+                }
+                if (descoveryTypeOfPiecesWithClassName(classOfBox) == 3) {
+                    moveOfOnePieces = moveKnight(row.cells[j])
+                }
+                if (descoveryTypeOfPiecesWithClassName(classOfBox) == 4) {
+                    moveOfOnePieces = moveQueen(row.cells[j])
+                }
+                if (descoveryTypeOfPiecesWithClassName(classOfBox) == 5) {
+                    moveOfOnePieces = moveKing(row.cells[j])
+                }
+                if (descoveryTypeOfPiecesWithClassName(classOfBox) == 6) {
+                    moveOfOnePieces = movePawn(row.cells[j])
+                    $(row.cells[j]).removeClass(colorCpu + 'pawn').addClass(colorCpu + 'pawn');
+                }
+
+                console.log(moveOfOnePieces)
             }
         }
 
-
     }
+    /* for (let i = 0; i < 8; i++) {
+         row = chessBoard.rows[i];
+         for (let j = 0; j < 8; j++) {
+             classOfBox = boardMatrixTypeOfPawn[i][j];
+             if (classOfBox.slice(0, 5) == colorCpu) {
+                 console.log(descoveryTypeOfPieces(row.cells[j]))
+                 typeOfPieces.push(classOfBox);
+                 idOfPieces.push(boardMatrixPosition[i][j]);
+                 if (descoveryTypeOfPiecesWithClassName(classOfBox) == 1) {
+                     moveOfOnePieces = moveRook(row.cells[j])
+                 }
+                 if (descoveryTypeOfPiecesWithClassName(classOfBox) == 2) {
+                     moveOfOnePieces = moveBishop(row.cells[j])
+                 }
+                 if (descoveryTypeOfPiecesWithClassName(classOfBox) == 3) {
+                     moveOfOnePieces = moveKnight(row.cells[j])
+                 }
+                 if (descoveryTypeOfPiecesWithClassName(classOfBox) == 4) {
+                     moveOfOnePieces = moveQueen(row.cells[j])
+                 }
+                 if (descoveryTypeOfPiecesWithClassName(classOfBox) == 5) {
+                     moveOfOnePieces = moveKing(row.cells[j])
+                 }
+                 if (descoveryTypeOfPiecesWithClassName(classOfBox) == 6) {
+                     for (let l = 0; l < movePawn(row.cells[j]).length; l++) {
+                         moveOfOnePieces.push(movePawn(row.cells[j])[l])
+                     }
+                 }
+ 
+                 for (let k = 0; k < moveOfOnePieces.length; k++) {
+                     console.log(moveOfOnePieces[k])
+                     moves[indexOfMovesAndValueOfMove].push(moveOfOnePieces[k])
+                     valueOfMove[indexOfMovesAndValueOfMove].push(valueOfOneMove(moveOfOnePieces[k], row.cells[j]))
+                     console.log(typeof(valueOfOneMove(moveOfOnePieces[k], row.cells[j])))
+                     if (k == moveOfOnePieces.length - 1) {
+                         indexOfMovesAndValueOfMove++;
+                     }
+                 }
+             }
+         }
+     }
+
+*/
+}
 
 /*
                    Uncaught TypeError: Cannot read properties of undefined (reading 'className')
