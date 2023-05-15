@@ -31,7 +31,7 @@ var remainingTimeBlack;
 // Movimento pedina
 var movingPawnState = 'ready';
 var currentSelection;
-var turn='white';
+var turn = 'white';
 var colorCpu = 'black'
 var colorPlayer = 'white'
 //imposto i vari valore che hanno le pedine
@@ -286,85 +286,66 @@ function reversedGetLetterGivenAxisX(axisX) {
 }
 //funzione per capire di che tipo di pedina si tratta
 function descoveryTypeOfPieces(pawn) {
-    console.log(pawn.className.slice(5, 9))
-    if (pawn.className.slice(5, 9) == "Rook") {
-        return 1;
-    } else if (pawn.className.slice(5, 9) == "Bish") {
-        return 2;
-    } else if (pawn.className.slice(5, 9) == "Knig") {
-        return 3;
-    } else if (pawn.className.slice(5, 9) == "Quee") {
-        return 4;
-    } else if (pawn.className.slice(5, 9) == "King") {
-        return 5;
-    } else if (pawn.className.slice(5, 9) == "Pawn" || pawn.className.slice(5, 9) == "pawn") {
-        return 6;
-    }
+    if (pawn.className.slice(5, 9) == "Rook") { return 1; }
+    else if (pawn.className.slice(5, 9) == "Bish") { return 2; }
+    else if (pawn.className.slice(5, 9) == "Knig") { return 3; }
+    else if (pawn.className.slice(5, 9) == "Quee") { return 4; }
+    else if (pawn.className.slice(5, 9) == "King") { return 5; }
+    else if (pawn.className.slice(5, 9) == "Pawn" || pawn.className.slice(5, 9) == "pawn") { return 6; }
+    else { return 0 }
 
 }
 
 // Funzione chiamata ogni volta che viene premuto un elemento nella scacchiera
 function move(pawn) {
-        if (turn == colorCpu) {
-            cpuMove;
-        } else {
-    //Problema a trovare il tipo del pe4zzo
-    if (descoveryTypeOfPieces(pawn) == 1) {
-        moveRook(pawn)
-    }
-    if (descoveryTypeOfPieces(pawn) == 2) {
-        moveBishop(pawn)
-    }
-    if (descoveryTypeOfPieces(pawn) == 3) {
-        moveKnight(pawn)
-    }
-    if (descoveryTypeOfPieces(pawn) == 4) {
-        moveQueen(pawn)
-    }
-    if (descoveryTypeOfPieces(pawn) == 5) {
-        moveKing(pawn)
-    }
-    if (descoveryTypeOfPieces(pawn) == 6) {
-        movePawn(pawn)
-    }
+    if (turn == colorCpu) {
+        cpuMove();
+    } else {
+        //Problema a trovare il tipo del pe4zzo
+        if (descoveryTypeOfPieces(pawn) == 1) { moveRook(pawn) }
+        if (descoveryTypeOfPieces(pawn) == 2) { moveBishop(pawn) }
+        if (descoveryTypeOfPieces(pawn) == 3) { moveKnight(pawn) }
+        if (descoveryTypeOfPieces(pawn) == 4) { moveQueen(pawn) }
+        if (descoveryTypeOfPieces(pawn) == 5) { moveKing(pawn) }
+        if (descoveryTypeOfPieces(pawn) == 6) { movePawn(pawn) }
 
 
-    // Scelta della pedina
-    if (movingPawnState == 'ready' && choosenRightPawn(pawn)) {
-        //coloro la casella del  che ho selezionato
-        $(pawn).css("background-color", "purple");//COLORE
-        currentSelection = pawn;
-        movingPawnState = 'waiting';
-        //highLightChoices(pawn);
-    }
-
-    // Scelta del movimento
-    else if (movingPawnState == 'waiting') {
-        //console.log(pawn);
-        var tmp = pawn;
-        if (checkMove(pawn)) {
-            // Mossa legale, procedo allo scambio
-            swapper(currentSelection, tmp);
-
-            // Faccio ripartire il prossimo turno
-            movingPawnState = 'ready'
-            if (turn == 'white') {
-                movesWhite += 1;
-                turn = 'black';
-            }
-            else {
-                movesBlack += 1;
-                turn = 'white';
-            }
-            // Dai il turno all'altro player
+        // Scelta della pedina
+        if (movingPawnState == 'ready' && choosenRightPawn(pawn)) {
+            //coloro la casella del  che ho selezionato
+            $(pawn).css("background-color", "purple");//COLORE
+            currentSelection = pawn;
+            movingPawnState = 'waiting';
+            //highLightChoices(pawn);
         }
-        resetColor();
+
+        // Scelta del movimento
+        else if (movingPawnState == 'waiting') {
+            //console.log(pawn);
+            var tmp = pawn;
+            if (checkMove(pawn)) {
+                // Mossa legale, procedo allo scambio
+                swapper(currentSelection, tmp);
+
+                // Faccio ripartire il prossimo turno
+                movingPawnState = 'ready'
+                if (turn == 'white') {
+                    movesWhite += 1;
+                    turn = 'black';
+                }
+                else {
+                    movesBlack += 1;
+                    turn = 'white';
+                }
+                // Dai il turno all'altro player
+            }
+            resetColor();
+        }
+        matrixBuilderPosition();
+        matrixBuilderTypeOfPawn();
+        console.log(boardMatrixPosition);
+        console.log(boardMatrixTypeOfPawn);
     }
-    matrixBuilderPosition();
-    matrixBuilderTypeOfPawn();
-    console.log(boardMatrixPosition);
-    console.log(boardMatrixTypeOfPawn);
-}
 
 }
 
@@ -388,13 +369,10 @@ function checkMove(pawn) {
         currentSelection = null;
         movingPawnState = 'ready';
         resetChessBoard(pawn.className.slice(0, 5));
-        if(descoveryTypeOfPieces(pawn)==6){
-            if(pawn.className.slice(0, 5) == 'white'){
-                $(pawn).removeClass('whitepawn').addClass('whitePawn');
-            }else{
-                $(pawn).removeClass('blackpawn').addClass('blackPawn');
-            }
-            
+        if (descoveryTypeOfPieces(pawn) == 6) {
+            // rimetto la classe che dovrebbe avere il pawn alla prima mossa quando banalmente il giocatore sceglie di cambiare mossa
+            if (pawn.className.slice(0, 5) == 'white') { $(pawn).removeClass('whitepawn').addClass('whitePawn'); }
+            else { $(pawn).removeClass('blackpawn').addClass('blackPawn'); }
         }
         return false;
     }
@@ -418,52 +396,53 @@ function checkMove(pawn) {
     }
 
     // Impossibile andare sopra ad un altro pedone dello stesso colore
-    if (pawn.className == currentSelection.className) {
+    if (pawn.className.slice(0, 5) == currentSelection.className.slice(0, 5)) {
         console.log("Vietato scambiare pedine");
         resetChessBoard(pawn.className.slice(0, 5));
         movingPawnState = 'ready';
-        if(descoveryTypeOfPieces(pawn)==6){
-            if(pawn.className.slice(0, 5) == 'white'){
-                $(pawn).removeClass('whitepawn').addClass('whitePawn');
-            }else{
-                $(pawn).removeClass('blackpawn').addClass('BlackPawn');
-            }
-            
+        if (descoveryTypeOfPieces(pawn) == 6) {
+            // rimetto la classe che dovrebbe avere il pawn alla prima mossa quando banalmente il giocatore sbaglia mossa
+            if (pawn.className.slice(0, 5) == 'white') { $(pawn).removeClass('whitepawn').addClass('whitePawn'); }
+            else { $(pawn).removeClass('blackpawn').addClass('BlackPawn'); }
         }
         return false;
     }
+
     if (turn == 'black') { resetChessBoard('white'); }
     else { resetChessBoard('black'); }
+
     // Movimento a vuoto, accettabile.
 
 
     return true;
 }
 
-function resetColor(){
-    var whiteQuad=[];
-    var blackQuad=[];
+// funzione per colorare le caselle della scacchiera
+//non ce tanto da dire
+function resetColor() {
+    var whiteQuad = [];
+    var blackQuad = [];
     var sup;
     for (let i = 0; i < 8; i++) {
-        if(i%2==0){
-            for (let j = 0; j < 8 ;j++) {
-              if(j%2==0){
-                sup = getLetterGivenAxisX(i) + getLetterGivenAxisY(j)
-                blackQuad.push(sup);
-              }else{
-                sup = getLetterGivenAxisX(i) + getLetterGivenAxisY(j)
-                whiteQuad.push(sup);
-              }
+        if (i % 2 == 0) {
+            for (let j = 0; j < 8; j++) {
+                if (j % 2 == 0) {
+                    sup = getLetterGivenAxisX(i) + getLetterGivenAxisY(j)
+                    blackQuad.push(sup);
+                } else {
+                    sup = getLetterGivenAxisX(i) + getLetterGivenAxisY(j)
+                    whiteQuad.push(sup);
+                }
             }
-        }else{
-            for (let j = 0; j < 8 ;j++) {
-              if(j%2==0){
-                sup = getLetterGivenAxisX(i) + getLetterGivenAxisY(j)
-                whiteQuad.push(sup);
-              }else{
-                sup = getLetterGivenAxisX(i) + getLetterGivenAxisY(j) 
-                blackQuad.push(sup);
-              }
+        } else {
+            for (let j = 0; j < 8; j++) {
+                if (j % 2 == 0) {
+                    sup = getLetterGivenAxisX(i) + getLetterGivenAxisY(j)
+                    whiteQuad.push(sup);
+                } else {
+                    sup = getLetterGivenAxisX(i) + getLetterGivenAxisY(j)
+                    blackQuad.push(sup);
+                }
             }
         }
     }
@@ -471,17 +450,17 @@ function resetColor(){
         row = chessBoard.rows[i];
         for (let j = 0; j < 8; j++) {
             for (let k = 0; k < blackQuad.length; k++) {
-            if(row.cells[j].id == blackQuad[k]){
-                $(row.cells[j]).css("background-color", "green");//COLORE
-            }else if(row.cells[j].id==whiteQuad[k]){
-                $(row.cells[j]).css("background-color", "antiquewhite");//COLORE
-            } 
+                if (row.cells[j].id == blackQuad[k]) {
+                    $(row.cells[j]).css("background-color", "green");//COLORE
+                } else if (row.cells[j].id == whiteQuad[k]) {
+                    $(row.cells[j]).css("background-color", "antiquewhite");//COLORE
+                }
             }
-            
+
         }
     }
 }
-
+//funzione che permette a giocare solo a chi ha il turno
 function resetChessBoard(colorPawn) {
     for (let i = 0; i < 8; i++) {
         row = chessBoard.rows[i];
@@ -526,12 +505,7 @@ function moveBishop(pawn) {
     for (let i = 0; i < 8; i++) {
         if (xUso >= 8 || yUso >= 8) { i = 9; } else {//controllo che le mosse siano fattibili per la pedina 
             sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
-            validMove.push(sup);
-            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') {
-                i = 9;
-                console.log('polkaholica')
-            }
-
+            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') { i = 9; } //controllo che la casella sia vuota
             yUso++;
             xUso++;  //lo faccio muovere in diagonale 
         }
@@ -547,11 +521,7 @@ function moveBishop(pawn) {
         } else {
             sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
             validMove.push(sup);
-            console.log(sup)
-            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') {
-                i = 9;
-                console.log('polkaholica')
-            }
+            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') { i = 9; }
             yUso--;
             xUso++;
         }
@@ -563,11 +533,7 @@ function moveBishop(pawn) {
         if (xUso < 0 || yUso >= 8) { i = 9; } else {
             sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
             validMove.push(sup);
-            console.log(sup)
-            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') {
-                i = 9;
-                console.log('polkaholica')
-            }
+            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') { i = 9; }
             yUso++;
             xUso--;
         }
@@ -579,16 +545,11 @@ function moveBishop(pawn) {
         if (xUso < 0 || yUso < 0) { i = 9; } else {
             sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
             validMove.push(sup);
-            console.log(sup)
-            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') {
-                i = 9;
-                console.log('polkaholica')
-            }
+            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') { i = 9; }
             yUso--;
             xUso--;
         }
     }
-
     vvalidMove(validMove, pawn)
     return validMove;
 }
@@ -611,12 +572,7 @@ function moveRook(pawn) {
         if (xUso == 8) { i = 9; } else {//controllo che le mosse siano fattibili per la pedina
             sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
             validMove.push(sup);
-            console.log(sup);
-            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') {
-                i = 9;
-                console.log('polkaholica')
-            }
-
+            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') { i = 9; }
             xUso++;  //lo faccio muovere una posizione in più sull'asse x 
         }
     }
@@ -628,12 +584,7 @@ function moveRook(pawn) {
         if (xUso < 0) { i = 9; } else {//controllo che le mosse siano fattibili per la pedina DEVO TENERE CONTO ANCHE DELLO 0
             sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
             validMove.push(sup);
-            console.log(sup);
-            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') {
-                i = 9;
-                console.log('polkaholica')
-            }
-
+            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') { i = 9; }
             xUso--;  //lo faccio muovere di una posizione in meno sull'asse x 
         }
     }
@@ -645,12 +596,7 @@ function moveRook(pawn) {
         if (yUso == 8) { i = 9; } else {//controllo che le mosse siano fattibili per la pedina
             sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
             validMove.push(sup);
-            console.log(sup);
-            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') {
-                i = 9;
-                console.log('polkaholica')
-            }
-
+            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') { i = 9; }
             yUso++; //lo faccio muovere di una posizione in più sull'asse y
         }
     }
@@ -662,12 +608,7 @@ function moveRook(pawn) {
         if (yUso <= 0) { i = 9; } else {//controllo che le mosse siano fattibili per la pedina
             sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
             validMove.push(sup);
-            console.log(sup);
-            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') {
-                i = 9;
-                console.log('polkaholica')
-            }
-
+            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') { i = 9; }
             yUso--; //lo faccio muovere una posizione in meno sull'asse y 
         }
     }
@@ -770,8 +711,8 @@ function moveKnight(pawn) {
 }
 
 function moveQueen(pawn) {
-    var validMoveV1=moveBishop(pawn)
-    var validMoveV2=moveRook(pawn)
+    var validMoveV1 = moveBishop(pawn)
+    var validMoveV2 = moveRook(pawn)
     for (let index = 0; index < validMoveV1.length; index++) {
         validMoveV2.push(validMoveV1[index])
     }
@@ -813,15 +754,24 @@ function moveKing(pawn) {
     return validMove;
 }
 
+/*
+piccolo remember 
+(descoveryTypeOfPieces(pawn) == 1 ROOK
+(descoveryTypeOfPieces(pawn) == 2 BISHOP
+(descoveryTypeOfPieces(pawn) == 3 KNIGHT
+(descoveryTypeOfPieces(pawn) == 4 QUEEN
+(descoveryTypeOfPieces(pawn) == 5 KING
+(descoveryTypeOfPieces(pawn) == 6 PAWN
+(descoveryTypeOfPieces(pawn) == 0 EMPTY
+*/
+
 function supValue(positionOfMOve,) { }
 
 function valueOfOneMove(hypoteticalPosition, pawn) {
     var x = reversedGetLetterGivenAxisX(hypoteticalPosition.slice(0, 1));//parte letteraria
     var y = reversedGetLetterGivenAxisY(hypoteticalPosition.slice(1, 2));//parte numerica
-    var valueOfMove;
+    var valueOfMove = 0;
     var sup;
-
-
 
     //controllo che la casella sia dell'avversario
     if (boardMatrixTypeOfPawn[x][y].slice(0, 5) == colorPlayer) {
@@ -829,212 +779,225 @@ function valueOfOneMove(hypoteticalPosition, pawn) {
         for (let i = 0; i < 8; i++) {
             row = chessBoard.rows[i];
             for (let j = 0; j < 8; j++) {
-                if (hypoteticalPosition == row.cells[j].id) { sup = row.cells[j] }
+                console.log(row.cells[j].id)
+                if (hypoteticalPosition == row.cells[j].id) {
+                    sup = row.cells[j]
+                    
+                    //in base al mio tipo di pedina cambiera il valore
+                    if (descoveryTypeOfPieces(pawn) == 1) {
+                        //in base da che pedina ha l'avversario in quella casella il valroe cambia
+                        if (descoveryTypeOfPieces(sup) == 1) {
+                            //controllo il colore che ha la cpu perche il valore cambiera
+                            if (colorCpu == 'white') { valueOfMove = rookEvalWhite[x][y] + 50 }
+                            else { valueOfMove = rookEvalBlack[x][y] + 50 }
+                        }
 
-                //in base al mio tipo di pedina cambiera il valore
-                if (descoveryTypeOfPieces(pawn) == 1) {
-                    //in base da che pedina ha l'avversario in quella casella il valroe cambia
-                    if (descoveryTypeOfPieces(sup) == 1) {
-                        //controllo il colore che ha la cpu perche il valore cambiera
-                        if (colorCpu == 'white') { valueOfMove = rookEvalWhite[x][y] + 50 }
-                        else { valueOfMove = rookEvalBlack[x][y] + 50 }
+                        if (descoveryTypeOfPieces(sup) == 2 || descoveryTypeOfPieces(sup) == 3) {
+                            if (colorCpu == 'white') { valueOfMove = rookEvalWhite[x][y] + 30 }
+                            else { valueOfMove = rookEvalBlack[x][y] + 30 }
+                        }
+
+                        if (descoveryTypeOfPieces(sup) == 4) {
+                            if (colorCpu == 'white') { valueOfMove = rookEvalWhite[x][y] + 90 }
+                            else { valueOfMove = rookEvalBlack[x][y] + 90 }
+                        }
+
+                        if (descoveryTypeOfPieces(sup) == 5) {
+                            if (colorCpu == 'white') { valueOfMove = rookEvalWhite[x][y] + 900 }
+                            else { valueOfMove = rookEvalBlack[x][y] + 900 }
+                        }
+
+                        if (descoveryTypeOfPieces(sup) == 6) {
+                            if (colorCpu == 'white') { valueOfMove = rookEvalWhite[x][y] + 10 }
+                            else { valueOfMove = rookEvalBlack[x][y] + 10 }
+                        }
+
+                        if (descoveryTypeOfPieces(sup) == 0) {
+                            if (colorCpu == 'white') { valueOfMove = rookEvalWhite[x][y] }
+                            else { valueOfMove = rookEvalBlack[x][y] }
+                        }
                     }
+                    else if (descoveryTypeOfPieces(pawn) == 2) {
+                        if (descoveryTypeOfPieces(sup) == 1) {
+                            //controllo il colore che ha la cpu perche il valore cambiera
+                            if (colorCpu == 'white') { valueOfMove = bishopEvalWhite[x][y] + 50 }
+                            else { valueOfMove = bishopEvalBlack[x][y] + 50 }
+                        }
+                        if (descoveryTypeOfPieces(sup) == 2 || descoveryTypeOfPieces(sup) == 3) {
+                            if (colorCpu == 'white') { valueOfMove = bishopEvalWhite[x][y] + 30 }
+                            else { valueOfMove = bishopEvalBlack[x][y] + 30 }
+                        }
 
-                    if (descoveryTypeOfPieces(sup) == 2) {
-                        if (colorCpu == 'white') { valueOfMove = rookEvalWhite[x][y] + 30 }
-                        else { valueOfMove = rookEvalBlack[x][y] + 30 }
-                    }
+                        if (descoveryTypeOfPieces(sup) == 4) {
+                            if (colorCpu == 'white') { valueOfMove = bishopEvalWhite[x][y] + 90 }
+                            else { valueOfMove = bishopEvalBlack[x][y] + 90 }
+                        }
 
-                    if (descoveryTypeOfPieces(sup) == 3) {
-                        if (colorCpu == 'white') { valueOfMove = rookEvalWhite[x][y] + 30 }
-                        else { valueOfMove = rookEvalBlack[x][y] + 30 }
-                    }
+                        if (descoveryTypeOfPieces(sup) == 5) {
+                            if (colorCpu == 'white') { valueOfMove = bishopEvalWhite[x][y] + 900 }
+                            else { valueOfMove = bishopEvalBlack[x][y] + 900 }
+                        }
 
-                    if (descoveryTypeOfPieces(sup) == 4) {
-                        if (colorCpu == 'white') { valueOfMove = rookEvalWhite[x][y] + 90 }
-                        else { valueOfMove = rookEvalBlack[x][y] + 90 }
-                    }
+                        if (descoveryTypeOfPieces(sup) == 6) {
+                            if (colorCpu == 'white') { valueOfMove = bishopEvalWhite[x][y] + 10 }
+                            else { valueOfMove = bishopEvalBlack[x][y] + 10 }
+                        }
+                        if (descoveryTypeOfPieces(sup) == 0) {
+                            if (colorCpu == 'white') { valueOfMove = bishopEvalWhite[x][y] }
+                            else { valueOfMove = bishopEvalBlack[x][y] }
+                        }
 
-                    if (descoveryTypeOfPieces(sup) == 5) {
-                        if (colorCpu == 'white') { valueOfMove = rookEvalWhite[x][y] + 900 }
-                        else { valueOfMove = rookEvalBlack[x][y] + 900 }
-                    }
+                    } else if (descoveryTypeOfPieces(pawn) == 3) {
+                        //valore mossa del cavallo 
+                        if (descoveryTypeOfPieces(sup) == 1) { valueOfMove = KnightEval[x][y] + 50 }
+                        if (descoveryTypeOfPieces(sup) == 2) { valueOfMove = KnightEval[x][y] + 30 }
+                        if (descoveryTypeOfPieces(sup) == 3) { valueOfMove = KnightEval[x][y] + 30 }
+                        if (descoveryTypeOfPieces(sup) == 4) { valueOfMove = KnightEval[x][y] + 90 }
+                        if (descoveryTypeOfPieces(sup) == 5) { valueOfMove = KnightEval[x][y] + 900 }
+                        if (descoveryTypeOfPieces(sup) == 6) { valueOfMove = KnightEval[x][y] + 10 }
+                        if (descoveryTypeOfPieces(sup) == 0) { valueOfMove = KnightEval[x][y] }
 
-                    if (descoveryTypeOfPieces(sup) == 6) {
-                        if (colorCpu == 'white') { valueOfMove = rookEvalWhite[x][y] + 10 }
-                        else { valueOfMove = rookEvalBlack[x][y] + 10 }
+                    } else if (descoveryTypeOfPieces(pawn) == 4) {
+                        //valore mossa della regina
+                        if (descoveryTypeOfPieces(sup) == 1) { valueOfMove = queenEval[x][y] + 50 }
+                        if (descoveryTypeOfPieces(sup) == 2) { valueOfMove = queenEval[x][y] + 30 }
+                        if (descoveryTypeOfPieces(sup) == 3) { valueOfMove = queenEval[x][y] + 30 }
+                        if (descoveryTypeOfPieces(sup) == 4) { valueOfMove = queenEval[x][y] + 90 }
+                        if (descoveryTypeOfPieces(sup) == 5) { valueOfMove = queenEval[x][y] + 900 }
+                        if (descoveryTypeOfPieces(sup) == 6) { valueOfMove = queenEval[x][y] + 10 }
+                        if (descoveryTypeOfPieces(sup) == 0) { valueOfMove = queenEval[x][y] }
+
+                    } else if (descoveryTypeOfPieces(pawn) == 5) {
+                        if (descoveryTypeOfPieces(sup) == 1) {
+                            //controllo il colore che ha la cpu perche il valore cambiera
+                            if (colorCpu == 'white') { valueOfMove = KingEvalWhite[x][y] + 50 }
+                            else { valueOfMove = KingEvalBlack[x][y] + 50 }
+                        }
+
+                        if (descoveryTypeOfPieces(sup) == 2 || descoveryTypeOfPieces(sup) == 3) {
+                            if (colorCpu == 'white') { valueOfMove = KingEvalWhite[x][y] + 30 }
+                            else { valueOfMove = KingEvalBlack[x][y] + 30 }
+                        }
+
+                        if (descoveryTypeOfPieces(sup) == 4) {
+                            if (colorCpu == 'white') { valueOfMove = KingEvalWhite[x][y] + 90 }
+                            else { valueOfMove = KingEvalBlack[x][y] + 90 }
+                        }
+
+                        if (descoveryTypeOfPieces(sup) == 5) {
+                            if (colorCpu == 'white') { valueOfMove = KingEvalWhite[x][y] + 900 }
+                            else { valueOfMove = KingEvalBlack[x][y] + 900 }
+                        }
+
+                        if (descoveryTypeOfPieces(sup) == 6) {
+                            if (colorCpu == 'white') { valueOfMove = KingEvalWhite[x][y] + 10 }
+                            else { valueOfMove = KingEvalBlack[x][y] + 10 }
+                        }
+                        if (descoveryTypeOfPieces(sup) == 0) {
+                            if (colorCpu == 'white') { valueOfMove = KingEvalWhite[x][y] }
+                            else { valueOfMove = KingEvalBlack[x][y] }
+
+                        }
+                    } else if (descoveryTypeOfPieces(pawn) == 6) {
+                        if (descoveryTypeOfPieces(sup) == 1) {
+                            //controllo il colore che ha la cpu perche il valore cambiera
+                            if (colorCpu == 'white') { valueOfMove = pawnEvalWhite[x][y] + 50 }
+                            else { valueOfMove = pawnEvalBlack[x][y] + 50 }
+                        }
+
+                        if (descoveryTypeOfPieces(sup) == 2 || descoveryTypeOfPieces(sup) == 3) {
+                            if (colorCpu == 'white') { valueOfMove = pawnEvalWhite[x][y] + 30 }
+                            else { valueOfMove = pawnEvalBlack[x][y] + 30 }
+                        }
+                        if (descoveryTypeOfPieces(sup) == 4) {
+                            if (colorCpu == 'white') { valueOfMove = pawnEvalWhite[x][y] + 90 }
+                            else { valueOfMove = pawnEvalBlack[x][y] + 90 }
+                        }
+
+                        if (descoveryTypeOfPieces(sup) == 5) {
+                            if (colorCpu == 'white') { valueOfMove = pawnEvalWhite[x][y] + 900 }
+                            else { valueOfMove = pawnEvalBlack[x][y] + 900 }
+                        }
+
+                        if (descoveryTypeOfPieces(sup) == 6) {
+                            if (colorCpu == 'white') { valueOfMove = pawnEvalWhite[x][y] + 10 }
+                            else { valueOfMove = pawnEvalBlack[x][y] + 10 }
+                        }
+
+                        if (descoveryTypeOfPieces(sup) == 0) {
+                            if (colorCpu == 'white') { valueOfMove = pawnEvalWhite[x][y] }
+                            else { valueOfMove = pawnEvalBlack[x][y] }
+                        }
                     }
                 }
-            }
-
-        }
-
-        if (descoveryTypeOfPieces(pawn) == 2) {
-            if (descoveryTypeOfPieces(sup) == 1) {
-                //controllo il colore che ha la cpu perche il valore cambiera
-                if (colorCpu == 'white') { valueOfMove = bishopEvalWhite[x][y] + 50 }
-                else { valueOfMove = bishopEvalBlack[x][y] + 50 }
-            }
-            if (descoveryTypeOfPieces(sup) == 2) {
-                if (colorCpu == 'white') { valueOfMove = bishopEvalWhite[x][y] + 30 }
-                else { valueOfMove = bishopEvalBlack[x][y] + 30 }
-            }
-
-            if (descoveryTypeOfPieces(sup) == 3) {
-                if (colorCpu == 'white') { valueOfMove = bishopEvalWhite[x][y] + 30 }
-                else { valueOfMove = bishopEvalBlack[x][y] + 30 }
-            }
-
-            if (descoveryTypeOfPieces(sup) == 4) {
-                if (colorCpu == 'white') { valueOfMove = bishopEvalWhite[x][y] + 90 }
-                else { valueOfMove = bishopEvalBlack[x][y] + 90 }
-            }
-
-            if (descoveryTypeOfPieces(sup) == 5) {
-                if (colorCpu == 'white') { valueOfMove = bishopEvalWhite[x][y] + 900 }
-                else { valueOfMove = bishopEvalBlack[x][y] + 900 }
-            }
-
-            if (descoveryTypeOfPieces(sup) == 6) {
-                if (colorCpu == 'white') { valueOfMove = bishopEvalWhite[x][y] + 10 }
-                else { valueOfMove = bishopEvalBlack[x][y] + 10 }
+                return valueOfMove;
             }
         }
     }
-    if (descoveryTypeOfPieces(pawn) == 3) {
-        //valore mossa del cavallo 
-        if (descoveryTypeOfPieces(sup) == 1) { valueOfMove = KnightEval[x][y] + 50 }
-        if (descoveryTypeOfPieces(sup) == 2) { valueOfMove = KnightEval[x][y] + 30 }
-        if (descoveryTypeOfPieces(sup) == 3) { valueOfMove = KnightEval[x][y] + 30 }
-        if (descoveryTypeOfPieces(sup) == 4) { valueOfMove = KnightEval[x][y] + 90 }
-        if (descoveryTypeOfPieces(sup) == 5) { valueOfMove = KnightEval[x][y] + 900 }
-        if (descoveryTypeOfPieces(sup) == 6) { valueOfMove = KnightEval[x][y] + 10 }
-    }
-    if (descoveryTypeOfPieces(pawn) == 4) {
-        //valore mossa della regina
-        if (descoveryTypeOfPieces(sup) == 1) { valueOfMove = queenEval[x][y] + 50 }
-        if (descoveryTypeOfPieces(sup) == 2) { valueOfMove = queenEval[x][y] + 30 }
-        if (descoveryTypeOfPieces(sup) == 3) { valueOfMove = queenEval[x][y] + 30 }
-        if (descoveryTypeOfPieces(sup) == 4) { valueOfMove = queenEval[x][y] + 90 }
-        if (descoveryTypeOfPieces(sup) == 5) { valueOfMove = queenEval[x][y] + 900 }
-        if (descoveryTypeOfPieces(sup) == 6) { valueOfMove = queenEval[x][y] + 10 }
-    }
-    if (descoveryTypeOfPieces(pawn) == 5) {
-        if (descoveryTypeOfPieces(sup) == 1) {
-            //controllo il colore che ha la cpu perche il valore cambiera
-            if (colorCpu == 'white') { valueOfMove = KingEvalWhite[x][y] + 50 }
-            else { valueOfMove = KingEvalBlack[x][y] + 50 }
-        }
-
-        if (descoveryTypeOfPieces(sup) == 2) {
-            if (colorCpu == 'white') { valueOfMove = KingEvalWhite[x][y] + 30 }
-            else { valueOfMove = KingEvalBlack[x][y] + 30 }
-        }
-
-        if (descoveryTypeOfPieces(sup) == 3) {
-            if (colorCpu == 'white') { valueOfMove = KingEvalWhite[x][y] + 30 }
-            else { valueOfMove = KingEvalBlack[x][y] + 30 }
-        }
-
-        if (descoveryTypeOfPieces(sup) == 4) {
-            if (colorCpu == 'white') { valueOfMove = KingEvalWhite[x][y] + 90 }
-            else { valueOfMove = KingEvalBlack[x][y] + 90 }
-        }
-
-        if (descoveryTypeOfPieces(sup) == 5) {
-            if (colorCpu == 'white') { valueOfMove = KingEvalWhite[x][y] + 900 }
-            else { valueOfMove = KingEvalBlack[x][y] + 900 }
-        }
-
-        if (descoveryTypeOfPieces(sup) == 6) {
-            if (colorCpu == 'white') { valueOfMove = KingEvalWhite[x][y] + 10 }
-            else { valueOfMove = KingEvalBlack[x][y] + 10 }
-        }
-    }
-    if (descoveryTypeOfPieces(pawn) == 6) {
-        if (descoveryTypeOfPieces(sup) == 1) {
-            //controllo il colore che ha la cpu perche il valore cambiera
-            if (colorCpu == 'white') { valueOfMove = pawnEvalWhite[x][y] + 50 }
-            else { valueOfMove = pawnEvalBlack[x][y] + 50 }
-        }
-
-        if (descoveryTypeOfPieces(sup) == 2) {
-            if (colorCpu == 'white') { valueOfMove = pawnEvalWhite[x][y] + 30 }
-            else { valueOfMove = pawnEvalBlack[x][y] + 30 }
-        }
-
-        if (descoveryTypeOfPieces(sup) == 3) {
-            if (colorCpu == 'white') { valueOfMove = pawnEvalWhite[x][y] + 30 }
-            else { valueOfMove = pawnEvalBlack[x][y] + 30 }
-        }
-
-        if (descoveryTypeOfPieces(sup) == 4) {
-            if (colorCpu == 'white') { valueOfMove = pawnEvalWhite[x][y] + 90 }
-            else { valueOfMove = pawnEvalBlack[x][y] + 90 }
-        }
-
-        if (descoveryTypeOfPieces(sup) == 5) {
-            if (colorCpu == 'white') { valueOfMove = pawnEvalWhite[x][y] + 900 }
-            else { valueOfMove = pawnEvalBlack[x][y] + 900 }
-        }
-
-        if (descoveryTypeOfPieces(sup) == 6) {
-            if (colorCpu == 'white') { valueOfMove = pawnEvalWhite[x][y] + 10 }
-            else { valueOfMove = pawnEvalBlack[x][y] + 10 }
-        }
-    }
-    return valueOfMove;
 }
 
+    function cpuMove() {
+        //ARRAY TRIDIMENSIONALE MI SA 
+        //[TIPO_PEDINA]-[POSIZIONE ATTUALE]-[[MOSSA1,MOSSA2,MOSSA3,ETC]]-[[VALOREMOSSA1,VALOREMOSSA2,VALOREMOSSA3,ETC]]
+        var hypoteticalMove = [[[]]];
+        var typeOfPieces = [];
+        var idOfPieces = [];
+        var moveOfOnePieces = [];
+        var moves = [[]];
+        var indexOfMovesAndValueOfMove = 0;
+        var valueOfMove = [[]];
 
-function cpuMove() {
-    //ARRAY TRIDIMENSIONALE MI SA 
-    //[TIPO_PEDINA]-[POSIZIONE ATTUALE]-[[MOSSA1,MOSSA2,MOSSA3,ETC]]-[[VALOREMOSSA1,VALOREMOSSA2,VALOREMOSSA3,ETC]]
-    var hypoteticalMove = [[[]]];
-    var typeOfPieces = [];
-    var idOfPieces = [];
-    var moveOfOnePieces=[];
-    var moves = [[]];
-    var indexOfMovesAndValueOfMove = 0;
-    var valueOfMove = [[]];
-
-    for (let i = 0; i < 8; i++) {
-        row = chessBoard.rows[i];
-        for (let j = 0; j < 8; j++) {
-            if (row.cells[j].className.slice(0, 5) == colorCpu) {
-                typeOfPieces.push(row.cells[j].className);
-                idOfPieces.push(row.cells[j].id);
-                if (descoveryTypeOfPieces(row.cells[j]) == 1) {
-                    moveOfOnePieces = moveRook(row.cells[j])
-                }
-                if (descoveryTypeOfPieces(row.cells[j]) == 2) {
-                    moveOfOnePieces = moveBishop(row.cells[j])
-                }
-                if (descoveryTypeOfPieces(row.cells[j]) == 3) {
-                    moveOfOnePieces = moveKnight(row.cells[j])
-                }
-                if (descoveryTypeOfPieces(row.cells[j]) == 4) {
-                    moveOfOnePieces = moveQueen(row.cells[j])
-                }
-                if (descoveryTypeOfPieces(row.cells[j]) == 5) {
-                    moveOfOnePieces = moveKing(row.cells[j])
-                }
-                if (descoveryTypeOfPieces(row.cells[j]) == 6) {
-                    moveOfOnePieces = movePawn(row.cells[j])
-                }
-                for (let k = 0; k < moveOfOnePieces.length; k++) {
-
-                    moves[indexOfMovesAndValueOfMove].push(moveOfOnePieces[k])
-                    valueOfMove[indexOfMovesAndValueOfMove].push(valueOfMove(moveOfOnePieces[k],row.cells[j]))
-                    console.log(valueOfMove(moveOfOnePieces[k],row.cells[j]))
-                    if (k == moveOfOnePieces.length - 1) {
-                        indexOfMovesAndValueOfMove++;
+        for (let i = 0; i < 8; i++) {
+            row = chessBoard.rows[i];
+            for (let j = 0; j < 8; j++) {
+                if (row.cells[j].className.slice(0, 5) == colorCpu) {
+                    console.log(descoveryTypeOfPieces(row.cells[j]))
+                    typeOfPieces.push(row.cells[j].className);
+                    idOfPieces.push(row.cells[j].id);
+                    if (descoveryTypeOfPieces(row.cells[j]) == 1) {
+                        moveOfOnePieces = moveRook(row.cells[j])
+                    }
+                    if (descoveryTypeOfPieces(row.cells[j]) == 2) {
+                        moveOfOnePieces = moveBishop(row.cells[j])
+                    }
+                    if (descoveryTypeOfPieces(row.cells[j]) == 3) {
+                        moveOfOnePieces = moveKnight(row.cells[j])
+                    }
+                    if (descoveryTypeOfPieces(row.cells[j]) == 4) {
+                        moveOfOnePieces = moveQueen(row.cells[j])
+                    }
+                    if (descoveryTypeOfPieces(row.cells[j]) == 5) {
+                        moveOfOnePieces = moveKing(row.cells[j])
+                    }
+                    if (descoveryTypeOfPieces(row.cells[j]) == 6) {
+                        for (let l = 0; l < movePawn(row.cells[j]).length; l++) {
+                            moveOfOnePieces.push(movePawn(row.cells[j])[l])
+                        }
+                      
+                    }
+ 
+                    for (let k = 0; k < moveOfOnePieces.length; k++) {
+                        console.log(moveOfOnePieces[k])
+                        moves[indexOfMovesAndValueOfMove].push(moveOfOnePieces[k])
+                        valueOfMove[indexOfMovesAndValueOfMove].push(valueOfOneMove(moveOfOnePieces[k], row.cells[j]))
+                        console.log(typeof(valueOfOneMove(moveOfOnePieces[k], row.cells[j])))
+                        if (k == moveOfOnePieces.length - 1) {
+                            indexOfMovesAndValueOfMove++;
+                        }
                     }
                 }
             }
         }
+
+
     }
 
-
-}
-
+/*
+                   Uncaught TypeError: Cannot read properties of undefined (reading 'className')
+   at descoveryTypeOfPieces (cpuGame.js:289:14)
+   at valueOfOneMove (cpuGame.js:786:25)
+   at cpuMove (cpuGame.js:999:66)
+   at move (cpuGame.js:302:9)
+   at HTMLTableCellElement.onclick (cpuGame.html:120:68)
+   PORCA TROIASFAIOSDFIA-=HAJSDKFGHADYUJSURGFUIQWKADESHERFOIASDGHFHJUKSAG
+                   */
