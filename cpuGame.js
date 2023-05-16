@@ -310,8 +310,18 @@ function descoveryTypeOfPiecesWithClassName(className) {
 
 // Funzione chiamata ogni volta che viene premuto un elemento nella scacchiera
 function move(pawn) {
+    
     if (turn == colorCpu) {
         cpuMove();
+        if (turn == 'white') {
+            movesWhite += 1;
+            turn = 'black';
+        }
+        else {
+            movesBlack += 1;
+            turn = 'white';
+        }
+
     } else {
         //Problema a trovare il tipo del pe4zzo
         if (descoveryTypeOfPieces(pawn) == 1) { moveRook(pawn) }
@@ -363,7 +373,6 @@ function move(pawn) {
 
 // Funzione per capire se e' stata scelta all'inizio una pedina del player corretto
 function choosenRightPawn(pawn) {
-    console.log(pawn.className);
     if (pawn.className.slice(0, 5) == 'white' && turn == 'white') return true;
     if (pawn.className.slice(0, 5) == 'black' && turn == 'black') return true;
     console.log("Non e' una tua pedina");
@@ -374,7 +383,7 @@ function choosenRightPawn(pawn) {
 function checkMove(pawn) {
     // la ricoloro del colore originario
     // currentSelection per riferirsi alla casella della pedina prima della mossa 
-    $(currentSelection).css("background-color", "antiquewhite");
+    $(currentSelection).css("background-color", "antiquewhite"); 
     // Reset mossa
     if (pawn == currentSelection) {
         console.log("Reset mossa");
@@ -472,6 +481,7 @@ function resetColor() {
         }
     }
 }
+
 //funzione che permette a giocare solo a chi ha il turno
 function resetChessBoard(colorPawn) {
     for (let i = 0; i < 8; i++) {
@@ -676,11 +686,12 @@ function movePawn(pawn) {
 
         if (boardMatrixTypeOfPawn[y - 1][x + 1] != 'empty') {
             sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y - 1);
-            validMove.push(sup);
+
         }
         if (boardMatrixTypeOfPawn[y - 1][x - 1] != 'empty') {
             sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y - 1);
-            validMove.push(sup)
+            if (boardMatrixTypeOfPawn[y - 1][x-1] == 'empty' || boardMatrixTypeOfPawn[y -1][x-1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
+        {validMove.push(sup)}
         }
     }
     vvalidMove(validMove, pawn)
@@ -730,6 +741,7 @@ function moveQueen(pawn) {
     }
     return validMoveV2
 }
+
 function moveKing(pawn) {
     var idRook = pawn.id;
     var x = reversedGetLetterGivenAxisX(idRook.slice(0, 1));//parte letteraria
@@ -739,42 +751,42 @@ function moveKing(pawn) {
     //controllo se il re non si trovi ai confini della scacchiera per vedere le mosse disponibile poi le metto una a una 
     if (x > 1) {
         sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y + 1);
-        if (boardMatrixTypeOfPawn[x - 1][y+1] == 'empty' || boardMatrixTypeOfPawn[x - 1][y+1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
+        if (boardMatrixTypeOfPawn[y+1][x - 1]== 'empty' || boardMatrixTypeOfPawn[y+1][x-1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
         {validMove.push(sup)}
         sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y);
-        if (boardMatrixTypeOfPawn[x - 1][y] == 'empty' || boardMatrixTypeOfPawn[x - 1][y].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
+        if (boardMatrixTypeOfPawn[y][x - 1] == 'empty' || boardMatrixTypeOfPawn[y][x - 1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
         {validMove.push(sup)}
     }
     if (x > 1 && y > 1) {
         sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y - 1);
-        if (boardMatrixTypeOfPawn[x - 1][y-1] == 'empty' || boardMatrixTypeOfPawn[x - 1][y-1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
+        if (boardMatrixTypeOfPawn[y-1][x - 1] == 'empty' || boardMatrixTypeOfPawn[y-1][x - 1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
         {validMove.push(sup)}
     }
     if (y > 1) {
         sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y - 1);
-        if (boardMatrixTypeOfPawn[x + 1][y] == 'empty' || boardMatrixTypeOfPawn[x - 1][y].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
+        if (boardMatrixTypeOfPawn[y][x + 1] == 'empty' || boardMatrixTypeOfPawn[y][x - 1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
         {validMove.push(sup)}
         sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 1);
-        if (boardMatrixTypeOfPawn[x ][y-1] == 'empty' || boardMatrixTypeOfPawn[x ][y-1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
+        if (boardMatrixTypeOfPawn[y-1][x ]== 'empty' || boardMatrixTypeOfPawn[y-1][x ].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
         {validMove.push(sup)}
     }
     if (y < 8) {
         sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 1);
-        if (boardMatrixTypeOfPawn[x][y+1] == 'empty' || boardMatrixTypeOfPawn[x][y+1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
+        if (boardMatrixTypeOfPawn[y+1][x] == 'empty' || boardMatrixTypeOfPawn[y+1][x].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
         {validMove.push(sup)}
     }
     if (x < 8) {
         sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y);
-        if (boardMatrixTypeOfPawn[x + 1][y] == 'empty' || boardMatrixTypeOfPawn[x + 1][y].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
+        if (boardMatrixTypeOfPawn[y][x + 1] == 'empty' || boardMatrixTypeOfPawn[y][x + 1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
         {validMove.push(sup)}
     }
     if (x < 8 && y < 8) {
         sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y + 1);
-        if (boardMatrixTypeOfPawn[x + 1][y+1] == 'empty' || boardMatrixTypeOfPawn[x +1][y+1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
+        if (boardMatrixTypeOfPawn[y+1][x + 1] == 'empty' || boardMatrixTypeOfPawn[y+1][x +1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0,5))) 
         {validMove.push(sup)}
     }
-
     vvalidMove(validMove, pawn)
+    console.log(validMove)
     return validMove;
 }
 
@@ -959,6 +971,30 @@ function valueOfOneMove(hypoteticalPosition, pawn) {
         }
     }
 }
+//metodi per gestire la cosa
+function shamble(num) {
+        var yEE = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+        var yE = [9, 8, 7, 6, 5, 4, 3, 2, 1];
+        var n = 0
+        for (var i = 0; i < 9; i++) {
+            if (num == yEE[i]) {
+                n = yE[i];
+        }
+        return (n);
+    }
+}
+    function shambleV2(num) {
+        var yE = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+        var yEE = [9, 8, 7, 6, 5, 4, 3, 2, 1];
+        var n = 0
+        for (var i = 0; i < 9; i++) {
+            if (num == yEE[i]) {
+                n = yE[i];
+    
+            }
+        }
+        return (n);
+    }
 
 function cpuMove() {
     //ARRAY TRIDIMENSIONALE MI SA 
@@ -974,6 +1010,7 @@ function cpuMove() {
         // PORCA DI QUELLA TROIA 
         // RIGUARDARE GLI ALGORTMI GLI ARRAY DEVONO AVERE SOLO LE CASELLE IN CUI REALMENTE POSSONO ANDARE 
         // Stesso problema tabella flippata
+        // rimessi metodi shamblee shamble v2
     for (let i = 0; i < 8; i++) {
         row = chessBoard.rows[i];
         for (let j = 0; j < 8; j++) {
@@ -982,6 +1019,7 @@ function cpuMove() {
                 typeOfPieces.push(classOfBox);
                 idOfPieces.push(boardMatrixPosition[i][j]);
                 console.log(classOfBox, boardMatrixPosition[i][j])
+
                 if (descoveryTypeOfPiecesWithClassName(classOfBox) == 1) {
                     moveOfOnePieces = moveRook(row.cells[j])
                 }
@@ -999,10 +1037,8 @@ function cpuMove() {
                 }
                 if (descoveryTypeOfPiecesWithClassName(classOfBox) == 6) {
                     moveOfOnePieces = movePawn(row.cells[j])
-                    $(row.cells[j]).removeClass(colorCpu + 'pawn').addClass(colorCpu + 'pawn');
+                    $(row.cells[j]).removeClass(colorCpu + 'pawn').addClass(colorCpu + 'Pawn');
                 }
-
-                console.log(moveOfOnePieces)
             }
         }
 
