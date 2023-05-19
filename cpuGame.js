@@ -297,6 +297,7 @@ function descoveryTypeOfPieces(pawn) {
     else { return 0 }
 
 }
+
 function descoveryTypeOfPiecesWithClassName(className) {
     if (className.slice(5, 9) == "Rook") { return 1; }
     else if (className.slice(5, 9) == "Bish") { return 2; }
@@ -311,18 +312,7 @@ function descoveryTypeOfPiecesWithClassName(className) {
 // Funzione chiamata ogni volta che viene premuto un elemento nella scacchiera
 function move(pawn) {
 
-    if (turn == colorCpu) {
-        cpuMove();
-        if (colorCpu == 'white') {
-            movesWhite += 1;
-            turn = 'black';
-        }
-        else {
-            movesBlack += 1;
-            colorCpu = 'white';
-        }
 
-    } else {
         //Problema a trovare il tipo del pe4zzo
         if (descoveryTypeOfPieces(pawn) == 1) { moveRook(pawn) }
         if (descoveryTypeOfPieces(pawn) == 2) { moveBishop(pawn) }
@@ -351,23 +341,18 @@ function move(pawn) {
 
                 // Faccio ripartire il prossimo turno
                 movingPawnState = 'ready'
-                if (turn == 'white') {
-                    movesWhite += 1;
-                    turn = 'black';
-                }
-                else {
-                    movesBlack += 1;
-                    turn = 'white';
-                }
+               
                 // Dai il turno all'altro player
             }
-            resetColor();
+            cpuMove();
+            resetColor();      
         }
-    }
+    
     matrixBuilderPosition();
     matrixBuilderTypeOfPawn();
     console.log(boardMatrixPosition);
     console.log(boardMatrixTypeOfPawn);
+    
 }
 
 // Funzione per capire se e' stata scelta all'inizio una pedina del player corretto
