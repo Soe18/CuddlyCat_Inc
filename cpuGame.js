@@ -1090,22 +1090,23 @@ function valueOfOneMove(hypoteticalPosition, pawn) {
 
 function moveToCellsTable(theBestMove){
     var row;
+    var row2;
     for (let i = 0; i < 8; i++) {
         row = chessBoard.rows[i];
-        for (let j = 0; j < j; j++) {
-            console.log('polkaholica2')
-            if (row.cells[j].className==theBestMove[1]&& row.cells[j].id==theBestMove[0]){
-                console.log('polkaholica3')
-                for (let k = 0; k < 8; k++) {
-                   if(row.cells[k].id == theBestMove[2]){
-                    swapper(row.cells[j],row.cells[k])
-                    console.log('polkaholica')
-                   }
-                    
+        for (let j = 0; j < 8; j++) {
+                console.log('polkaholica2')
+                if (row.cells[j].className==theBestMove[1]&& row.cells[j].id==theBestMove[0]){
+                    console.log('polkaholica3')
+                    for (let m = 0; m < 8; m++) {
+                        row2 = chessBoard.rows[m];
+                              for (let k = 0; k < 8; k++) {
+                                if(row2.cells[k].id == theBestMove[2]){
+                                    swapper(row.cells[j],row2.cells[k])
+                                    console.log('polkaholica')
+                                }   
+                    }
                 }
-            }
-            
+                }
         }
     }
-
 }
