@@ -313,13 +313,13 @@ function move(pawn) {
 
     if (turn == colorCpu) {
         cpuMove();
-        if (turn == 'white') {
+        if (colorCpu == 'white') {
             movesWhite += 1;
             turn = 'black';
         }
         else {
             movesBlack += 1;
-            turn = 'white';
+            colorCpu = 'white';
         }
 
     } else {
@@ -363,12 +363,11 @@ function move(pawn) {
             }
             resetColor();
         }
-        matrixBuilderPosition();
-        matrixBuilderTypeOfPawn();
-        console.log(boardMatrixPosition);
-        console.log(boardMatrixTypeOfPawn);
     }
-
+    matrixBuilderPosition();
+    matrixBuilderTypeOfPawn();
+    console.log(boardMatrixPosition);
+    console.log(boardMatrixTypeOfPawn);
 }
 
 // Funzione per capire se e' stata scelta all'inizio una pedina del player corretto
@@ -1000,7 +999,6 @@ function valueOfOneMove(hypoteticalPosition, pawn) {
     function cpuMove() {
         //ARRAY TRIDIMENSIONALE MI SA 
         //[TIPO_PEDINA]-[POSIZIONE ATTUALE]-[[MOSSA1,MOSSA2,MOSSA3,ETC]]-[[VALOREMOSSA1,VALOREMOSSA2,VALOREMOSSA3,ETC]]
-        var hypoteticalMove = [[[]]];;
         var moveOfOnePieces = [];
         var moves = [];
         var index = 0;
@@ -1070,33 +1068,44 @@ function valueOfOneMove(hypoteticalPosition, pawn) {
             for (let j = 0; j < sup[2].length; j++) {
                 sup2 = sup[2]
                 sup3 = sup[3]
-                FinalMove[index]=[]
                 FinalMove[index] = [sup[0], sup[1], sup2[j], sup3[j]]
+                index++
             }
          
         }
-        console.log(FinalMove)
-        bubbleSort(FinalMove)
+        FinalMove = findTheBestMove(FinalMove)
+        moveToCellsTable(FinalMove[0])
     }
 
-    function bubbleSort(array){
-        for (let i = 0; i < array.length-1; i++) {
-            // Last i elements are already in place
-            for(var j = 0; j < ( array.length - i -1); j++){
-    
-                // Comparing two adjacent numbers 
-                // and see if first is greater than second
-                if(array[j][3] > array[j+1][3]){
-    
-                // Swap them if the condition is true 
-                var temp = array[j]
-                array[j] = array[j + 1]
-                array[j+1] = temp
+    function findTheBestMove(array){
+        var arraysup=[];
+        array.sort(function(a, b) {
+            return b[3] - a[3];
+            });
+            for (let i = 0; i < 5; i++) {
+                arraysup[i]=array[i];
+            }
+            return arraysup
+    }
+
+function moveToCellsTable(theBestMove){
+    var row;
+    for (let i = 0; i < 8; i++) {
+        row = chessBoard.rows[i];
+        for (let j = 0; j < j; j++) {
+            console.log('polkaholica2')
+            if (row.cells[j].className==theBestMove[1]&& row.cells[j].id==theBestMove[0]){
+                console.log('polkaholica3')
+                for (let k = 0; k < 8; k++) {
+                   if(row.cells[k].id == theBestMove[2]){
+                    swapper(row.cells[j],row.cells[k])
+                    console.log('polkaholica')
+                   }
+                    
                 }
             }
-        
+            
         }
-        
-        // Print the sorted array
-        console.log(array);
     }
+
+}
