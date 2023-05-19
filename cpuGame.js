@@ -77,7 +77,7 @@ var knightEval =
         [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0]
     ];
 
-var bishopEvalBlack  = [
+var bishopEvalBlack = [
     [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0],
     [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0],
     [-1.0, 0.0, 0.5, 1.0, 1.0, 0.5, 0.0, -1.0],
@@ -88,9 +88,9 @@ var bishopEvalBlack  = [
     [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0]
 ];
 
-var bishopEvalWhite = reverseArray(bishopEvalBlack );
+var bishopEvalWhite = reverseArray(bishopEvalBlack);
 
-var rookEvalBlack= [
+var rookEvalBlack = [
     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
     [0.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5],
     [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
@@ -114,7 +114,7 @@ var queenEval = [
     [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0]
 ];
 
-var kingEvalBlack  = [
+var kingEvalBlack = [
     [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
     [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
     [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
@@ -791,42 +791,48 @@ piccolo remember
 (descoveryTypeOfPieces(pawn) == 6 PAWN
 (descoveryTypeOfPieces(pawn) == 0 EMPTY
 */
-function actualValue(pawn){
+function actualValue(pawn) {
     var x = reversedGetLetterGivenAxisX(pawn.id.slice(0, 1));//parte letteraria
     var y = reversedGetLetterGivenAxisY(pawn.id.slice(1, 2))//parte numerica
-    var value=0;
-    if (descoveryTypeOfPieces(pawn) == 1) { 
+    var value = 0;
+    if (descoveryTypeOfPieces(pawn) == 1) {
         if (colorCpu == 'white') { value = rookEvalWhite[x][y] }
-    else { value = rookEvalBlack[x][y] }
- }
-    if (descoveryTypeOfPieces(pawn) == 2) {  if (colorCpu == 'white') { value = bishopEvalWhite[x][y] }
-    else { value = bishopEvalBlack[x][y]}}
-    if (descoveryTypeOfPieces(pawn) == 3) {  value = knightEval[x][y]}
-    if (descoveryTypeOfPieces(pawn) == 4) {  value = queenEval[x][y]}
-    if (descoveryTypeOfPieces(pawn) == 5) {  if (colorCpu == 'white') { value = kingEvalWhite[x][y] }
-    else { value = kingEvalBlack[x][y] }}
-    if (descoveryTypeOfPieces(pawn) == 6) { if (colorCpu == 'white'){ value = pawnEvalWhite[x][y] }
-    else { value = pawnEvalBlack[x][y] }}
- return value
+        else { value = rookEvalBlack[x][y] }
+    }
+    if (descoveryTypeOfPieces(pawn) == 2) {
+        if (colorCpu == 'white') { value = bishopEvalWhite[x][y] }
+        else { value = bishopEvalBlack[x][y] }
+    }
+    if (descoveryTypeOfPieces(pawn) == 3) { value = knightEval[x][y] }
+    if (descoveryTypeOfPieces(pawn) == 4) { value = queenEval[x][y] }
+    if (descoveryTypeOfPieces(pawn) == 5) {
+        if (colorCpu == 'white') { value = kingEvalWhite[x][y] }
+        else { value = kingEvalBlack[x][y] }
+    }
+    if (descoveryTypeOfPieces(pawn) == 6) {
+        if (colorCpu == 'white') { value = pawnEvalWhite[x][y] }
+        else { value = pawnEvalBlack[x][y] }
+    }
+    return value
 }
 
 
 function valueOfOneMove(hypoteticalPosition, pawn) {
     var x = reversedGetLetterGivenAxisX(hypoteticalPosition.slice(0, 1));//parte letteraria
     var y = reversedGetLetterGivenAxisY(hypoteticalPosition.slice(1, 2));//parte numerica
-    var valueOfMove=0;
+    var valueOfMove = 0;
     var sup;
     var row;
-    console.log(hypoteticalPosition, boardMatrixTypeOfPawn[y][x].slice(0,5))
+    console.log(hypoteticalPosition, boardMatrixTypeOfPawn[y][x].slice(0, 5))
     //controllo che la casella sia dell'avversario
-    if (idToClass(hypoteticalPosition).slice(0, 5) != colorCpu){
+    if (idToClass(hypoteticalPosition).slice(0, 5) != colorCpu) {
         //trovo la riga della tabella dellavversario
         for (let i = 0; i < 8; i++) {
             row = chessBoard.rows[i];
             for (var j = 0; j < 8; j++) {
-                
+
                 if (hypoteticalPosition == row.cells[j].id) {
-                    
+
                     sup = row.cells[j]
 
                     //in base al mio tipo di pedina cambiera il valore
@@ -834,146 +840,147 @@ function valueOfOneMove(hypoteticalPosition, pawn) {
                         //in base da che pedina ha l'avversario in quella casella il valroe cambia
                         if (descoveryTypeOfPieces(sup) == 1) {
                             //controllo il colore che ha la cpu perche il valore cambiera
-                            if (colorCpu == 'white') { valueOfMove = rookEvalWhite + 50 [y][x]}
-                            else { valueOfMove = rookEvalBlack[y][x] + 50 }
+                            if (colorCpu == 'white') { return rookEvalWhite + 50[y][x] }
+                            else { return rookEvalBlack[y][x] + 50 }
                         }
 
                         if (descoveryTypeOfPieces(sup) == 2 || descoveryTypeOfPieces(sup) == 3) {
-                            if (colorCpu == 'white') { valueOfMove = rookEvalWhite[y][x] + 30 }
-                            else { valueOfMove = rookEvalBlack[y][x] + 30 }
+                            if (colorCpu == 'white') { return rookEvalWhite[y][x] + 30 }
+                            else { return rookEvalBlack[y][x] + 30 }
                         }
 
                         if (descoveryTypeOfPieces(sup) == 4) {
-                            if (colorCpu == 'white') { valueOfMove = rookEvalWhite[y][x] + 90 }
-                            else { valueOfMove = rookEvalBlack[y][x] + 90 }
+                            if (colorCpu == 'white') { return rookEvalWhite[y][x] + 90 }
+                            else { return rookEvalBlack[y][x] + 90 }
                         }
 
                         if (descoveryTypeOfPieces(sup) == 5) {
-                            if (colorCpu == 'white') { valueOfMove = rookEvalWhite[y][x] + 900 }
-                            else { valueOfMove = rookEvalBlack[y][x] + 900 }
+                            if (colorCpu == 'white') { return rookEvalWhite[y][x] + 900 }
+                            else { return rookEvalBlack[y][x] + 900 }
                         }
 
                         if (descoveryTypeOfPieces(sup) == 6) {
-                            if (colorCpu == 'white') { valueOfMove = rookEvalWhite[y][x] + 10 }
-                            else { valueOfMove = rookEvalBlack[y][x] + 10 }
+                            if (colorCpu == 'white') { return rookEvalWhite[y][x] + 10 }
+                            else { return rookEvalBlack[y][x] + 10 }
                         }
 
                         if (descoveryTypeOfPieces(sup) == 0) {
-                            if (colorCpu == 'white') { valueOfMove = rookEvalWhite[y][x] }
-                            else { valueOfMove = rookEvalBlack[y][x] }
+                            if (colorCpu == 'white') { return rookEvalWhite[y][x] }
+                            else { return rookEvalBlack[y][x] }
                         }
                     }
                     if (descoveryTypeOfPieces(pawn) == 2) {
                         if (descoveryTypeOfPieces(sup) == 1) {
                             //controllo il colore che ha la cpu perche il valore cambiera
-                            if (colorCpu == 'white') { valueOfMove = bishopEvalWhite[y][x] + 50 }
-                            else { valueOfMove += bishopEvalBlack[y][x] + 50 }
+                            if (colorCpu == 'white') { return bishopEvalWhite[y][x] + 50 }
+                            else { return bishopEvalBlack[y][x] + 50 }
                         }
                         if (descoveryTypeOfPieces(sup) == 2 || descoveryTypeOfPieces(sup) == 3) {
-                            if (colorCpu == 'white') { valueOfMove = bishopEvalWhite[y][x] + 30 }
-                            else { valueOfMove = bishopEvalBlack[y][x] + 30 }
+                            if (colorCpu == 'white') { return bishopEvalWhite[y][x] + 30 }
+                            else { return bishopEvalBlack[y][x] + 30 }
                         }
 
                         if (descoveryTypeOfPieces(sup) == 4) {
-                            if (colorCpu == 'white') { valueOfMove = bishopEvalWhite[y][x] + 90 }
-                            else { valueOfMove += bishopEvalBlack[y][x] + 90 }
+                            if (colorCpu == 'white') { return bishopEvalWhite[y][x] + 90 }
+                            else { return bishopEvalBlack[y][x] + 90 }
                         }
 
                         if (descoveryTypeOfPieces(sup) == 5) {
-                            if (colorCpu == 'white') { valueOfMove = bishopEvalWhite[y][x] + 900 }
-                            else { valueOfMove = bishopEvalBlack[y][x] + 900 }
+                            if (colorCpu == 'white') { return bishopEvalWhite[y][x] + 900 }
+                            else { return bishopEvalBlack[y][x] + 900 }
                         }
 
                         if (descoveryTypeOfPieces(sup) == 6) {
-                            if (colorCpu == 'white') { valueOfMove = bishopEvalWhite[y][x] + 10 }
-                            else { valueOfMove += bishopEvalBlack[y][x] + 10 }
+                            if (colorCpu == 'white') { return bishopEvalWhite[y][x] + 10 }
+                            else { return bishopEvalBlack[y][x] + 10 }
                         }
                         if (descoveryTypeOfPieces(sup) == 0) {
-                            if (colorCpu == 'white') { valueOfMove = bishopEvalWhite[y][x] }
-                            else { valueOfMove = bishopEvalBlack[y][x] }
+                            if (colorCpu == 'white') { return bishopEvalWhite[y][x] }
+                            else { return bishopEvalBlack[y][x] }
                         }
 
                     } else if (descoveryTypeOfPieces(pawn) == 3) {
                         //valore mossa del cavallo 
-                        if (descoveryTypeOfPieces(sup) == 1) { valueOfMove = KnightEval[y][x] + 50 }
-                        if (descoveryTypeOfPieces(sup) == 2) { valueOfMove = KnightEval[y][x] + 30 }
-                        if (descoveryTypeOfPieces(sup) == 3) { valueOfMove = KnightEval[y][x] + 30 }
-                        if (descoveryTypeOfPieces(sup) == 4) { valueOfMove = KnightEval[y][x] + 90 }
-                        if (descoveryTypeOfPieces(sup) == 5) { valueOfMove = KnightEval[y][x] + 900 }
-                        if (descoveryTypeOfPieces(sup) == 6) { valueOfMove = KnightEval[y][x] + 10 }
-                        if (descoveryTypeOfPieces(sup) == 0) { valueOfMove = knightEval[y][x]; return valueOfMove }
+                        if (descoveryTypeOfPieces(sup) == 1) { return knightEval[y][x] + 50 }
+                        if (descoveryTypeOfPieces(sup) == 2) { return knightEval[y][x] + 30 }
+                        if (descoveryTypeOfPieces(sup) == 3) { return knightEval[y][x] + 30 }
+                        if (descoveryTypeOfPieces(sup) == 4) { return knightEval[y][x] + 90 }
+                        if (descoveryTypeOfPieces(sup) == 5) { return knightEval[y][x] + 900 }
+                        if (descoveryTypeOfPieces(sup) == 6) { return knightEval[y][x] + 10 }
+                        if (descoveryTypeOfPieces(sup) == 0) { return knightEval[y][x]; }
 
-                    } else if (descoveryTypeOfPieces(pawn) == 4) {
+                        }    else if (descoveryTypeOfPieces(pawn) == 4) {
                         //valore mossa della regina
-                        if (descoveryTypeOfPieces(sup) == 1) { valueOfMove = queenEval[y][x] + 50 }
-                        if (descoveryTypeOfPieces(sup) == 2) { valueOfMove = queenEval[y][x] + 30 }
-                        if (descoveryTypeOfPieces(sup) == 3) { valueOfMove = queenEval[y][x] + 30 }
-                        if (descoveryTypeOfPieces(sup) == 4) { valueOfMove = queenEval[y][x] + 90 }
-                        if (descoveryTypeOfPieces(sup) == 5) { valueOfMove = queenEval[y][x] + 900 }
-                        if (descoveryTypeOfPieces(sup) == 6) { valueOfMove = queenEval[y][x] + 10 }
-                        if (descoveryTypeOfPieces(sup) == 0) { valueOfMove = queenEval[y][x] }
+                        if (descoveryTypeOfPieces(sup) == 1) { return queenEval[y][x] + 50 }
+                        if (descoveryTypeOfPieces(sup) == 2) { return queenEval[y][x] + 30 }
+                        if (descoveryTypeOfPieces(sup) == 3) { return queenEval[y][x] + 30 }
+                        if (descoveryTypeOfPieces(sup) == 4) { return queenEval[y][x] + 90 }
+                        if (descoveryTypeOfPieces(sup) == 5) { return queenEval[y][x] + 900 }
+                        if (descoveryTypeOfPieces(sup) == 6) { return queenEval[y][x] + 10 }
+                        if (descoveryTypeOfPieces(sup) == 0) { return queenEval[y][x] }
+                        }
+                        else if (descoveryTypeOfPieces(pawn) == 5) {
+                            if (descoveryTypeOfPieces(sup) == 1) {
+                                //controllo il colore che ha la cpu perche il valore cambiera
+                                if (colorCpu == 'white') { return KingEvalWhite[y][x] + 50 }
+                                else { return KingEvalBlack[y][x] + 50 }
+                            }
 
-                    } else if (descoveryTypeOfPieces(pawn) == 5) {
-                        if (descoveryTypeOfPieces(sup) == 1) {
-                            //controllo il colore che ha la cpu perche il valore cambiera
-                            if (colorCpu == 'white') { return KingEvalWhite[y][x] + 50 }
-                            else { return KingEvalBlack[y][x] + 50 }
-                        }
+                            if (descoveryTypeOfPieces(sup) == 2 || descoveryTypeOfPieces(sup) == 3) {
+                                if (colorCpu == 'white') { return KingEvalWhite[y][x] + 30 }
+                                else { return KingEvalBlack[y][x] + 30 }
+                            }
 
-                        if (descoveryTypeOfPieces(sup) == 2 || descoveryTypeOfPieces(sup) == 3) {
-                            if (colorCpu == 'white') { return KingEvalWhite[y][x] + 30 }
-                            else { return KingEvalBlack[y][x] + 30 }
-                        }
+                            if (descoveryTypeOfPieces(sup) == 4) {
+                                if (colorCpu == 'white') { return KingEvalWhite[y][x] + 90 }
+                                else { return KingEvalBlack[y][x] + 90 }
+                            }
 
-                        if (descoveryTypeOfPieces(sup) == 4) {
-                            if (colorCpu == 'white') { return KingEvalWhite[y][x] + 90 }
-                            else { return KingEvalBlack[y][x] + 90 }
-                        }
+                            if (descoveryTypeOfPieces(sup) == 5) {
+                                if (colorCpu == 'white') { return KingEvalWhite[y][x] + 900 }
+                                else { return KingEvalBlack[y][x] + 900 }
+                            }
 
-                        if (descoveryTypeOfPieces(sup) == 5) {
-                            if (colorCpu == 'white') { return KingEvalWhite[y][x] + 900 }
-                            else { return KingEvalBlack[y][x] + 900 }
-                        }
+                            if (descoveryTypeOfPieces(sup) == 6) {
+                                if (colorCpu == 'white') { return KingEvalWhite[y][x] + 10 }
+                                else { return KingEvalBlack[y][x] + 10 }
+                            }
+                            if (descoveryTypeOfPieces(sup) == 0) {
+                                if (colorCpu == 'white') { return KingEvalWhite[y][x] }
+                                else { return KingEvalBlack[y][x] }
 
-                        if (descoveryTypeOfPieces(sup) == 6) {
-                            if (colorCpu == 'white') { return KingEvalWhite[y][x] + 10 }
-                            else { return KingEvalBlack[y][x] + 10 }
-                        }
-                        if (descoveryTypeOfPieces(sup) == 0) {
-                            if (colorCpu == 'white') { return KingEvalWhite[y][x] }
-                            else { return KingEvalBlack[y][x] }
+                                }
+                        } 
+                        else if (descoveryTypeOfPieces(pawn) == 6) {
 
-                        }
-                    } else if (descoveryTypeOfPieces(pawn) == 6) {
+                            if (descoveryTypeOfPieces(sup) == 1) {
+                                //controllo il colore che ha la cpu perche il valore cambiera
+                                if (colorCpu == 'white') { return pawnEvalWhite[y][x] + 50 }
+                                else { return pawnEvalBlack[y][x] + 50 }
+                            }
+                            if (descoveryTypeOfPieces(sup) == 2 || descoveryTypeOfPieces(sup) == 3) {
+                                if (colorCpu == 'white') { return pawnEvalWhite[y][x] + 30 }
+                                else { return pawnEvalBlack[y][x] + 30 }
+                            }
+                            if (descoveryTypeOfPieces(sup) == 4) {
+                                if (colorCpu == 'white') { return pawnEvalWhite[y][x] + 90 }
+                                else { return pawnEvalBlack[y][x] + 90 }
+                            }
 
-                        if (descoveryTypeOfPieces(sup) == 1) {
-                            //controllo il colore che ha la cpu perche il valore cambiera
-                            if (colorCpu == 'white') { return pawnEvalWhite[y][x] + 50 }
-                            else { return pawnEvalBlack[y][x] + 50 }
-                        }
-                        if (descoveryTypeOfPieces(sup) == 2 || descoveryTypeOfPieces(sup) == 3) {
-                        if (colorCpu == 'white') { return pawnEvalWhite[y][x] + 30 }
-                            else { return pawnEvalBlack[y][x] + 30 }
-                        }
-                        if (descoveryTypeOfPieces(sup) == 4) {
-                            if (colorCpu == 'white') { return pawnEvalWhite[y][x] + 90 }
-                            else {  return pawnEvalBlack[y][x] + 90 }
-                        }
+                            if (descoveryTypeOfPieces(sup) == 5) {
+                                if (colorCpu == 'white') { valueOfMove = pawnEvalWhite[y][x] + 900 }
+                                else { return pawnEvalBlack[y][x] + 900 }
+                            }
 
-                        if (descoveryTypeOfPieces(sup) == 5) {
-                            if (colorCpu == 'white') { valueOfMove= pawnEvalWhite[y][x] + 900 }
-                            else { return pawnEvalBlack[y][x] + 900 }
-                        }
+                            if (descoveryTypeOfPieces(sup) == 6) {
+                                if (colorCpu == 'white') { return pawnEvalWhite[y][x] + 10 }
+                                else { return pawnEvalBlack[y][x] + 10 }
+                            }
 
-                        if (descoveryTypeOfPieces(sup) == 6) {
-                            if (colorCpu == 'white') { return pawnEvalWhite[y][x] + 10 }
-                            else { return pawnEvalBlack[y][x] + 10 }
-                        }
-
-                        if (descoveryTypeOfPieces(sup) == 0) {
-                            valueOfMove=0
-                            if (colorCpu == 'white') { return pawnEvalWhite[x][y] }
-                            else { return pawnEvalBlack[x][y];  }
+                            if (descoveryTypeOfPieces(sup) == 0) {
+                                if (colorCpu == 'white') { return pawnEvalWhite[y][x] }
+                                else { return pawnEvalBlack[y][x]; }
+                            }
                         }
                     }
                 }
@@ -981,114 +988,115 @@ function valueOfOneMove(hypoteticalPosition, pawn) {
         }
     }
 
-  
 
-}
+    //PROBLEMA DELLA VALUTAZIONE
+    //DA RISOLVERE
+    function idToClass(id) {
+        var x = reversedGetLetterGivenAxisX(id.slice(0, 1));//parte letteraria
+        var y = reversedGetLetterGivenAxisY(id.slice(1, 2));//parte numerica
+        return boardMatrixTypeOfPawn[y][x]
+    }
 
-//PROBLEMA DELLA VALUTAZIONE
-//DA RISOLVERE
-function idToClass(id) {
-    var x = reversedGetLetterGivenAxisX(id.slice(0, 1));//parte letteraria
-    var y = reversedGetLetterGivenAxisY(id.slice(1, 2));//parte numerica
-    return boardMatrixTypeOfPawn[y][x]
-}
+    function cpuMove() {
+        //ARRAY TRIDIMENSIONALE MI SA 
+        //[TIPO_PEDINA]-[POSIZIONE ATTUALE]-[[MOSSA1,MOSSA2,MOSSA3,ETC]]-[[VALOREMOSSA1,VALOREMOSSA2,VALOREMOSSA3,ETC]]
+        var hypoteticalMove = [[[]]];;
+        var moveOfOnePieces = [];
+        var moves = [];
+        var index = 0;
+        var row;
+        var nmove = 0;
+        for (let i = 0; i < 8; i++) {
+            row = chessBoard.rows[i];
+            for (let j = 0; j < 8; j++) {
+                if (row.cells[j].className.slice(0, 5) == colorCpu) {
 
-function cpuMove() {
-    //ARRAY TRIDIMENSIONALE MI SA 
-    //[TIPO_PEDINA]-[POSIZIONE ATTUALE]-[[MOSSA1,MOSSA2,MOSSA3,ETC]]-[[VALOREMOSSA1,VALOREMOSSA2,VALOREMOSSA3,ETC]]
-    var hypoteticalMove = [[[]]];;
-    var moveOfOnePieces = [];
-    var moves = [];
-    var index=0;
-    var row;
-    var nmove=0;
-    for (let i = 0; i < 8; i++) {
-        row = chessBoard.rows[i];
-        for (let j = 0; j < 8; j++) {
-            if (row.cells[j].className.slice(0, 5) == colorCpu) {
-                
-                moves[index]=[]
-                moves[index][0]=row.cells[j].id;
-                moves[index][1]=row.cells[j].className;
-                if (descoveryTypeOfPiecesWithClassName(row.cells[j].className) == 1) {
-                    moveOfOnePieces = moveRook(row.cells[j])
-                }
-                if (descoveryTypeOfPiecesWithClassName(row.cells[j].className) == 2) {
-                    moveOfOnePieces = moveBishop(row.cells[j])
-                }
-                if (descoveryTypeOfPiecesWithClassName(row.cells[j].className) == 3) {
-                    moveOfOnePieces = moveKnight(row.cells[j])
-                }
-                if (descoveryTypeOfPiecesWithClassName(row.cells[j].className) == 4) {
-                    moveOfOnePieces = moveQueen(row.cells[j])
-                }
-                if (descoveryTypeOfPiecesWithClassName(row.cells[j].className) == 5) {
-                    moveOfOnePieces = moveKing(row.cells[j])
-                }
-                if (descoveryTypeOfPiecesWithClassName(row.cells[j].className) == 6) {
-                    moveOfOnePieces = movePawn(row.cells[j])
-                    $(row.cells[j]).removeClass(colorCpu + 'pawn').addClass(colorCpu + 'Pawn');
-                }
-                moves[index][2]=[];
-                moves[index][3]=[];
+                    moves[index] = []
+                    moves[index][0] = row.cells[j].id;
+                    moves[index][1] = row.cells[j].className;
+                    if (descoveryTypeOfPiecesWithClassName(row.cells[j].className) == 1) {
+                        moveOfOnePieces = moveRook(row.cells[j])
+                    }
+                    if (descoveryTypeOfPiecesWithClassName(row.cells[j].className) == 2) {
+                        moveOfOnePieces = moveBishop(row.cells[j])
+                    }
+                    if (descoveryTypeOfPiecesWithClassName(row.cells[j].className) == 3) {
+                        moveOfOnePieces = moveKnight(row.cells[j])
+                    }
+                    if (descoveryTypeOfPiecesWithClassName(row.cells[j].className) == 4) {
+                        moveOfOnePieces = moveQueen(row.cells[j])
+                    }
+                    if (descoveryTypeOfPiecesWithClassName(row.cells[j].className) == 5) {
+                        moveOfOnePieces = moveKing(row.cells[j])
+                    }
+                    if (descoveryTypeOfPiecesWithClassName(row.cells[j].className) == 6) {
+                        moveOfOnePieces = movePawn(row.cells[j])
+                        $(row.cells[j]).removeClass(colorCpu + 'pawn').addClass(colorCpu + 'Pawn');
+                    }
+                    moves[index][2] = [];
+                    moves[index][3] = [];
 
-                for (let k = 0; k < moveOfOnePieces.length; k++) {
+                    for (let k = 0; k < moveOfOnePieces.length; k++) {
 
-                    if (moveOfOnePieces[k].length == 2 && idToClass(moveOfOnePieces[k]).slice(0, 5) != colorCpu) {
-                        moves[index][2].push(moveOfOnePieces[k]);
-                        moves[index][3].push(valueOfOneMove(moveOfOnePieces[k], row.cells[j]))
-                        nmove++;
+                        if (moveOfOnePieces[k].length == 2 && idToClass(moveOfOnePieces[k]).slice(0, 5) != colorCpu) {
+                            moves[index][2].push(moveOfOnePieces[k]);
+                            moves[index][3].push(valueOfOneMove(moveOfOnePieces[k], row.cells[j]))
+                            nmove++;
+                        }
+
                     }
 
                 }
-                
+                resetColor();
+                index++;
             }
-            resetColor();
-            index++;
+
         }
 
+        console.log(moves)
+        moveCpu(moves)
     }
 
-    console.log(moves)
-    moveCpu(moves)
-}
-
-function moveCpu(moves){
-    var realMoves=moves;
-    var sup;
-    var sup2;
-    var sup3;
-    var FinalMove=[
-        ['position','className','goPosition',0],
-        ['position','className','goPosition',0],
-        ['position','className','goPosition',0],
-        ['position','className','goPosition',0],
-        ['position','className','goPosition',0]
-    ];
-    var index=0
+    function moveCpu(moves) {
+        var realMoves = moves;
+        var sup;
+        var sup2;
+        var sup3;
+        var FinalMove = [];
+        var index = 0
         for (let i = 0; i < realMoves.length; i++) {
-            sup=realMoves[i];
+            sup = realMoves[i];
+            
             for (let j = 0; j < sup[2].length; j++) {
-                sup2=sup[2]
-                sup3=sup[3]
-
-                if(index<5){
-                        FinalMove[index]=[sup[0],sup[1],sup2[j],sup3[j]]
-                        index++
-                      
-                }else{
-                if(sup3[j]>FinalMove[0][3])
-                    for (let k = 4; k > 1; k--) {
-                        FinalMove[k][0]=FinalMove[k-1][0]
-                        FinalMove[k][1]=FinalMove[k-1][1]
-                        FinalMove[k][2]=FinalMove[k-1][2]
-                        FinalMove[k][3]=FinalMove[k-1][3]
-                    }
-                        FinalMove[0]=[sup[0],sup[1],sup2[j],sup3[j]]
-                    }
+                sup2 = sup[2]
+                sup3 = sup[3]
+                FinalMove[index]=[]
+                FinalMove[index] = [sup[0], sup[1], sup2[j], sup3[j]]
             }
+         
         }
-    console.log(FinalMove)
-}
-//DA RIGUARDARE IL METODO DI VALUTAZIONE DELLE MOSSE E IL SORT DELLE 5 MOSSE
-// POI SVILUPPARE I SCENARI IPOTETICI DELL'AVVERSARIO E IMPLEMENTARE LE MOSSE ALLA SCACCHIERA
+        console.log(FinalMove)
+        bubbleSort(FinalMove)
+    }
+
+    function bubbleSort(array){
+        for (let i = 0; i < array.length-1; i++) {
+            // Last i elements are already in place
+            for(var j = 0; j < ( array.length - i -1); j++){
+    
+                // Comparing two adjacent numbers 
+                // and see if first is greater than second
+                if(array[j][3] > array[j+1][3]){
+    
+                // Swap them if the condition is true 
+                var temp = array[j]
+                array[j] = array[j + 1]
+                array[j+1] = temp
+                }
+            }
+        
+        }
+        
+        // Print the sorted array
+        console.log(array);
+    }
