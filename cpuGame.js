@@ -4,6 +4,11 @@ function reverseArray(array) {
 };
 
 function swapper(a, b) {
+    if (a.className.slice(5,9)=='Pawn') {
+        // rimetto la classe che dovrebbe avere il pawn alla prima mossa quando banalmente il giocatore sbaglia mossa
+        if (a.className.slice(0, 5) == 'white') { $(a).removeClass('whitePawn').addClass('whitepawn'); }
+        else { $(a).removeClass('blackPawn').addClass('blackpawn'); }
+    }
     console.log("Start swap");
     //scambio gli id spoiler dovrebbero essere statici
     var idA = a.id;
@@ -50,6 +55,11 @@ var boardMatrixPosition = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [
 var boardMatrixTypeOfPawn = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],
 [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],];
 
+var hypoteticalBoardMatrixPosition = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],
+[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],];
+
+var hypoteticalBoardMatrixTypeOfPawn = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],
+[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],];
 
 // la matrice con i vari valori impostati in base alla posizione 
 var pawnEvalBlack =
@@ -171,6 +181,7 @@ function matrixBuilderPosition() {
         for (let j = 0; j < 8; j++) {
             getID = getLetterGivenAxisX(j) + getLetterGivenAxisY(i);
             boardMatrixPosition[i][j] = document.getElementById(getID).id;
+            hypoteticalBoardMatrixPosition[i][j] = document.getElementById(getID).className;
         }
     }
 }
@@ -183,6 +194,7 @@ function matrixBuilderTypeOfPawn() {
         for (let j = 0; j < 8; j++) {
             getID = getLetterGivenAxisX(j) + getLetterGivenAxisY(i);
             boardMatrixTypeOfPawn[i][j] = document.getElementById(getID).className;
+            hypoteticalBoardMatrixTypeOfPawn[i][j] = document.getElementById(getID).className;
         }
     }
 }
@@ -323,15 +335,16 @@ function move(pawn) {
         var tmp = pawn;
         if (checkMove(pawn)) {
             // Mossa legale, procedo allo scambio
-            swapper(currentSelection, tmp);
-            if (descoveryTypeOfPieces(pawn) == 6) {
+            if (pawn.className.slice(5,9)=='Pawn') {
                 // rimetto la classe che dovrebbe avere il pawn alla prima mossa quando banalmente il giocatore sbaglia mossa
                 if (pawn.className.slice(0, 5) == 'white') { $(pawn).removeClass('whitePawn').addClass('whitepawn'); }
                 else { $(pawn).removeClass('blackPawn').addClass('blackpawn'); }
             }
+            swapper(currentSelection, tmp);
+            
             // Faccio ripartire il prossimo turno
             movingPawnState = 'ready'
-            setTimeout(() => { cpuMove(); }, 1000);
+            setTimeout(() => { cpuMove(); }, 500);
             uploadMoves()
             // Dai il turno all'altro player
         }
@@ -395,8 +408,8 @@ function checkMove(pawn) {
         return false;
     }
 
-    if (turn == 'black') { resetChessBoard('white'); }
-    else { resetChessBoard('black'); }
+     resetChessBoard(colorPlayer); 
+   
 
     // Movimento a vuoto, accettabile.
    
@@ -493,7 +506,8 @@ function moveBishop(pawn) {
 
     for (let i = 0; i < 8; i++) {
         if (xUso >= 8 || yUso >= 8) { i = 9; } else {//controllo che le mosse siano fattibili per la pedina 
-            sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
+            sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso);//creo l'id della casella in cui puo andare
+            validMove.push(sup);
             if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') { i = 9; } //controllo che la casella sia vuota
             yUso++;
             xUso++;  //lo faccio muovere in diagonale 
@@ -505,9 +519,7 @@ function moveBishop(pawn) {
     xUso = x + 1;
     yUso = y - 1;
     for (let i = 0; i < 8; i++) {
-        if (xUso > 8 || yUso < 0) {
-            i = 9
-        } else {
+        if (xUso >= 8 || yUso < 0) { i = 9 } else {
             sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
             validMove.push(sup);
             if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') { i = 9; }
@@ -632,14 +644,14 @@ function movePawn(pawn) {
             if (boardMatrixTypeOfPawn[y + 1][x + 1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0, 5))) {// controllo se posso mangiare o meno tramite il classname
                 sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y + 1);
                 validMove.push(sup);
-                console.log('polkaholica')
+               
             }
         }
         if (y < 7 && x > 0) {
             if (boardMatrixTypeOfPawn[y + 1][x - 1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0, 5))) {
                 sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y + 1);
                 validMove.push(sup)
-                console.log('polkaholica')
+                
             }
         }
     }
@@ -1079,7 +1091,7 @@ function moveToCellsTable(theBestMove) {
     for (let i = 0; i < 8; i++) {
         row = chessBoard.rows[i];
         for (let j = 0; j < 8; j++) {
-            if (row.cells[j].className == theBestMove[1] && row.cells[j].id == theBestMove[0]) {
+            if ( row.cells[j].id == theBestMove[0]) {
                 for (let m = 0; m < 8; m++) {
                     row2 = chessBoard.rows[m];
                     for (let k = 0; k < 8; k++) {
