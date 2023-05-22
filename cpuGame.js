@@ -4,8 +4,7 @@ function reverseArray(array) {
 };
 
 function swapper(a, b) {
-    if (a.className.slice(5,9)=='Pawn') {
-        // rimetto la classe che dovrebbe avere il pawn alla prima mossa quando banalmente il giocatore sbaglia mossa
+    if (a.className.slice(5, 9) == 'Pawn') {
         if (a.className.slice(0, 5) == 'white') { $(a).removeClass('whitePawn').addClass('whitepawn'); }
         else { $(a).removeClass('blackPawn').addClass('blackpawn'); }
     }
@@ -60,6 +59,29 @@ var hypoteticalBoardMatrixPosition = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 
 
 var hypoteticalBoardMatrixTypeOfPawn = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],
 [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],];
+
+//var existingChessBoard = document.querySelector('#chessBoard');
+var hypoteticalChessBoard = document.createElement('table')
+// vado a creare una tabella solo per il pensiero ipotetico della mossa 
+// la vedo abbastanza greve]
+function buildHypoteticalChessBoard(){
+    hypoteticalChessBoard = document.createElement('table')
+     var row;
+    var hypoteticalRow;
+    var hypoteticalCell;
+    for(let i = 0; i < 8; i++) {
+         hypoteticalRow = document.createElement('tr');
+         row=chessBoard.rows[i];
+        // Aggiungi le colonne alla nuova riga
+        for(let j = 0; j < 8; j++) {
+          hypoteticalCell = document.createElement('td');
+          hypoteticalCell.id = row.cells[j].id;
+          hypoteticalCell.classList.add(row.cells[j].className);
+          hypoteticalRow.appendChild(hypoteticalCell);
+        }
+        hypoteticalChessBoard.appendChild(hypoteticalRow)
+      }
+}
 
 // la matrice con i vari valori impostati in base alla posizione 
 var pawnEvalBlack =
@@ -149,6 +171,8 @@ function ready() {
     matrixBuilderPosition();
     matrixBuilderTypeOfPawn();
     uploadMoves()
+    buildHypoteticalChessBoard();
+    
 }
 
 // Funzione temporanea per mostrare informazioni partita
@@ -329,16 +353,17 @@ function move(pawn) {
         var tmp = pawn;
         if (checkMove(pawn)) {
             // Mossa legale, procedo allo scambio
-            if (pawn.className.slice(5,9)=='Pawn') {
+            if (pawn.className.slice(5, 9) == 'Pawn') {
                 // rimetto la classe che dovrebbe avere il pawn alla prima mossa quando banalmente il giocatore sbaglia mossa
                 if (pawn.className.slice(0, 5) == 'white') { $(pawn).removeClass('whitePawn').addClass('whitepawn'); }
                 else { $(pawn).removeClass('blackPawn').addClass('blackpawn'); }
             }
             swapper(currentSelection, tmp);
-            
+
             // Faccio ripartire il prossimo turno
             movingPawnState = 'ready'
-            setTimeout(() => { cpuMove(); }, 500);
+            buildHypoteticalChessBoard();
+            setTimeout(() => { secondWayOfDepth(); }, 500);
             uploadMoves()
             // Dai il turno all'altro player
         }
@@ -349,8 +374,10 @@ function move(pawn) {
 
     matrixBuilderPosition();
     matrixBuilderTypeOfPawn();
-    console.log(boardMatrixPosition);
-    console.log(boardMatrixTypeOfPawn);
+    buildHypoteticalChessBoard();
+   // console.log(hypoteticalChessBoard)
+    //console.log(boardMatrixPosition);
+    //console.log(boardMatrixTypeOfPawn);
 
 }
 
@@ -373,7 +400,7 @@ function checkMove(pawn) {
         currentSelection = null;
         movingPawnState = 'ready';
         resetChessBoard(pawn.className.slice(0, 5));
-       
+
         return false;
     }
 
@@ -402,11 +429,11 @@ function checkMove(pawn) {
         return false;
     }
 
-     resetChessBoard(colorPlayer); 
-   
+    resetChessBoard(colorPlayer);
+
 
     // Movimento a vuoto, accettabile.
-   
+
 
     return true;
 }
@@ -638,14 +665,14 @@ function movePawn(pawn) {
             if (boardMatrixTypeOfPawn[y + 1][x + 1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0, 5))) {// controllo se posso mangiare o meno tramite il classname
                 sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y + 1);
                 validMove.push(sup);
-               
+
             }
         }
         if (y < 7 && x > 0) {
             if (boardMatrixTypeOfPawn[y + 1][x - 1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0, 5))) {
                 sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y + 1);
                 validMove.push(sup)
-                
+
             }
         }
     }
@@ -664,7 +691,7 @@ function movePawn(pawn) {
                 sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 1);
                 validMove.push(sup);
             }
-            
+
         }
 
         if (y > 0 && x < 7) {
@@ -811,10 +838,9 @@ function actualValue(pawn) {
 function valueOfOneMove(hypoteticalPosition, pawn) {
     var x = reversedGetLetterGivenAxisX(hypoteticalPosition.slice(0, 1));//parte letteraria
     var y = reversedGetLetterGivenAxisY(hypoteticalPosition.slice(1, 2));//parte numerica
-    var valueOfMove = 0;
     var sup;
     var row;
-    console.log(hypoteticalPosition, boardMatrixTypeOfPawn[y][x].slice(0, 5))
+
     //controllo che la casella sia dell'avversario
     if (idToClass(hypoteticalPosition).slice(0, 5) != colorCpu) {
         //trovo la riga della tabella dellavversario
@@ -988,18 +1014,20 @@ function idToClass(id) {
     return boardMatrixTypeOfPawn[y][x]
 }
 
-function cpuMove() {
+function cpuMove(colorIWant) {
     //ARRAY TRIDIMENSIONALE MI SA 
     //[TIPO_PEDINA]-[POSIZIONE ATTUALE]-[[MOSSA1,MOSSA2,MOSSA3,ETC]]-[[VALOREMOSSA1,VALOREMOSSA2,VALOREMOSSA3,ETC]]
     var moveOfOnePieces = [];
     var moves = [];
     var index = 0;
     var row;
-    var nmove = 0;
+
     for (let i = 0; i < 8; i++) {
-        row = chessBoard.rows[i];
+        row = hypoteticalChessBoard.rows[i];
         for (let j = 0; j < 8; j++) {
-            if (row.cells[j].className.slice(0, 5) == colorCpu) {
+            
+            if (row.cells[j].className.slice(0, 5) == colorIWant) {
+                
                 moves[index] = []
                 moves[index][0] = row.cells[j].id;
                 moves[index][1] = row.cells[j].className;
@@ -1020,17 +1048,16 @@ function cpuMove() {
                 }
                 if (descoveryTypeOfPiecesWithClassName(row.cells[j].className) == 6) {
                     moveOfOnePieces = movePawn(row.cells[j])
-                    $(row.cells[j]).removeClass(colorCpu + 'pawn').addClass(colorCpu + 'Pawn');
+                    $(row.cells[j]).removeClass(colorIWant + 'pawn').addClass(colorIWant + 'Pawn');
                 }
                 moves[index][2] = [];
                 moves[index][3] = [];
 
                 for (let k = 0; k < moveOfOnePieces.length; k++) {
 
-                    if (moveOfOnePieces[k].length == 2 && idToClass(moveOfOnePieces[k]).slice(0, 5) != colorCpu) {
+                    if (moveOfOnePieces[k].length == 2 && idToClass(moveOfOnePieces[k]).slice(0, 5) != colorIWant) {
                         moves[index][2].push(moveOfOnePieces[k]);
                         moves[index][3].push(valueOfOneMove(moveOfOnePieces[k], row.cells[j]))
-                        nmove++;
                     }
 
                 }
@@ -1041,12 +1068,12 @@ function cpuMove() {
         }
 
     }
-
-    console.log(moves)
-    moveCpu(moves)
+    moves = moveOfCpu(moves)
+    
+    return moves
 }
 
-function moveCpu(moves) {
+function moveOfCpu(moves) {
     var realMoves = moves;
     var sup;
     var sup2;
@@ -1065,7 +1092,11 @@ function moveCpu(moves) {
 
     }
     FinalMove = findTheBestMove(FinalMove)
-    moveToCellsTable(FinalMove[0])
+
+    
+    return FinalMove
+
+
 }
 
 function findTheBestMove(array) {
@@ -1073,8 +1104,14 @@ function findTheBestMove(array) {
     array.sort(function (a, b) {
         return b[3] - a[3];
     });
-    for (let i = 0; i < 5; i++) {
-        arraysup[i] = array[i];
+    if (array.length > 4) {
+        for (let i = 0; i < 5; i++) {
+            arraysup[i] = array[i];
+        }
+    } else {
+        for (let i = 0; i < array.length; i++) {
+            arraysup[i] = array[i];
+        }
     }
     return arraysup
 }
@@ -1085,7 +1122,7 @@ function moveToCellsTable(theBestMove) {
     for (let i = 0; i < 8; i++) {
         row = chessBoard.rows[i];
         for (let j = 0; j < 8; j++) {
-            if ( row.cells[j].id == theBestMove[0]) {
+            if (row.cells[j].id == theBestMove[0]) {
                 for (let m = 0; m < 8; m++) {
                     row2 = chessBoard.rows[m];
                     for (let k = 0; k < 8; k++) {
@@ -1103,4 +1140,56 @@ function moveToCellsTable(theBestMove) {
         }
     }
 }
-// DA AGGIUSTARE UN BEL PO DI COSE NELLE MOSSE
+
+function hypoteticalMoves(move) {
+    var row;
+    var row2;
+    for (let i = 0; i < 8; i++) {
+        row = hypoteticalChessBoard.rows[i];
+        for (let j = 0; j < 8; j++) {
+            if (row.cells[j].id == move[0]) {
+                for (let m = 0; m < 8; m++) {
+                    row2 = hypoteticalChessBoard.rows[m];
+                    for (let k = 0; k < 8; k++) {
+                        if (row2.cells[k].id == move[2]) {
+                            swapper(row.cells[j], row2.cells[k])
+                            if (move[3] >= 7) {
+                                $(row.cells[j]).removeClass(row.cells[j].className).addClass('empty');
+                                document.getElementById(row.cells[j].id).innerHTML = '<td id="' + row.cells[j].id + '"; class="empty" onclick="move(this)">&nbsp;</td>';
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+function secondWayOfDepth() {
+    // MATRICE QUADRIDIMENSIONALE 
+    // [MOSSACPU[RISPOSTA PLAYER[RISPOSTA CPU[RISPOSTA PLAYER, ETC],[]],[]],[]]
+    var actualValue = 0
+    var depht1 = cpuMove(colorCpu);
+    var suicidio=depht1 //[[][][][][[]]][]
+    var depht2;
+    var depht3;
+    var depht4;
+    for (let i = 0; i < depht1.length; i++) {
+        hypoteticalMoves(depht1[i])
+        depht2 = cpuMove(colorPlayer);
+        suicidio[i][4]=depht2
+        for (let j = 0; j < depht2.length; j++) {
+            hypoteticalMoves(depht2[j])
+            depht3 = cpuMove(colorCpu);
+            suicidio[i][4][j][4]=depht3
+            for (let k = 0; k < depht3.length; k++) {
+                hypoteticalMoves(depht3[k])
+                depht4 = cpuMove(colorPlayer);
+                suicidio[i][4][j][4][k][4]=depht4;
+            }
+        }
+        depht1[i][3] = depht1[i][3]-depht2[Math.floor(Math.random()*depht2.length)][3]+depht3[Math.floor(Math.random()*depht3.length)][3]-depht4[Math.floor(Math.random()*depht4.length)][3]
+    }
+    console.log(cpuMove(colorCpu))
+}
+// DA AGGIUSTARE UN BEL Po DI COSE NELLE MOSSE
