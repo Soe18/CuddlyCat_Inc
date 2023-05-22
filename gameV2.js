@@ -16,6 +16,7 @@ function swapper(a, b) {
     tmp.replaceWith(b);
 }
 
+
 // VARIABILI
 
 // Dettagli della partita
@@ -28,6 +29,9 @@ var remainingTimeBlack;
 var movingPawnState = 'ready';
 var currentSelection;
 var turn;
+
+// Promozione
+var onlyUseForPromotion_CurrentSelection;
 
 // Matrice della scacchiera, build iniziale che verra' subito cambiata
 var boardMatrixPosition = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],
@@ -273,11 +277,13 @@ function move(pawn) {
                 movesWhite += 1;
                 turn = 'black';
                 writeOnH1();
+                promotionDone(currentSelection);
             }
             else if (turn == 'black') {
                 movesBlack += 1;
                 turn = 'white';
                 writeOnH1();
+                promotionDone(currentSelection);
             }
             // Dai il turno all'altro player
         }
@@ -287,6 +293,21 @@ function move(pawn) {
     matrixBuilderTypeOfPawn();
     console.log(boardMatrixPosition);
     console.log(boardMatrixTypeOfPawn);
+}
+
+// Controlla se bisogna fare la promozione
+// Ritorna vero quando finisce o se non serve
+function promotionDone(pawn) {
+    let pawnAxisY = (pawn.id).substring(1);
+    /*  Non differenzio perche' pedone bianco non potra' mai
+        stare su asse y = 1 e pedone nero su asse y = 8. */
+    var needsPromotion = (pawn.className == "blackpawn" || pawn.className == "whitepawn") && pawnAxisY == "1" || pawnAxisY == "8";
+    if (needsPromotion) {
+        $(document.getElementById("obscureAllForPromotion")).css("display", "block");
+        if (turn == 'black') turn = 'white';
+        else turn = 'black';
+        onlyUseForPromotion_CurrentSelection = pawn;
+    }
 }
 
 // Funzione per capire se e' stata scelta all'inizio una pedina del player corretto

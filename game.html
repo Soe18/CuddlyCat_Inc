@@ -81,6 +81,28 @@ th, td {
     width: 70px;
     height: 70px;
 }
+
+#obscureAllForPromotion {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 999; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+#containerPawn {
+    display: flex;
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; 
+}
+
 </style>
 <body onload="ready()">
     <h1 id="cipolla"> SWsS </h1>
@@ -202,5 +224,98 @@ th, td {
     </tr>
 </table>
     </div>
+
+    <div id="obscureAllForPromotion">
+        <div id="containerPawn">
+            <button id="queenPromotion">
+                Regina
+            </button>
+            <button id="bishopPromotion">
+                Alfiere
+            </button>
+            <button id="knightPromotion">
+                Cavallo
+            </button>
+            <button id="rookPromotion">
+                Torre
+            </button>
+        </div>
+    </div>
 </body>
+<script>
+    $(document.getElementById("queenPromotion")).click(function () {
+        $(document.getElementById("obscureAllForPromotion")).css("display", "none");
+        let pawn = onlyUseForPromotion_CurrentSelection;
+        let isWhitePawn = pawn.className == "whitepawn";
+        if(isWhitePawn) {
+            document.getElementById(pawn.id).className = "whiteQueen";
+            document.getElementById(pawn.id).innerHTML = "Wq";
+            turn = 'black';
+        }
+        else {
+            document.getElementById(pawn.id).className = "blackQueen";
+            document.getElementById(pawn.id).innerHTML = "Bq";
+            turn = 'white';
+        }
+        matrixBuilderPosition();
+        matrixBuilderTypeOfPawn();
+    });
+
+
+    $(document.getElementById("bishopPromotion")).click(function () {
+        $(document.getElementById("obscureAllForPromotion")).css("display", "none");
+        let pawn = onlyUseForPromotion_CurrentSelection;
+        let isWhitePawn = pawn.className == "whitepawn";
+        if(isWhitePawn) {
+            document.getElementById(pawn.id).className = "whiteBishop";
+            document.getElementById(pawn.id).innerHTML = "Wbs";
+            turn = 'black';
+        }
+        else {
+            document.getElementById(pawn.id).className = "blackBishop";
+            document.getElementById(pawn.id).innerHTML = "Bbs";
+            turn = 'white';
+        }
+        matrixBuilderPosition();
+        matrixBuilderTypeOfPawn();
+    });
+
+
+    $(document.getElementById("knightPromotion")).click(function () {
+        $(document.getElementById("obscureAllForPromotion")).css("display", "none");
+        let pawn = onlyUseForPromotion_CurrentSelection;
+        let isWhitePawn = pawn.className == "whitepawn";
+        if(isWhitePawn) {
+            document.getElementById(pawn.id).className = "whiteKnight";
+            document.getElementById(pawn.id).innerHTML = "Wkn";
+            turn = 'black';
+        }
+        else {
+            document.getElementById(pawn.id).className = "blackKnight";
+            document.getElementById(pawn.id).innerHTML = "Bkn";
+            turn = 'white';
+        }
+        matrixBuilderPosition();
+        matrixBuilderTypeOfPawn();
+    });
+
+
+    $(document.getElementById("rookPromotion")).click(function () {
+        $(document.getElementById("obscureAllForPromotion")).css("display", "none");
+        let pawn = onlyUseForPromotion_CurrentSelection;
+        let isWhitePawn = pawn.className == "whitepawn";
+        if(isWhitePawn) {
+            document.getElementById(pawn.id).className = "whiteRook";
+            document.getElementById(pawn.id).innerHTML = "Wr";
+            turn = 'black';
+        }
+        else {
+            document.getElementById(pawn.id).className = "blackRook";
+            document.getElementById(pawn.id).innerHTML = "Br";
+            turn = 'white';
+        }
+        matrixBuilderPosition();
+        matrixBuilderTypeOfPawn();
+    });
+</script>
 </html>
