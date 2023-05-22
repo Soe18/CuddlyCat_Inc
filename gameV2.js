@@ -39,9 +39,9 @@ var boardMatrixTypeOfPawn = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],
 chronometer = setInterval(timer, 1000);
 
 function ready() {
+    getInfosFromURL();
     movesWhite = 0;
     movesBlack = 0;
-    startingTime = 300;
     remainingTimeBlack = startingTime;
     remainingTimeWhite = startingTime;
     turn = 'white';
@@ -51,11 +51,25 @@ function ready() {
     matrixBuilderTypeOfPawn();
 }
 
+function getInfosFromURL() {
+    myParams = new URLSearchParams(document.location.search);
+    startingTime = parseInt(myParams.get("time"));
+    if (!startingTime) startingTime = 300;
+    if (startingTime == -1) clearInterval(chronometer);
+}
+
+
 // Funzione temporanea per mostrare informazioni partita
 function writeOnH1() {
-    document.getElementById("cipolla").innerHTML = "Tempo d'inizio: " + timeFormatter(startingTime) +
+    if(startingTime > 0) {
+        document.getElementById("cipolla").innerHTML = "Tempo d'inizio: " + timeFormatter(startingTime) +
         ", Tempo rimanente nero: " + timeFormatter(remainingTimeBlack) + ", Tempo rimanente bianco: " +
         timeFormatter(remainingTimeWhite) + ", Mosse bianco: " + movesWhite + ", Mosse nero: " + movesBlack;
+    }
+    else {
+        document.getElementById("cipolla").innerHTML = "Mosse bianco: " + movesWhite + ", Mosse nero: " + movesBlack;
+    }
+    
 }
 
 // Timer del tempo di gioco
@@ -258,10 +272,12 @@ function move(pawn) {
             if (turn == 'white') {
                 movesWhite += 1;
                 turn = 'black';
+                writeOnH1();
             }
-            else {
+            else if (turn == 'black') {
                 movesBlack += 1;
                 turn = 'white';
+                writeOnH1();
             }
             // Dai il turno all'altro player
         }

@@ -165,12 +165,6 @@ function uploadMoves() {
     }
 }
 
-
-
-// Formattatore del tempo, ritorna con il formato ==> mm:ss
-
-
-
 // Creatore della matrice, da ricostruire ad ogni fine movePawn()
 // Questa ci consentira' di gestire i movimenti
 function matrixBuilderPosition() {
