@@ -77,6 +77,7 @@ function buildHypoteticalChessBoard(){
           hypoteticalCell = document.createElement('td');
           hypoteticalCell.id = row.cells[j].id;
           hypoteticalCell.classList.add(row.cells[j].className);
+          hypoteticalCell.innerText = row.cells[j].innerText
           hypoteticalRow.appendChild(hypoteticalCell);
         }
         hypoteticalChessBoard.appendChild(hypoteticalRow)
@@ -84,7 +85,7 @@ function buildHypoteticalChessBoard(){
 }
 
 // la matrice con i vari valori impostati in base alla posizione 
-var pawnEvalBlack =
+var pawnEvalWhite =
     [
         [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
         [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0],
@@ -96,7 +97,7 @@ var pawnEvalBlack =
         [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     ];
 
-var pawnEvalWhite = reverseArray(pawnEvalBlack)
+var pawnEvalBlack = reverseArray(pawnEvalWhite)
 
 var knightEval =
     [
@@ -110,7 +111,7 @@ var knightEval =
         [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0]
     ];
 
-var bishopEvalBlack = [
+var bishopEvalWhite = [
     [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0],
     [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0],
     [-1.0, 0.0, 0.5, 1.0, 1.0, 0.5, 0.0, -1.0],
@@ -121,9 +122,9 @@ var bishopEvalBlack = [
     [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0]
 ];
 
-var bishopEvalWhite = reverseArray(bishopEvalBlack);
+var bishopEvalBlack = reverseArray(bishopEvalWhite);
 
-var rookEvalBlack = [
+var  rookEvalWhite = [
     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
     [0.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5],
     [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
@@ -134,7 +135,7 @@ var rookEvalBlack = [
     [0.0, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0]
 ];
 
-var rookEvalWhite = reverseArray(rookEvalBlack);
+var rookEvalBlack = reverseArray( rookEvalWhite);
 
 var queenEval = [
     [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0],
@@ -147,7 +148,7 @@ var queenEval = [
     [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0]
 ];
 
-var kingEvalBlack = [
+var kingEvalWhite = [
     [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
     [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
     [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
@@ -157,7 +158,7 @@ var kingEvalBlack = [
     [2.0, 2.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0],
     [2.0, 3.0, 1.0, 0.0, 0.0, 1.0, 3.0, 2.0]
 ];
-var kingEvalWhite = reverseArray(kingEvalBlack);
+var kingEvalBlack = reverseArray(kingEvalWhite);
 
 
 function ready() {
@@ -647,6 +648,7 @@ function movePawn(pawn) {
     var sup;
     if (pawn.className.slice(0, 5) == 'white') {//controllo il colore
         if (pawn.className.slice(5, 9) == 'Pawn') {// controll che sia la sua prima mossa
+            if (y <6){
             if (boardMatrixTypeOfPawn[y + 1][x] == 'empty') {
                 sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 1);// prendo le 2 caselle che dopo faro colorare e rendere disponibile per il movimento
                 validMove.push(sup);
@@ -654,12 +656,13 @@ function movePawn(pawn) {
                     sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 2);
                     validMove.push(sup);
                 }
-            }
+            }}
         } else {//prendo solo una casella se non è la sua prima mossa
+            if (y < 7){
             if (boardMatrixTypeOfPawn[y + 1][x] == 'empty') {
                 sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 1);
                 validMove.push(sup);
-            }
+            }}
         }
         if (y < 7 && x < 7) {
             if (boardMatrixTypeOfPawn[y + 1][x + 1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0, 5))) {// controllo se posso mangiare o meno tramite il classname
@@ -678,6 +681,7 @@ function movePawn(pawn) {
     }
     else {// stessa cosa del ciclo sopra
         if (pawn.className.slice(5, 9) == 'Pawn') {
+            if (y > 1){
             if (boardMatrixTypeOfPawn[y - 1][x] == 'empty') {
                 sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 1);
                 validMove.push(sup);
@@ -686,11 +690,13 @@ function movePawn(pawn) {
                     validMove.push(sup);
                 }
             }
+        }
         } else {
+            if (y > 0){
             if (boardMatrixTypeOfPawn[y - 1][x] == 'empty') {
                 sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 1);
                 validMove.push(sup);
-            }
+            }}
 
         }
 
@@ -1155,7 +1161,7 @@ function hypoteticalMoves(move) {
                             swapper(row.cells[j], row2.cells[k])
                             if (move[3] >= 7) {
                                 $(row.cells[j]).removeClass(row.cells[j].className).addClass('empty');
-                                document.getElementById(row.cells[j].id).innerHTML = '<td id="' + row.cells[j].id + '"; class="empty" onclick="move(this)">&nbsp;</td>';
+                                document.getElementById(row.cells[j].id).innerHTML = '<td id="' + row.cells[j].id + '"; class="empty" onclick="move(this)">'+row.cells[j].innerText+'</td>';
                             }
                         }
                     }
@@ -1174,10 +1180,13 @@ function secondWayOfDepth() {
     var depht2;
     var depht3;
     var depht4;
+
     for (let i = 0; i < depht1.length; i++) {
+       
         hypoteticalMoves(depht1[i])
         depht2 = cpuMove(colorPlayer);
         suicidio[i][4]=depht2
+        
         for (let j = 0; j < depht2.length; j++) {
             hypoteticalMoves(depht2[j])
             depht3 = cpuMove(colorCpu);
@@ -1186,10 +1195,11 @@ function secondWayOfDepth() {
                 hypoteticalMoves(depht3[k])
                 depht4 = cpuMove(colorPlayer);
                 suicidio[i][4][j][4][k][4]=depht4;
+                
             }
         }
-        depht1[i][3] = depht1[i][3]-depht2[Math.floor(Math.random()*depht2.length)][3]+depht3[Math.floor(Math.random()*depht3.length)][3]-depht4[Math.floor(Math.random()*depht4.length)][3]
+       
     }
-    console.log(cpuMove(colorCpu))
+       console.log(suicidio)
 }
 // DA AGGIUSTARE UN BEL Po DI COSE NELLE MOSSE
