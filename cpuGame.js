@@ -84,8 +84,6 @@ function buildHypoteticalChessBoard(){
       }
 }
     function buildExistingChessBoard(){
-
-        
         existingChessBoard = document.createElement('table')
         var row;
         var existingRow;
@@ -828,40 +826,6 @@ function moveKing(pawn) {
 }
 
 
-/*
-piccolo remember 
-(descoveryTypeOfPieces(pawn) == 1 ROOK
-(descoveryTypeOfPieces(pawn) == 2 BISHOP
-(descoveryTypeOfPieces(pawn) == 3 KNIGHT
-(descoveryTypeOfPieces(pawn) == 4 QUEEN
-(descoveryTypeOfPieces(pawn) == 5 KING
-(descoveryTypeOfPieces(pawn) == 6 PAWN
-(descoveryTypeOfPieces(pawn) == 0 EMPTY
-*/
-function actualValue(pawn) {
-    var x = reversedGetLetterGivenAxisX(pawn.id.slice(0, 1));//parte letteraria
-    var y = reversedGetLetterGivenAxisY(pawn.id.slice(1, 2))//parte numerica
-    var value = 0;
-    if (descoveryTypeOfPieces(pawn) == 1) {
-        if (colorCpu == 'white') { value = rookEvalWhite[x][y] }
-        else { value = rookEvalBlack[x][y] }
-    }
-    if (descoveryTypeOfPieces(pawn) == 2) {
-        if (colorCpu == 'white') { value = bishopEvalWhite[x][y] }
-        else { value = bishopEvalBlack[x][y] }
-    }
-    if (descoveryTypeOfPieces(pawn) == 3) { value = knightEval[x][y] }
-    if (descoveryTypeOfPieces(pawn) == 4) { value = queenEval[x][y] }
-    if (descoveryTypeOfPieces(pawn) == 5) {
-        if (colorCpu == 'white') { value = kingEvalWhite[x][y] }
-        else { value = kingEvalBlack[x][y] }
-    }
-    if (descoveryTypeOfPieces(pawn) == 6) {
-        if (colorCpu == 'white') { value = pawnEvalWhite[x][y] }
-        else { value = pawnEvalBlack[x][y] }
-    }
-    return value
-}
 
 
 function valueOfOneMove(hypoteticalPosition, pawn) {
@@ -1203,8 +1167,6 @@ function secondWayOfDepth() {
     var suicidio=depht1 //[[][][][][[]]][]
     var depht2;
     var depht3;
-    var row;
-    var row2;
     var depht4;
 
     for (let i = 0; i < depht1.length; i++) {
@@ -1223,7 +1185,9 @@ function secondWayOfDepth() {
                 hypoteticalMoves(depht1[i])
                 hypoteticalMoves(depht2[j])
                 hypoteticalMoves(depht3[k])
-                depht4 = cpuMove(colorCpu);
+                depht4 = cpuMove(colorPlayer);
+               
+                
                 suicidio[i][4][j][4][k][4]=depht4
                 for (let l = 0; l < depht4.length; l++) {
                 buildHypoteticalChessBoard();
@@ -1232,10 +1196,11 @@ function secondWayOfDepth() {
                 hypoteticalMoves(depht3[k])
                 hypoteticalMoves(depht4[l])
                 actualValue = suicidio[i][3]-suicidio[i][4][j][3]+suicidio[i][4][j][4][k][3]-suicidio[i][4][j][4][k][4][l][3]
-                
                 if(suicidio[i][3]>actualValue){
                     suicidio[i][3]=actualValue
                 }
+                
+               
                 }
                 
             }
@@ -1256,4 +1221,11 @@ function secondWayOfDepth() {
        
        moveToCellsTable(FinalMove[0])
 }
+
 // DA AGGIUSTARE UN BEL Po DI COSE NELLE MOSSE
+class cpu{
+    constructor(color) {
+        this.color = color;
+        this.check = 0;
+      }
+}
