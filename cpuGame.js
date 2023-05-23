@@ -8,17 +8,16 @@ function swapper(a, b) {
         if (a.className.slice(0, 5) == 'white') { $(a).removeClass('whitePawn').addClass('whitepawn'); }
         else { $(a).removeClass('blackPawn').addClass('blackpawn'); }
     }
-    console.log("Start swap");
+    //console.log("Start swap");
     //scambio gli id spoiler dovrebbero essere statici
     var idA = a.id;
     var idB = b.id;
     b.id = idA;
     a.id = idB;
-
-    a = $(a);
+      a = $(a);
     b = $(b);
     var tmp = $('<span>').hide();
-    console.log(tmp);
+    //console.log(tmp);
     a.before(tmp);
     b.before(a);
     tmp.replaceWith(b);
@@ -60,7 +59,7 @@ var hypoteticalBoardMatrixPosition = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 
 var hypoteticalBoardMatrixTypeOfPawn = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],
 [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],];
 
-//var existingChessBoard = document.querySelector('#chessBoard');
+var existingChessBoard = document.querySelector('#chessBoard');
 var hypoteticalChessBoard = document.createElement('table')
 // vado a creare una tabella solo per il pensiero ipotetico della mossa 
 // la vedo abbastanza greve]
@@ -364,7 +363,8 @@ function move(pawn) {
             // Faccio ripartire il prossimo turno
             movingPawnState = 'ready'
             buildHypoteticalChessBoard();
-            setTimeout(() => { secondWayOfDepth(); }, 500);
+            setTimeout(() => { secondWayOfDepth(); }, 100);
+            
             uploadMoves()
             // Dai il turno all'altro player
         }
@@ -1171,6 +1171,7 @@ function hypoteticalMoves(move) {
     }
 }
 
+  
 function secondWayOfDepth() {
     // MATRICE QUADRIDIMENSIONALE 
     // [MOSSACPU[RISPOSTA PLAYER[RISPOSTA CPU[RISPOSTA PLAYER, ETC],[]],[]],[]]
@@ -1179,26 +1180,39 @@ function secondWayOfDepth() {
     var suicidio=depht1 //[[][][][][[]]][]
     var depht2;
     var depht3;
-    var depht4;
+    var row;
+    var row2;
+    //var depht4;
 
     for (let i = 0; i < depht1.length; i++) {
-       
+       buildHypoteticalChessBoard();
         hypoteticalMoves(depht1[i])
         depht2 = cpuMove(colorPlayer);
-        suicidio[i][4]=depht2
-        
+        suicidio[i][4]=depht2  
         for (let j = 0; j < depht2.length; j++) {
+            buildHypoteticalChessBoard();
+            hypoteticalMoves(depht1[i])
             hypoteticalMoves(depht2[j])
             depht3 = cpuMove(colorCpu);
             suicidio[i][4][j][4]=depht3
             for (let k = 0; k < depht3.length; k++) {
+                buildHypoteticalChessBoard();
+                hypoteticalMoves(depht1[i])
+                hypoteticalMoves(depht2[j])
                 hypoteticalMoves(depht3[k])
-                depht4 = cpuMove(colorPlayer);
-                suicidio[i][4][j][4][k][4]=depht4;
-                
             }
         }
        
+    }
+
+    for (let i = 0; i < 8; i++) {
+        row=chessBoard.rows[i]
+        console.log(existingChessBoard)
+        row2=existingChessBoard.rows[i]
+        for (let j = 0; j < 8; j++) {
+            row.cells[j]=row2.cells[j]
+        }
+        
     }
        console.log(suicidio)
 }
