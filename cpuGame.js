@@ -59,11 +59,12 @@ var hypoteticalBoardMatrixPosition = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 
 var hypoteticalBoardMatrixTypeOfPawn = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],
 [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],];
 
-var existingChessBoard = document.querySelector('#chessBoard');
+var existingChessBoard = document.createElement('table')
 var hypoteticalChessBoard = document.createElement('table')
 // vado a creare una tabella solo per il pensiero ipotetico della mossa 
 // la vedo abbastanza greve]
 function buildHypoteticalChessBoard(){
+   
     hypoteticalChessBoard = document.createElement('table')
      var row;
     var hypoteticalRow;
@@ -76,12 +77,33 @@ function buildHypoteticalChessBoard(){
           hypoteticalCell = document.createElement('td');
           hypoteticalCell.id = row.cells[j].id;
           hypoteticalCell.classList.add(row.cells[j].className);
-          hypoteticalCell.innerText = row.cells[j].innerText
+          hypoteticalCell.innerText = row.cells[j].innerText;
           hypoteticalRow.appendChild(hypoteticalCell);
         }
         hypoteticalChessBoard.appendChild(hypoteticalRow)
       }
 }
+    function buildExistingChessBoard(){
+
+        
+        existingChessBoard = document.createElement('table')
+        var row;
+        var existingRow;
+        var existingCell;
+        for(let i = 0; i < 8; i++) {
+            existingRow = document.createElement('tr');
+            row=chessBoard.rows[i];
+            // Aggiungi le colonne alla nuova riga
+            for(let j = 0; j < 8; j++) {
+                existingCell = document.createElement('td');
+                existingCell.id = row.cells[j].id;
+                existingCell.classList.add(row.cells[j].className); 
+                existingCell.innerText= row.cells[j].innerText
+                existingRow.appendChild(existingCell);
+            }
+            existingChessBoard.appendChild(existingRow)
+        }
+    }
 
 // la matrice con i vari valori impostati in base alla posizione 
 var pawnEvalWhite =
@@ -376,6 +398,7 @@ function move(pawn) {
     matrixBuilderPosition();
     matrixBuilderTypeOfPawn();
     buildHypoteticalChessBoard();
+    buildExistingChessBoard()
    // console.log(hypoteticalChessBoard)
     //console.log(boardMatrixPosition);
     //console.log(boardMatrixTypeOfPawn);
@@ -1182,7 +1205,7 @@ function secondWayOfDepth() {
     var depht3;
     var row;
     var row2;
-    //var depht4;
+    var depht4;
 
     for (let i = 0; i < depht1.length; i++) {
        buildHypoteticalChessBoard();
@@ -1200,20 +1223,37 @@ function secondWayOfDepth() {
                 hypoteticalMoves(depht1[i])
                 hypoteticalMoves(depht2[j])
                 hypoteticalMoves(depht3[k])
+                depht4 = cpuMove(colorCpu);
+                suicidio[i][4][j][4][k][4]=depht4
+                for (let l = 0; l < depht4.length; l++) {
+                buildHypoteticalChessBoard();
+                hypoteticalMoves(depht1[i])
+                hypoteticalMoves(depht2[j])
+                hypoteticalMoves(depht3[k])
+                hypoteticalMoves(depht4[l])
+                actualValue = suicidio[i][3]-suicidio[i][4][j][3]+suicidio[i][4][j][4][k][3]-suicidio[i][4][j][4][k][4][l][3]
+                
+                if(suicidio[i][3]>actualValue){
+                    suicidio[i][3]=actualValue
+                }
+                }
+                
             }
         }
        
     }
 
-    for (let i = 0; i < 8; i++) {
-        row=chessBoard.rows[i]
-        console.log(existingChessBoard)
-        row2=existingChessBoard.rows[i]
-        for (let j = 0; j < 8; j++) {
-            row.cells[j]=row2.cells[j]
-        }
-        
-    }
+    
+        for (let  i = 0; i < 8; i++) {
+            for (let j = 0; j < 8; j++) {
+                chessBoard.rows[i].cells[j].innerText= existingChessBoard.rows[i].cells[j].innerText
+                
+            }
+          }
+          console.log(chessBoard)
        console.log(suicidio)
+       var FinalMove = findTheBestMove(suicidio)
+       
+       moveToCellsTable(FinalMove[0])
 }
 // DA AGGIUSTARE UN BEL Po DI COSE NELLE MOSSE
