@@ -48,7 +48,7 @@ var currentSelection;
 var cpuObject= new Cpu('black')
 var playerObject= new Player('white')
 var colorPlayer = 'white';
-var turn = colorPlayer;
+let turn = colorPlayer;
 //imposto i vari valore che hanno le pedine
 let valueOfPawn = 10;
 let valueOfBishop = 30;
@@ -115,7 +115,7 @@ function buildHypoteticalChessBoard(){
     }
 
 // la matrice con i vari valori impostati in base alla posizione 
-var pawnEvalWhite =
+let pawnEvalWhite =
     [
         [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
         [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0],
@@ -127,9 +127,9 @@ var pawnEvalWhite =
         [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     ];
 
-var pawnEvalBlack = reverseArray(pawnEvalWhite)
+let pawnEvalBlack = reverseArray(pawnEvalWhite)
 
-var knightEval =
+let knightEval =
     [
         [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0],
         [-4.0, -2.0, 0.0, 0.0, 0.0, 0.0, -2.0, -4.0],
@@ -141,7 +141,7 @@ var knightEval =
         [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0]
     ];
 
-var bishopEvalWhite = [
+let bishopEvalWhite = [
     [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0],
     [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0],
     [-1.0, 0.0, 0.5, 1.0, 1.0, 0.5, 0.0, -1.0],
@@ -152,9 +152,9 @@ var bishopEvalWhite = [
     [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0]
 ];
 
-var bishopEvalBlack = reverseArray(bishopEvalWhite);
+let bishopEvalBlack = reverseArray(bishopEvalWhite);
 
-var  rookEvalWhite = [
+let  rookEvalWhite = [
     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
     [0.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5],
     [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
@@ -165,9 +165,9 @@ var  rookEvalWhite = [
     [0.0, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0]
 ];
 
-var rookEvalBlack = reverseArray( rookEvalWhite);
+let rookEvalBlack = reverseArray( rookEvalWhite);
 
-var queenEval = [
+let queenEval = [
     [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0],
     [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0],
     [-1.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -1.0],
@@ -178,7 +178,7 @@ var queenEval = [
     [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0]
 ];
 
-var kingEvalWhite = [
+let kingEvalWhite = [
     [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
     [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
     [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
@@ -188,7 +188,7 @@ var kingEvalWhite = [
     [2.0, 2.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0],
     [2.0, 3.0, 1.0, 0.0, 0.0, 1.0, 3.0, 2.0]
 ];
-var kingEvalBlack = reverseArray(kingEvalWhite);
+let kingEvalBlack = reverseArray(kingEvalWhite);
 
 
 function ready() {
@@ -224,11 +224,11 @@ function uploadMoves() {
 // Questa ci consentira' di gestire i movimenti
 function matrixBuilderPosition() {
     console.log("reloading board");
-    // getID ci servira' per salvare i valori dell'id
-    var getID;
+    
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
-            getID = getLetterGivenAxisX(j) + getLetterGivenAxisY(i);
+            // getID ci servira' per salvare i valori dell'id
+            let getID = getLetterGivenAxisX(j) + getLetterGivenAxisY(i);
             boardMatrixPosition[i][j] = document.getElementById(getID).id;
             hypoteticalBoardMatrixPosition[i][j] = document.getElementById(getID).className;
         }
@@ -237,11 +237,12 @@ function matrixBuilderPosition() {
 
 function matrixBuilderTypeOfPawn() {
     console.log("reloading board");
-    // getID ci servira' per salvare i valori dell'id
-    var getID;
+    
+    
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
-            getID = getLetterGivenAxisX(j) + getLetterGivenAxisY(i);
+            // getID ci servira' per salvare i valori dell'id
+            let getID = getLetterGivenAxisX(j) + getLetterGivenAxisY(i);
             boardMatrixTypeOfPawn[i][j] = document.getElementById(getID).className;
             hypoteticalBoardMatrixTypeOfPawn[i][j] = document.getElementById(getID).className;
         }
@@ -518,7 +519,7 @@ function resetColor() {
 //funzione che permette a giocare solo a chi ha il turno
 function resetChessBoard() {
     for (let i = 0; i < 8; i++) {
-        row = chessBoard.rows[i];
+        let row = chessBoard.rows[i];
         for (let j = 0; j < 8; j++) {
             if (row.cells[j].className.slice(0, 5) == colorPlayer) {
                 $(row.cells[j]).css("pointer-events", "auto");
@@ -532,9 +533,9 @@ function resetChessBoard() {
 
 
 function vvalidMove(arrayWithValidMove, pawn) {
-    var row;//riga della scacchiera in cui si trova il ciclo
     for (let i = 0; i < 8; i++) {
-        row = chessBoard.rows[i];
+        //riga della scacchiera in cui si trova il ciclo
+        let row = chessBoard.rows[i];
         for (let j = 0; j < 8; j++) {
             for (let k = 0; k < arrayWithValidMove.length; k++) {
                 if (row.cells[j].id == arrayWithValidMove[k] && row.cells[j].className.slice(0, 5) != pawn.className.slice(0, 5)) {
@@ -547,9 +548,9 @@ function vvalidMove(arrayWithValidMove, pawn) {
 }
 
 function moveBishop(pawn) {
-    var idBishop = pawn.id;
-    var x = reversedGetLetterGivenAxisX(idBishop.slice(0, 1));//parte letteraria
-    var y = reversedGetLetterGivenAxisY(idBishop.slice(1, 2));//parte numerica
+    let idBishop = pawn.id;
+    let x = reversedGetLetterGivenAxisX(idBishop.slice(0, 1));//parte letteraria
+    let y = reversedGetLetterGivenAxisY(idBishop.slice(1, 2));//parte numerica
 
     var xUso = 0;
     var validMove = [];
@@ -584,7 +585,7 @@ function moveBishop(pawn) {
 
     xUso = x - 1;
     yUso = y + 1;
-    for (var i = y; i < 8; i++) {
+    for (let i = y; i < 8; i++) {
         if (xUso < 0 || yUso >= 8) { i = 9; } else {
             sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
             validMove.push(sup);
@@ -596,7 +597,7 @@ function moveBishop(pawn) {
 
     xUso = x - 1;
     yUso = y - 1;
-    for (var i = y; i < 8; i++) {
+    for (let i = y; i < 8; i++) {
         if (xUso < 0 || yUso < 0) { i = 9; } else {
             sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
             validMove.push(sup);
@@ -611,9 +612,9 @@ function moveBishop(pawn) {
 
 function moveRook(pawn) {
     var row;//riga della scacchiera in cui si trova il ciclo
-    var idRook = pawn.id;
-    var x = reversedGetLetterGivenAxisX(idRook.slice(0, 1));//parte letteraria
-    var y = reversedGetLetterGivenAxisY(idRook.slice(1, 2));//parte numerica
+    let idBishop = pawn.id;
+    let x = reversedGetLetterGivenAxisX(idBishop.slice(0, 1));//parte letteraria
+    let y = reversedGetLetterGivenAxisY(idBishop.slice(1, 2));//parte numerica
 
     var xUso = 0;
     var yUso = 0;
@@ -673,9 +674,9 @@ function moveRook(pawn) {
 }
 
 function movePawn(pawn) {
-    var idRook = pawn.id;
-    var x = reversedGetLetterGivenAxisX(idRook.slice(0, 1));//parte letteraria
-    var y = reversedGetLetterGivenAxisY(idRook.slice(1, 2));//parte numerica
+    let idBishop = pawn.id;
+    let x = reversedGetLetterGivenAxisX(idBishop.slice(0, 1));//parte letteraria
+    let y = reversedGetLetterGivenAxisY(idBishop.slice(1, 2));//parte numerica
     var validMove = [];
     var sup;
     if (pawn.className.slice(0, 5) == 'white') {//controllo il colore
@@ -755,9 +756,9 @@ function movePawn(pawn) {
 
 
 function moveKnight(pawn) {
-    var idRook = pawn.id;
-    var x = reversedGetLetterGivenAxisX(idRook.slice(0, 1));//parte letteraria
-    var y = reversedGetLetterGivenAxisY(idRook.slice(1, 2));//parte numerica
+    let idBishop = pawn.id;
+    let x = reversedGetLetterGivenAxisX(idBishop.slice(0, 1));//parte letteraria
+    let y = reversedGetLetterGivenAxisY(idBishop.slice(1, 2));//parte numerica
     var validMove = [];
     var sup;
     if (x <= 7) {//essendo che si muove ad L ho calcolato manualmente le sue 8 posizioni e ho controllato che non andassero fuori dalla scacchiera 
@@ -798,9 +799,9 @@ function moveQueen(pawn) {
 }
 
 function moveKing(pawn) {
-    var idRook = pawn.id;
-    var x = reversedGetLetterGivenAxisX(idRook.slice(0, 1));//parte letteraria
-    var y = reversedGetLetterGivenAxisY(idRook.slice(1, 2));//parte numerica
+    let idBishop = pawn.id;
+    let x = reversedGetLetterGivenAxisX(idBishop.slice(0, 1));//parte letteraria
+    let y = reversedGetLetterGivenAxisY(idBishop.slice(1, 2));//parte numerica
     var validMove = [];
     var sup;
     //controllo se il re non si trovi ai confini della scacchiera per vedere le mosse disponibile poi le metto una a una 
@@ -840,21 +841,21 @@ function moveKing(pawn) {
 
 
 function valueOfOneMove(hypoteticalPosition, pawn) {
-    var x = reversedGetLetterGivenAxisX(hypoteticalPosition.slice(0, 1));//parte letteraria
-    var y = reversedGetLetterGivenAxisY(hypoteticalPosition.slice(1, 2));//parte numerica
-    var sup;
-    var row;
+    let x = reversedGetLetterGivenAxisX(hypoteticalPosition.slice(0, 1));//parte letteraria
+    let y = reversedGetLetterGivenAxisY(hypoteticalPosition.slice(1, 2));//parte numerica
+    
+
 
     //controllo che la casella sia dell'avversario
     if (idToClass(hypoteticalPosition).slice(0, 5) != cpuObject.color) {
         //trovo la riga della tabella dellavversario
         for (let i = 0; i < 8; i++) {
-            row = chessBoard.rows[i];
+            let row = chessBoard.rows[i];
             for (var j = 0; j < 8; j++) {
 
                 if (hypoteticalPosition == row.cells[j].id) {
 
-                    sup = row.cells[j]
+                    let sup = row.cells[j]
 
                     //in base al mio tipo di pedina cambiera il valore
                     if (descoveryTypeOfPieces(pawn) == 1) {
@@ -1013,8 +1014,8 @@ function valueOfOneMove(hypoteticalPosition, pawn) {
 //PROBLEMA DELLA VALUTAZIONE
 //DA RISOLVERE
 function idToClass(id) {
-    var x = reversedGetLetterGivenAxisX(id.slice(0, 1));//parte letteraria
-    var y = reversedGetLetterGivenAxisY(id.slice(1, 2));//parte numerica
+    let x = reversedGetLetterGivenAxisX(id.slice(0, 1));//parte letteraria
+    let y = reversedGetLetterGivenAxisY(id.slice(1, 2));//parte numerica
     return boardMatrixTypeOfPawn[y][x]
 }
 
@@ -1024,10 +1025,9 @@ function cpuMove(colorIWant) {
     var moveOfOnePieces = [];
     var moves = [];
     var index = 0;
-    var row;
 
     for (let i = 0; i < 8; i++) {
-        row = hypoteticalChessBoard.rows[i];
+       let row = hypoteticalChessBoard.rows[i];
         for (let j = 0; j < 8; j++) {
             
             if (row.cells[j].className.slice(0, 5) == colorIWant) {
@@ -1078,12 +1078,12 @@ function cpuMove(colorIWant) {
 }
 
 function moveOfCpu(moves) {
-    var realMoves = moves;
+    let realMoves = moves;
     var sup;
     var sup2;
     var sup3;
-    var FinalMove = [];
     var index = 0
+    var FinalMove =[];
     for (let i = 0; i < realMoves.length; i++) {
         sup = realMoves[i];
 
@@ -1095,7 +1095,7 @@ function moveOfCpu(moves) {
         }
 
     }
-    FinalMove = findTheBestMove(FinalMove)
+   FinalMove = findTheBestMove(FinalMove)
 
     
     return FinalMove
