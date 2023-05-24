@@ -32,7 +32,7 @@ class Cpu{
 class Player{
     constructor(color) {
         this.color = color;
-        this.check = true;
+        this.check = false;
       }
 }
 // VARIABILI
@@ -807,37 +807,65 @@ function moveKing(pawn) {
     //controllo se il re non si trovi ai confini della scacchiera per vedere le mosse disponibile poi le metto una a una 
     if (x > 1) {
         sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y + 1);
-        validMove.push(sup)
+        if(checkTheMoev(sup,pawn)){
+            validMove.push(sup)  
+         }
         sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y);
-        validMove.push(sup)
+        if(checkTheMoev(sup,pawn)){
+            validMove.push(sup)  
+         }
     }
     if (x > 1 && y > 1) {
         sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y - 1);
-        validMove.push(sup)
+        if(checkTheMoev(sup,pawn)){
+            validMove.push(sup)  
+         }
     }
     if (y > 1) {
         sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y - 1);
-        validMove.push(sup)
+        if(checkTheMoev(sup,pawn)){
+            validMove.push(sup)  
+         }
         sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 1);
-        validMove.push(sup)
+        if(checkTheMoev(sup,pawn)){
+            validMove.push(sup)  
+         }
     }
     if (y < 8) {
         sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 1);
-        validMove.push(sup)
+        if(checkTheMoev(sup,pawn)){
+            validMove.push(sup)  
+         }
     }
     if (x < 8) {
         sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y);
-        validMove.push(sup)
+        if(checkTheMoev(sup,pawn)){
+            validMove.push(sup)  
+         }
     }
     if (x < 8 && y < 8) {
         sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y + 1);
-        validMove.push(sup)
+        if(checkTheMoev(sup,pawn)){
+           validMove.push(sup)  
+        }
+       
     }
+    
     vvalidMove(validMove, pawn)
     return validMove;
 }
 
-
+function checkTheMoev(id,pawn){
+    for (let i = 0; i < 8; i++) {
+        //riga della scacchiera in cui si trova il ciclo
+        let row = chessBoard.rows[i];
+        for (let j = 0; j < 8; j++) {
+                if (row.cells[j].id == id && row.cells[j].className.slice(0, 5) != pawn.className.slice(0, 5)) {
+                return true
+                }
+        }
+    }
+}
 
 
 function valueOfOneMove(hypoteticalPosition, pawn) {
@@ -1094,7 +1122,7 @@ function moveOfCpu(moves) {
             index++
         }
 
-    }
+    }checkTheCheckMate('black',FinalMove)
    FinalMove = findTheBestMove(FinalMove)
 
     
@@ -1132,7 +1160,7 @@ function moveToCellsTable(theBestMove) {
                     for (let k = 0; k < 8; k++) {
                         if (row2.cells[k].id == theBestMove[2]) {
                             swapper(row.cells[j], row2.cells[k])
-                            if (theBestMove[3] >= 7) {
+                            if (row2.cells[k].className.slice((0,5))==findTheOppositeColor(row.cells[j].className.slice(0.5))) {
                                 $(row.cells[j]).removeClass(row.cells[j].className).addClass('empty');
                                 document.getElementById(row.cells[j].id).innerHTML = '<td id="' + row.cells[j].id + '"; class="empty" onclick="move(this)">&nbsp;</td>';
                             }
@@ -1157,7 +1185,7 @@ function hypoteticalMoves(move) {
                     for (let k = 0; k < 8; k++) {
                         if (row2.cells[k].id == move[2]) {
                             swapper(row.cells[j], row2.cells[k])
-                            if (move[3] >= 7) {
+                            if (row2.cells[k].className.slice((0,5))==findTheOppositeColor(row.cells[j].className.slice(0.5))) {
                                 $(row.cells[j]).removeClass(row.cells[j].className).addClass('empty');
                                 document.getElementById(row.cells[j].id).innerHTML = '<td id="' + row.cells[j].id + '"; class="empty" onclick="move(this)">'+row.cells[j].innerText+'</td>';
                             }
@@ -1233,4 +1261,40 @@ function secondWayOfDepth() {
        moveToCellsTable(FinalMove[0])
 }
 
-// DA AGGIUSTARE UN BEL Po DI COSE NELLE MOSSE
+function checkTheCheckMate(myColor,moveOfMyColor){
+    var moveOfOpposite;
+    var moveOfOppositeKing;
+    var idOfOppositeKing;
+    var vsKing=[]
+    var index=0;
+    for (let i = 0; i < 8; i++) {
+       let row = chessBoard.rows[i];
+        for (let j = 0; j < 8; j++) {
+            if(row.cells[j].className==(findTheOppositeColor(myColor)+'King'))
+            {
+                moveOfOppositeKing=moveKing(row.cells[j]) 
+                idOfOppositeKing=row.cells[j].id
+               
+            }
+        }
+    }
+
+    for (let i = 0; i < moveOfMyColor.length; i++) {
+        if (moveOfMyColor[i][2]==idOfOppositeKing) {
+            console.log(moveOfMyColor[i][2])
+            for (let k = 0; k < moveOfMyColor.length; k++) {
+                if (moveOfMyColor[i][0]==moveOfMyColor[k][0]) {
+                    vsKing[index]=moveOfMyColor[k]
+                 }
+             }
+             index++;
+         }
+ 
+    }
+
+    if(vsKing != null){
+        console.log(vsKing)
+    }
+    
+
+}
