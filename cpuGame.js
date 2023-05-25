@@ -23,17 +23,17 @@ function swapper(a, b) {
     tmp.replaceWith(b);
 }
 
-class Cpu{
+class Cpu {
     constructor(color) {
         this.color = color;
         this.check = false;
-      }
+    }
 }
-class Player{
+class Player {
     constructor(color) {
         this.color = color;
         this.check = false;
-      }
+    }
 }
 // VARIABILI
 
@@ -45,8 +45,8 @@ var remainingTimePlayer;
 // Movimento pedina
 var movingPawnState = 'ready';
 var currentSelection;
-var cpuObject= new Cpu('black')
-var playerObject= new Player('white')
+var cpuObject = new Cpu('black')
+var playerObject = new Player('white')
 var colorPlayer = 'white';
 let turn = colorPlayer;
 //imposto i vari valore che hanno le pedine
@@ -74,45 +74,45 @@ var existingChessBoard = document.createElement('table')
 var hypoteticalChessBoard = document.createElement('table')
 // vado a creare una tabella solo per il pensiero ipotetico della mossa 
 // la vedo abbastanza greve]
-function buildHypoteticalChessBoard(){
-   
+function buildHypoteticalChessBoard() {
+
     hypoteticalChessBoard = document.createElement('table')
-     var row;
+    var row;
     var hypoteticalRow;
     var hypoteticalCell;
-    for(let i = 0; i < 8; i++) {
-         hypoteticalRow = document.createElement('tr');
-         row=chessBoard.rows[i];
+    for (let i = 0; i < 8; i++) {
+        hypoteticalRow = document.createElement('tr');
+        row = chessBoard.rows[i];
         // Aggiungi le colonne alla nuova riga
-        for(let j = 0; j < 8; j++) {
-          hypoteticalCell = document.createElement('td');
-          hypoteticalCell.id = row.cells[j].id;
-          hypoteticalCell.classList.add(row.cells[j].className);
-          hypoteticalCell.innerText = row.cells[j].innerText;
-          hypoteticalRow.appendChild(hypoteticalCell);
+        for (let j = 0; j < 8; j++) {
+            hypoteticalCell = document.createElement('td');
+            hypoteticalCell.id = row.cells[j].id;
+            hypoteticalCell.classList.add(row.cells[j].className);
+            hypoteticalCell.innerText = row.cells[j].innerText;
+            hypoteticalRow.appendChild(hypoteticalCell);
         }
         hypoteticalChessBoard.appendChild(hypoteticalRow)
-      }
-}
-    function buildExistingChessBoard(){
-        existingChessBoard = document.createElement('table')
-        var row;
-        var existingRow;
-        var existingCell;
-        for(let i = 0; i < 8; i++) {
-            existingRow = document.createElement('tr');
-            row=chessBoard.rows[i];
-            // Aggiungi le colonne alla nuova riga
-            for(let j = 0; j < 8; j++) {
-                existingCell = document.createElement('td');
-                existingCell.id = row.cells[j].id;
-                existingCell.classList.add(row.cells[j].className); 
-                existingCell.innerText= row.cells[j].innerText
-                existingRow.appendChild(existingCell);
-            }
-            existingChessBoard.appendChild(existingRow)
-        }
     }
+}
+function buildExistingChessBoard() {
+    existingChessBoard = document.createElement('table')
+    var row;
+    var existingRow;
+    var existingCell;
+    for (let i = 0; i < 8; i++) {
+        existingRow = document.createElement('tr');
+        row = chessBoard.rows[i];
+        // Aggiungi le colonne alla nuova riga
+        for (let j = 0; j < 8; j++) {
+            existingCell = document.createElement('td');
+            existingCell.id = row.cells[j].id;
+            existingCell.classList.add(row.cells[j].className);
+            existingCell.innerText = row.cells[j].innerText
+            existingRow.appendChild(existingCell);
+        }
+        existingChessBoard.appendChild(existingRow)
+    }
+}
 
 // la matrice con i vari valori impostati in base alla posizione 
 let pawnEvalWhite =
@@ -154,7 +154,7 @@ let bishopEvalWhite = [
 
 let bishopEvalBlack = reverseArray(bishopEvalWhite);
 
-let  rookEvalWhite = [
+let rookEvalWhite = [
     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
     [0.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5],
     [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
@@ -165,7 +165,7 @@ let  rookEvalWhite = [
     [0.0, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0]
 ];
 
-let rookEvalBlack = reverseArray( rookEvalWhite);
+let rookEvalBlack = reverseArray(rookEvalWhite);
 
 let queenEval = [
     [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0],
@@ -203,7 +203,7 @@ function ready() {
     matrixBuilderTypeOfPawn();
     uploadMoves()
     buildHypoteticalChessBoard();
-    
+
 }
 
 // Funzione temporanea per mostrare informazioni partita
@@ -224,7 +224,7 @@ function uploadMoves() {
 // Questa ci consentira' di gestire i movimenti
 function matrixBuilderPosition() {
     console.log("reloading board");
-    
+
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
             // getID ci servira' per salvare i valori dell'id
@@ -237,8 +237,8 @@ function matrixBuilderPosition() {
 
 function matrixBuilderTypeOfPawn() {
     console.log("reloading board");
-    
-    
+
+
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
             // getID ci servira' per salvare i valori dell'id
@@ -396,7 +396,7 @@ function move(pawn) {
             movingPawnState = 'ready'
             buildHypoteticalChessBoard();
             setTimeout(() => { secondWayOfDepth(); }, 100);
-            
+
             uploadMoves()
             // Dai il turno all'altro player
         }
@@ -409,7 +409,7 @@ function move(pawn) {
     matrixBuilderTypeOfPawn();
     buildHypoteticalChessBoard();
     buildExistingChessBoard()
-   // console.log(hypoteticalChessBoard)
+    // console.log(hypoteticalChessBoard)
     //console.log(boardMatrixPosition);
     //console.log(boardMatrixTypeOfPawn);
 
@@ -681,21 +681,23 @@ function movePawn(pawn) {
     var sup;
     if (pawn.className.slice(0, 5) == 'white') {//controllo il colore
         if (pawn.className.slice(5, 9) == 'Pawn') {// controll che sia la sua prima mossa
-            if (y <6){
-            if (boardMatrixTypeOfPawn[y + 1][x] == 'empty') {
-                sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 1);// prendo le 2 caselle che dopo faro colorare e rendere disponibile per il movimento
-                validMove.push(sup);
-                if (boardMatrixTypeOfPawn[y + 2][x] == 'empty') {
-                    sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 2);
+            if (y < 6) {
+                if (boardMatrixTypeOfPawn[y + 1][x] == 'empty') {
+                    sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 1);// prendo le 2 caselle che dopo faro colorare e rendere disponibile per il movimento
+                    validMove.push(sup);
+                    if (boardMatrixTypeOfPawn[y + 2][x] == 'empty') {
+                        sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 2);
+                        validMove.push(sup);
+                    }
+                }
+            }
+        } else {//prendo solo una casella se non è la sua prima mossa
+            if (y < 7) {
+                if (boardMatrixTypeOfPawn[y + 1][x] == 'empty') {
+                    sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 1);
                     validMove.push(sup);
                 }
-            }}
-        } else {//prendo solo una casella se non è la sua prima mossa
-            if (y < 7){
-            if (boardMatrixTypeOfPawn[y + 1][x] == 'empty') {
-                sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 1);
-                validMove.push(sup);
-            }}
+            }
         }
         if (y < 7 && x < 7) {
             if (boardMatrixTypeOfPawn[y + 1][x + 1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0, 5))) {// controllo se posso mangiare o meno tramite il classname
@@ -714,22 +716,23 @@ function movePawn(pawn) {
     }
     else {// stessa cosa del ciclo sopra
         if (pawn.className.slice(5, 9) == 'Pawn') {
-            if (y > 1){
-            if (boardMatrixTypeOfPawn[y - 1][x] == 'empty') {
-                sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 1);
-                validMove.push(sup);
-                if (boardMatrixTypeOfPawn[y - 2][x] == 'empty') {
-                    sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 2);
+            if (y > 1) {
+                if (boardMatrixTypeOfPawn[y - 1][x] == 'empty') {
+                    sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 1);
+                    validMove.push(sup);
+                    if (boardMatrixTypeOfPawn[y - 2][x] == 'empty') {
+                        sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 2);
+                        validMove.push(sup);
+                    }
+                }
+            }
+        } else {
+            if (y > 0) {
+                if (boardMatrixTypeOfPawn[y - 1][x] == 'empty') {
+                    sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 1);
                     validMove.push(sup);
                 }
             }
-        }
-        } else {
-            if (y > 0){
-            if (boardMatrixTypeOfPawn[y - 1][x] == 'empty') {
-                sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 1);
-                validMove.push(sup);
-            }}
 
         }
 
@@ -807,62 +810,62 @@ function moveKing(pawn) {
     //controllo se il re non si trovi ai confini della scacchiera per vedere le mosse disponibile poi le metto una a una 
     if (x > 1) {
         sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y + 1);
-        if(checkTheMoev(sup,pawn)){
-            validMove.push(sup)  
-         }
+        if (checkTheMoev(sup, pawn)) {
+            validMove.push(sup)
+        }
         sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y);
-        if(checkTheMoev(sup,pawn)){
-            validMove.push(sup)  
-         }
+        if (checkTheMoev(sup, pawn)) {
+            validMove.push(sup)
+        }
     }
     if (x > 1 && y > 1) {
         sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y - 1);
-        if(checkTheMoev(sup,pawn)){
-            validMove.push(sup)  
-         }
+        if (checkTheMoev(sup, pawn)) {
+            validMove.push(sup)
+        }
     }
     if (y > 1) {
         sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y - 1);
-        if(checkTheMoev(sup,pawn)){
-            validMove.push(sup)  
-         }
+        if (checkTheMoev(sup, pawn)) {
+            validMove.push(sup)
+        }
         sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 1);
-        if(checkTheMoev(sup,pawn)){
-            validMove.push(sup)  
-         }
+        if (checkTheMoev(sup, pawn)) {
+            validMove.push(sup)
+        }
     }
     if (y < 8) {
         sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 1);
-        if(checkTheMoev(sup,pawn)){
-            validMove.push(sup)  
-         }
+        if (checkTheMoev(sup, pawn)) {
+            validMove.push(sup)
+        }
     }
     if (x < 8) {
         sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y);
-        if(checkTheMoev(sup,pawn)){
-            validMove.push(sup)  
-         }
+        if (checkTheMoev(sup, pawn)) {
+            validMove.push(sup)
+        }
     }
     if (x < 8 && y < 8) {
         sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y + 1);
-        if(checkTheMoev(sup,pawn)){
-           validMove.push(sup)  
+        if (checkTheMoev(sup, pawn)) {
+            validMove.push(sup)
         }
-       
+
     }
-    
+
     vvalidMove(validMove, pawn)
     return validMove;
 }
 
-function checkTheMoev(id,pawn){
+function checkTheMoev(id, pawn) {
     for (let i = 0; i < 8; i++) {
         //riga della scacchiera in cui si trova il ciclo
         let row = chessBoard.rows[i];
         for (let j = 0; j < 8; j++) {
-                if (row.cells[j].id == id && row.cells[j].className.slice(0, 5) != pawn.className.slice(0, 5)) {
+            if (row.cells[j].id == id && row.cells[j].className.slice(0, 5) != pawn.className.slice(0, 5)) {
                 return true
-                }
+            }
         }
     }
 }
@@ -871,7 +874,7 @@ function checkTheMoev(id,pawn){
 function valueOfOneMove(hypoteticalPosition, pawn) {
     let x = reversedGetLetterGivenAxisX(hypoteticalPosition.slice(0, 1));//parte letteraria
     let y = reversedGetLetterGivenAxisY(hypoteticalPosition.slice(1, 2));//parte numerica
-    
+
 
 
     //controllo che la casella sia dell'avversario
@@ -1055,11 +1058,11 @@ function cpuMove(colorIWant) {
     var index = 0;
 
     for (let i = 0; i < 8; i++) {
-       let row = hypoteticalChessBoard.rows[i];
+        let row = hypoteticalChessBoard.rows[i];
         for (let j = 0; j < 8; j++) {
-            
+
             if (row.cells[j].className.slice(0, 5) == colorIWant) {
-                
+
                 moves[index] = []
                 moves[index][0] = row.cells[j].id;
                 moves[index][1] = row.cells[j].className;
@@ -1101,7 +1104,7 @@ function cpuMove(colorIWant) {
 
     }
     moves = moveOfCpu(moves)
-    
+    moves = findTheBestMove(moves)
     return moves
 }
 
@@ -1111,7 +1114,7 @@ function moveOfCpu(moves) {
     var sup2;
     var sup3;
     var index = 0
-    var FinalMove =[];
+    var FinalMove = [];
     for (let i = 0; i < realMoves.length; i++) {
         sup = realMoves[i];
 
@@ -1122,10 +1125,10 @@ function moveOfCpu(moves) {
             index++
         }
 
-    }checkTheCheckMate('black',FinalMove)
-   FinalMove = findTheBestMove(FinalMove)
+    }
 
-    
+
+
     return FinalMove
 
 
@@ -1136,7 +1139,7 @@ function findTheBestMove(array) {
     array.sort(function (a, b) {
         return b[3] - a[3];
     });
-    if (array.length > 4) {
+    if (array.length > 10) {
         for (let i = 0; i < 5; i++) {
             arraysup[i] = array[i];
         }
@@ -1160,11 +1163,12 @@ function moveToCellsTable(theBestMove) {
                     for (let k = 0; k < 8; k++) {
                         if (row2.cells[k].id == theBestMove[2]) {
                             swapper(row.cells[j], row2.cells[k])
-                            if (row2.cells[k].className.slice((0,5))==findTheOppositeColor(row.cells[j].className.slice(0.5))) {
+                            if (row2.cells[k].className.slice((0, 5)) == findTheOppositeColor(row.cells[j].className.slice(0.5))) {
                                 $(row.cells[j]).removeClass(row.cells[j].className).addClass('empty');
                                 document.getElementById(row.cells[j].id).innerHTML = '<td id="' + row.cells[j].id + '"; class="empty" onclick="move(this)">&nbsp;</td>';
                             }
                             resetColor();
+                            checkTheCheckMate('black')
                         }
                     }
                 }
@@ -1185,9 +1189,9 @@ function hypoteticalMoves(move) {
                     for (let k = 0; k < 8; k++) {
                         if (row2.cells[k].id == move[2]) {
                             swapper(row.cells[j], row2.cells[k])
-                            if (row2.cells[k].className.slice((0,5))==findTheOppositeColor(row.cells[j].className.slice(0.5))) {
+                            if (row2.cells[k].className.slice((0, 5)) == findTheOppositeColor(row.cells[j].className.slice(0.5))) {
                                 $(row.cells[j]).removeClass(row.cells[j].className).addClass('empty');
-                                document.getElementById(row.cells[j].id).innerHTML = '<td id="' + row.cells[j].id + '"; class="empty" onclick="move(this)">'+row.cells[j].innerText+'</td>';
+                                document.getElementById(row.cells[j].id).innerHTML = '<td id="' + row.cells[j].id + '"; class="empty" onclick="move(this)">' + row.cells[j].innerText + '</td>';
                             }
                         }
                     }
@@ -1197,104 +1201,137 @@ function hypoteticalMoves(move) {
     }
 }
 
-  
+
 function secondWayOfDepth() {
     // MATRICE QUADRIDIMENSIONALE 
     // [MOSSACPU[RISPOSTA PLAYER[RISPOSTA CPU[RISPOSTA PLAYER, ETC],[]],[]],[]]
     var actualValue = 0
     var depht1 = cpuMove(cpuObject.color);
-    var suicidio=depht1 //[[][][][][[]]][]
+    var suicidio = depht1 //[[][][][][[]]][]
     var depht2;
     var depht3;
     var depht4;
 
     for (let i = 0; i < depht1.length; i++) {
-       buildHypoteticalChessBoard();
+        buildHypoteticalChessBoard();
         hypoteticalMoves(depht1[i])
         depht2 = cpuMove(colorPlayer);
-        suicidio[i][4]=depht2  
+        suicidio[i][4] = depht2
         for (let j = 0; j < depht2.length; j++) {
             buildHypoteticalChessBoard();
             hypoteticalMoves(depht1[i])
             hypoteticalMoves(depht2[j])
+            
+
             depht3 = cpuMove(cpuObject.color);
-            suicidio[i][4][j][4]=depht3
+            suicidio[i][4][j][4] = depht3
             for (let k = 0; k < depht3.length; k++) {
                 buildHypoteticalChessBoard();
                 hypoteticalMoves(depht1[i])
                 hypoteticalMoves(depht2[j])
                 hypoteticalMoves(depht3[k])
-                depht4 = cpuMove(colorPlayer);
-               
-                
-                suicidio[i][4][j][4][k][4]=depht4
-                for (let l = 0; l < depht4.length; l++) {
-                buildHypoteticalChessBoard();
-                hypoteticalMoves(depht1[i])
-                hypoteticalMoves(depht2[j])
-                hypoteticalMoves(depht3[k])
-                hypoteticalMoves(depht4[l])
-                actualValue = suicidio[i][3]-suicidio[i][4][j][3]+suicidio[i][4][j][4][k][3]-suicidio[i][4][j][4][k][4][l][3]
-                if(suicidio[i][3]>actualValue){
-                    suicidio[i][3]=actualValue
-                }
-                
-               
-                }
-                
+                actualValue = suicidio[i][3] - suicidio[i][4][j][3] + suicidio[i][4][j][4][k][3] 
+                    if (suicidio[i][3] > actualValue) {
+                        suicidio[i][3] = actualValue
+                    }
+
             }
         }
-       
+
     }
 
-    
-        for (let  i = 0; i < 8; i++) {
-            for (let j = 0; j < 8; j++) {
-                chessBoard.rows[i].cells[j].innerText= existingChessBoard.rows[i].cells[j].innerText
-                
-            }
-          }
-          console.log(chessBoard)
-       console.log(suicidio)
-       var FinalMove = findTheBestMove(suicidio)
-       
-       moveToCellsTable(FinalMove[0])
+
+    for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            chessBoard.rows[i].cells[j].innerText = existingChessBoard.rows[i].cells[j].innerText
+
+        }
+    }
+    console.log(chessBoard)
+    console.log(suicidio)
+    var FinalMove = findTheBestMove(suicidio)
+
+    moveToCellsTable(FinalMove[0], FinalMove)
 }
 
-function checkTheCheckMate(myColor,moveOfMyColor){
+function checkTheCheckMate(myColor) {
     var moveOfOpposite;
     var moveOfOppositeKing;
     var idOfOppositeKing;
-    var vsKing=[]
-    var index=0;
+    var vsKing = 0
+    var index = 0;
+    var moveOfOnePieces = [];
+    var myMoves = [];
+    var index2 = 0;
+
     for (let i = 0; i < 8; i++) {
-       let row = chessBoard.rows[i];
+        let row = chessBoard.rows[i];
+        let row2 = chessBoard.rows[i];
         for (let j = 0; j < 8; j++) {
-            if(row.cells[j].className==(findTheOppositeColor(myColor)+'King'))
-            {
-                moveOfOppositeKing=moveKing(row.cells[j]) 
-                idOfOppositeKing=row.cells[j].id
-               
+            if (row.cells[j].className == (findTheOppositeColor(myColor) + 'King')) {
+                moveOfOppositeKing = moveKing(row.cells[j])
+                idOfOppositeKing = row.cells[j].id
             }
+
+            if (row2.cells[j].className.slice(0, 5) == myColor) {
+
+                myMoves[index2] = []
+                myMoves[index2][0] = row2.cells[j].id;
+                myMoves[index2][1] = row2.cells[j].className;
+                if (descoveryTypeOfPiecesWithClassName(row2.cells[j].className) == 1) {
+                    moveOfOnePieces = moveRook(row2.cells[j])
+                }
+                if (descoveryTypeOfPiecesWithClassName(row2.cells[j].className) == 2) {
+                    moveOfOnePieces = moveBishop(row2.cells[j])
+                }
+                if (descoveryTypeOfPiecesWithClassName(row2.cells[j].className) == 3) {
+                    moveOfOnePieces = moveKnight(row2.cells[j])
+                }
+                if (descoveryTypeOfPiecesWithClassName(row2.cells[j].className) == 4) {
+                    moveOfOnePieces = moveQueen(row2.cells[j])
+                }
+                if (descoveryTypeOfPiecesWithClassName(row2.cells[j].className) == 5) {
+                    moveOfOnePieces = moveKing(row2.cells[j])
+                }
+                if (descoveryTypeOfPiecesWithClassName(row2.cells[j].className) == 6) {
+                    moveOfOnePieces = movePawn(row2.cells[j])
+                    $(row2.cells[j]).removeClass(myColor + 'pawn').addClass(myColor + 'Pawn');
+                }
+                myMoves[index2][2] = [];
+                myMoves[index2][3] = [];
+
+                for (let k = 0; k < moveOfOnePieces.length; k++) {
+
+                    if (moveOfOnePieces[k].length == 2 && idToClass(moveOfOnePieces[k]).slice(0, 5) != myColor) {
+                        myMoves[index2][2].push(moveOfOnePieces[k]);
+                        myMoves[index2][3].push(valueOfOneMove(moveOfOnePieces[k], row.cells[j]))
+                    }
+                }
+                index2++;
+            }
+            resetColor()
         }
     }
+    myMoves = moveOfCpu(myMoves)
 
-    for (let i = 0; i < moveOfMyColor.length; i++) {
-        if (moveOfMyColor[i][2]==idOfOppositeKing) {
-            console.log(moveOfMyColor[i][2])
-            for (let k = 0; k < moveOfMyColor.length; k++) {
-                if (moveOfMyColor[i][0]==moveOfMyColor[k][0]) {
-                    vsKing[index]=moveOfMyColor[k]
-                 }
-             }
-             index++;
-         }
- 
+    for (let i = 0; i < myMoves.length; i++) {
+        if (myMoves[i][2] == idOfOppositeKing) {
+            vsKing = [] 
+            for (let k = 0; k < myMoves.length; k++) {
+                if (myMoves[i][0] == myMoves[k][0]) {
+                    
+                    vsKing.push = myMoves[k]
+                    
+                }
+            }
+            
+        }
+
     }
-
-    if(vsKing != null){
+        console.log(myMoves)
+    if (vsKing.lenght != 0) {
         console.log(vsKing)
     }
-    
+
 
 }
