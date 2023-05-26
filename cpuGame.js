@@ -1163,9 +1163,10 @@ function moveToCellsTable(theBestMove) {
                     for (let k = 0; k < 8; k++) {
                         if (row2.cells[k].id == theBestMove[2]) {
                             swapper(row.cells[j], row2.cells[k])
-                            if (row2.cells[k].className.slice((0, 5)) == findTheOppositeColor(row.cells[j].className.slice(0.5))) {
+                            if (row2.cells[k].className.slice((0, 5)) != findTheOppositeColor(row.cells[j].className.slice(0.5))) {
                                 $(row.cells[j]).removeClass(row.cells[j].className).addClass('empty');
                                 document.getElementById(row.cells[j].id).innerHTML = '<td id="' + row.cells[j].id + '"; class="empty" onclick="move(this)">&nbsp;</td>';
+                                console.log("polkaholixc")
                             }
                             resetColor();
                             checkTheCheckMate('black')
@@ -1221,8 +1222,6 @@ function secondWayOfDepth() {
             buildHypoteticalChessBoard();
             hypoteticalMoves(depht1[i])
             hypoteticalMoves(depht2[j])
-            
-
             depht3 = cpuMove(cpuObject.color);
             suicidio[i][4][j][4] = depht3
             for (let k = 0; k < depht3.length; k++) {
@@ -1318,20 +1317,97 @@ function checkTheCheckMate(myColor) {
         if (myMoves[i][2] == idOfOppositeKing) {
             vsKing = [] 
             for (let k = 0; k < myMoves.length; k++) {
-                if (myMoves[i][0] == myMoves[k][0]) {
-                    
-                    vsKing.push = myMoves[k]
+                if (myMoves[i][0] == myMoves[k][0] ) {
+                        let x = reversedGetLetterGivenAxisX(myMoves[i][0].slice(0, 1));//parte letteraria
+                        let y = reversedGetLetterGivenAxisY(myMoves[i][0].slice(1, 2));//parte numerica
+                        let xk =reversedGetLetterGivenAxisX(idOfOppositeKing.slice(0, 1));
+                        let yk =reversedGetLetterGivenAxisY(idOfOppositeKing.slice(1, 2));
+
+                    if (descoveryTypeOfPiecesWithClassName(myMoves[i][1]) == 1 || descoveryTypeOfPiecesWithClassName(myMoves[i][1])==4) {
+                        
+                        if(x==xk){
+                            if (y>yk &&  myMoves[k][2].slice(0, 1)== idOfOppositeKing.slice(0,1)) {
+                                vsKing[index] = myMoves[k]
+                                index++
+                            } else if(y<yk &&   myMoves[k][2].slice(0, 1)== idOfOppositeKing.slice(0,1)) {
+                                vsKing[index] = myMoves[k]
+                                index++
+                            }
+                        }else if(y==yk){
+                            if (x>xk &&  myMoves[k][2].slice(1, 2)== idOfOppositeKing.slice(1,2)) {
+                                vsKing[index] = myMoves[k]
+                                index++
+                            } else if(x<xk &&  myMoves[k][2].slice(1, 2)== idOfOppositeKing.slice(1,2)) {
+                                vsKing[index] = myMoves[k]
+                                index++
+                            }
+                        }
+                    }
+                    if (descoveryTypeOfPiecesWithClassName(myMoves[i][1])== 2 || descoveryTypeOfPiecesWithClassName(myMoves[i][1])==4) {
+                        
+                        if(x>xk && y>yk ){
+                            for (let xUso = xk; xUso >=x; xUso--) {
+                                for (let yUso = yk; yUso >= y; yUso--) {
+                                    if(reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(0,1)) == yUso)
+                                    vsKing[index] = myMoves[k]
+                                    index++
+                                  }
+                            }
+                        }
+                        if(x<xk && y>yk ){
+                            for (let xUso = x; xUso <=xK; xUso++) {
+                                for (let yUso = yk; yUso <= y; yUso--) {
+    
+                                    if(reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(0,1)) == yUso)
+
+                                    vsKing[index] = myMoves[k]
+                                    index++
+                                  }
+                            }
+                        }
+                        if(x>xk && y<yk){
+                            //DA PRENDERE COME ESEMIPDJFOISDJFOIUSDBNF
+                            for (let xUso=x; xUso>=xk; xUso--) {
+                                for (let yUso = y; yUso <= yk; yUso++) {
+                                   
+                                    if(reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(0,1)) == yUso)
+                                    vsKing[index] = myMoves[k]
+                                    index++
+                                  }
+                            }
+                        }
+                        if(x<xk && y<yk ){
+                           
+                            for (let xUso = x; xUso <=xK; xUso++) {
+                                for (let yUso = y; yUso <= yk; yUso++) {
+    
+                                    if(reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(0,1)) == yUso)
+
+                                    vsKing[index] = myMoves[k]
+                                    index++
+                                  }
+                            }
+                            
+                        }
+
+                        
+                    }
+                    if (descoveryTypeOfPiecesWithClassName(myMoves[i][1]) == 3) {
+                        vsKing[index] = myMoves[k]
+                        index++
+                    }
+                    if (descoveryTypeOfPiecesWithClassName(myMoves[i][1]) == 6) {
+                        if(myMoves[k][2]==idOfOppositeKing){
+                            vsKing[index] = myMoves[k]
+                            index++
+                        }
+                    }
                     
                 }
             }
-            
         }
-
     }
-        console.log(myMoves)
-    if (vsKing.lenght != 0) {
-        console.log(vsKing)
-    }
-
+            
+    console.log(vsKing)
 
 }
