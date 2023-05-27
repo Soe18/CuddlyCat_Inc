@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="cpuGame.js"> </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scacchi</title>
+</head>
+<!-- CSS temporaneo -->
+<style>
+.blackPawn {
+    font-weight: bold;
+    pointer-events: none;
+}
+
+.blackpawn {
+    font-weight: bold;
+    pointer-events: none;
+}
+
+.blackQueen {
+    font-weight: bold;
+    pointer-events: none;
+    
+}
+
+.blackKing {
+    font-weight: bold;
+    pointer-events: none;
+    
+}
+
+.blackKnight {
+    font-weight: bold;
+    pointer-events: none;
+  
+}
+
+.blackBishop {
+    font-weight: bold; 
+    pointer-events: none;
+  
+}
+
+.blackRook {
+    font-weight: bold;
+    pointer-events: none;
+}
+
+.whitePawn {
+    font-weight: lighter;
+}
+
+.whiteRook{
+    font-weight: lighter;
+}
+
+.whiteKnight{
+    font-weight: lighter;
+}
+
+.whiteKing{
+    font-weight: lighter;
+}
+
+.whiteQueen{
+    font-weight: lighter;
+}
+.empty{
+    font-weight: bold;
+    pointer-events: none;
+}
+.chessBoard {
+    border: 1px solid;
+    background-color: antiquewhite;
+    
+}
+.supp{
+border: 0;
+text-align:center;
+background-color: white;
+}
+
+th, td {
+    border: 1px solid;
+    font-size: 32px;
+    width: 70px;
+    height: 70px;
+}
+</style>
+<body id='body' onload="ready()">
+    <h1 id="cipolla"> SWsS </h1>
+    <div style="align-items: center;">
+        <table id="chessBoard" class="chessBoard">
+            <!--  
+            W=White      
+            B=Black
+            r=Rook (torre)
+            bs=Bishop(alfiere)
+            p=Pawn(pedina)
+            kn=knight(cavallo)
+            k=King
+            q=Quenn
+            -->
+            <tr>
+               
+                <td id="a8" class="blackRook" onclick="move(this)">Br</td>
+                <td id="b8" class="blackKnight" onclick="move(this)">Bkn</td>
+                <td id="c8" class="blackBishop" onclick="move(this)">Bbs</td>
+                <td id="d8" class="blackQueen" onclick="move(this)">Bq</td>
+                <td id="e8" class="blackKing" onclick="move(this)">BK</td>
+                <td id="f8" class="blackBishop" onclick="move(this)">Bbs</td>
+                <td id="g8" class="blackKnight" onclick="move(this)">Bkn</td>
+                <td id="h8" class="blackRook" onclick="move(this)">Br</td>
+            </tr>
+            <tr>
+                
+          
+                <td id="a7" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="b7" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="c7" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="d7" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="e7" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="f7" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="g7" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="h7" class="empty" onclick="move(this)">&nbsp;</td>
+            </tr>
+            <tr>
+          
+                <td id="a6" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="b6" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="c6" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="d6" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="e6" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="f6" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="g6" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="h6" class="empty" onclick="move(this)">&nbsp;</td>
+            </tr>
+            <tr>
+             
+                <td id="a5" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="b5" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="c5" class="whiteKing" onclick="move(this)">Wk</td>
+                <td id="d5" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="e5" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="f5" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="g5" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="h5" class="empty" onclick="move(this)">&nbsp;</td>
+            </tr>
+            <tr>
+             
+                <td id="a4" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="b4" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="c4" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="d4" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="e4" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="f4" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="g4" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="h4" class="empty" onclick="move(this)">&nbsp;</td>
+            </tr>
+            <tr>
+                
+                <td id="a3" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="b3" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="c3" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="d3" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="e3" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="f3" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="g3" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="h3" class="empty" onclick="move(this)">&nbsp;</td>
+            </tr>
+            <tr>
+             
+                <td id="a2" class="whitePawn" onclick="move(this)">Wp</td>
+                <td id="b2" class="whitePawn" onclick="move(this)">Wp</td>
+                <td id="c2" class="whitePawn" onclick="move(this)">Wp</td>
+                <td id="d2" class="whitePawn" onclick="move(this)">Wp</td>
+                <td id="e2" class="whitePawn" onclick="move(this)">Wp</td>
+                <td id="f2" class="whitePawn" onclick="move(this)">Wp</td>
+                <td id="g2" class="whitePawn" onclick="move(this)">Wp</td>
+                <td id="h2" class="whitePawn" onclick="move(this)">Wp</td>
+            </tr>
+            <tr>
+                
+                <td id="a1" class="whiteRook" onclick="move(this)">Wr</td>
+                <td id="b1" class="whiteKnight" onclick="move(this)">Wkn</td>
+                <td id="c1" class="whiteBishop" onclick="move(this)">Wbs</td>
+                <td id="d1" class="whiteQueen" onclick="move(this)">Wq</td>
+                <td id="e1" class="empty" onclick="move(this)"></td>
+                <td id="f1" class="whiteBishop" onclick="move(this)">Wbs</td>
+                <td id="g1" class="whiteKnight" onclick="move(this)">Wkn</td>
+                <td id="h1" class="whiteRook" onclick="move(this)">Wr</td>
+            </tr>
+            
+        </table>
+    <table class="supp"> 
+    <tr>
+        
+   
+    <td class="whitePawn; supp">A</td>
+    <td class="whitePawn; supp">B</td>
+    <td class="whitePawn; supp">C</td>
+    <td class="whitePawn; supp">D</td>
+    <td class="whitePawn; supp">E</td>
+    <td class="whitePawn; supp">F</td>
+    <td class="whitePawn; supp">G</td>
+    <td class="whitePawn; supp">H</td>
+    </tr>
+</table>
+    </div>
+</body>
+</html>
