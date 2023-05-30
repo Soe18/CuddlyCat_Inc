@@ -1105,8 +1105,12 @@ function cpuMove(colorIWant) {
         }
 
     }
+
+    
     moves = moveOfCpu(moves)
+    console.log(moves)
     moves = findTheBestMove(moves)
+    
     return moves
 }
 
@@ -1128,18 +1132,14 @@ function moveOfCpu(moves) {
         }
 
     }
-
-
-
     return FinalMove
-
-
 }
 
 function findTheBestMove(array) { 
-    var idOfOppositeKing; 
-    var moveOfOppositeKing;
-   var arrayToRespect =checkTheCheckMate(cpuObject.color)
+    var idOfKing; 
+    var moveOfKing;
+   var arrayToRespect=checkTheCheckMate(playerObject.color)
+
     var arraysup = [];
     array.sort(function (a, b) {
         return b[3] - a[3];
@@ -1155,26 +1155,38 @@ function findTheBestMove(array) {
         }
     }
 }else{
+
     for (let i = 0; i < 8; i++) {
         let row = chessBoard.rows[i];
         for (let j = 0; j < 8; j++) {
             if (row.cells[j].className == (cpuObject.color + 'King')) {
-                moveOfOppositeKing = moveKing(row.cells[j])
-                idOfOppositeKing = row.cells[j].id
+                moveOfKing = moveKing(row.cells[j])
+                idOfKing = row.cells[j].id
             }
         }
     }
     for (let i = 0; i < array.length; i++) {
         for(var j =0; j< arrayToRespect.length;j++){
-            for (let k = 0; k < moveOfOppositeKing.length; k++) {
-            if(array[i][2]== arrayToRespect[j][2]|| array[i][0]== idOfOppositeKing && moveOfOppositeKing[k]==array[i][2]){
-                arraysup[i] = array[i];
+            for (let k = 0; k < moveOfKing.length; k++) {
+            if(array[i][2]==arrayToRespect[j][2] ){
+                    if(array[i][0]==idOfKing)
+                    {
+                        if(moveOfKing[k]!=arrayToRespect[j][2]){
+                            console.log(arraysup[i])
+                        arraysup[i] = array[i];
+                        }
+                    }else{
+                        arraysup[i] = array[i];
+                    }
             }
         }
         }
     }
+    arraysup =arraysup.filter(function(element) {
+        return element !== undefined;
+      });
 }
-
+console.log(arrayToRespect)
     return arraysup
 }
 
@@ -1239,11 +1251,13 @@ function secondWayOfDepth() {
     var depht2;
     var depht3;
     var depht4;
-
+   
     for (let i = 0; i < depht1.length; i++) {
+        console.log(suicidio)
         buildHypoteticalChessBoard();
         hypoteticalMoves(depht1[i])
         depht2 = cpuMove(colorPlayer);
+         console.log(suicidio)
         suicidio[i][4] = depht2
         for (let j = 0; j < depht2.length; j++) {
             buildHypoteticalChessBoard();
@@ -1256,6 +1270,7 @@ function secondWayOfDepth() {
                 hypoteticalMoves(depht1[i])
                 hypoteticalMoves(depht2[j])
                 hypoteticalMoves(depht3[k])
+                console.log(suicidio)
                 actualValue = suicidio[i][3] - suicidio[i][4][j][3] + suicidio[i][4][j][4][k][3] 
                     if (suicidio[i][3] > actualValue) {
                         suicidio[i][3] = actualValue
@@ -1273,11 +1288,12 @@ function secondWayOfDepth() {
 
         }
     }
+
     console.log(chessBoard)
     console.log(suicidio)
     var FinalMove = findTheBestMove(suicidio)
-
     moveToCellsTable(FinalMove[0], FinalMove)
+
 }
 
 function checkTheCheckMate(myColor) {
@@ -1372,7 +1388,7 @@ function checkTheCheckMate(myColor) {
                             }
                         }
                     }
-                    if (descoveryTypeOfPiecesWithClassName(myMoves[i][1])== 2 || descoveryTypeOfPiecesWithClassName(myMoves[i][1])==4) {
+                    if (descoveryTypeOfPiecesWithClassName(myMoves[i][1])== 2) {
                         if(x>xk && y>yk){
                         for (let xUso=x-1; xUso>=xk; xUso--) {
                             for (let yUso = y-1; yUso <= yk; yUso++) {
@@ -1385,7 +1401,6 @@ function checkTheCheckMate(myColor) {
                               }
                         }
                     }
-                        
                         if(x<xk && y>yk ){
                             for (let xUso=x+1; xUso>=xk; xUso--) {
                                 for (let yUso = y-1; yUso <= yk; yUso++) {
@@ -1404,7 +1419,6 @@ function checkTheCheckMate(myColor) {
                                 for (let yUso = y+1; yUso <= yk; yUso++) {
                                     if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
                                     {
-                                    console.log(myMoves[k])
                                     vsKing[index] = myMoves[k]
                                     index++ 
                                     }
@@ -1413,7 +1427,6 @@ function checkTheCheckMate(myColor) {
                             }
                         }
                         if(x<xk && y<yk ){
-                           
                             for (let xUso=x+1; xUso>=xk; xUso--) {
                                 for (let yUso = y+1; yUso <= yk; yUso++) {
                                     if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
@@ -1425,8 +1438,6 @@ function checkTheCheckMate(myColor) {
                                   }
                             }
                         }
-
-                        
                     }
                     if (descoveryTypeOfPiecesWithClassName(myMoves[i][1]) == 3) {
                         vsKing[index] = myMoves[k]
@@ -1451,7 +1462,7 @@ function checkTheCheckMate(myColor) {
                                 index++
                             }
                         }
-                    }else  {
+                    }else{
                         if(x>xk && y>yk){
                             for (let xUso=x-1; xUso>=xk; xUso--) {
                                 for (let yUso = y-1; yUso <= yk; yUso++) {
@@ -1464,7 +1475,6 @@ function checkTheCheckMate(myColor) {
                                   }
                             }
                         }
-                            
                             if(x<xk && y>yk ){
                                 for (let xUso=x+1; xUso>=xk; xUso--) {
                                     for (let yUso = y-1; yUso <= yk; yUso++) {
@@ -1483,16 +1493,13 @@ function checkTheCheckMate(myColor) {
                                     for (let yUso = y+1; yUso <= yk; yUso++) {
                                         if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
                                         {
-                                        console.log(myMoves[k])
                                         vsKing[index] = myMoves[k]
                                         index++ 
                                         }
-                                        
                                       }
                                 }
                             }
                             if(x<xk && y<yk ){
-                               
                                 for (let xUso=x+1; xUso>=xk; xUso--) {
                                     for (let yUso = y+1; yUso <= yk; yUso++) {
                                         if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
@@ -1518,7 +1525,7 @@ function checkTheCheckMate(myColor) {
            setTheCheck(findTheOppositeColor(myColor)) 
         }
     }
-    vsKing = fixTheDoubleValue(vsKing)
+    vsKing = fixTheDoubleValue(vsKing,idOfOppositeKing)
 
     return vsKing
 }
@@ -1532,9 +1539,9 @@ function setTheCheck(color){
     }
 }
 
-function fixTheDoubleValue(matrix){
+function fixTheDoubleValue(matrix,idOfOppositeKing){
       const seenRows = new Set();
-      
+        console.log(idOfOppositeKing)
         // Iterate over the matrix and check for duplicate rows
         for (let i = 0; i < matrix.length; i++) {
           const row = matrix[i];
@@ -1547,8 +1554,12 @@ function fixTheDoubleValue(matrix){
           } else {
             seenRows.add(rowString);
           }
+          
+         if(matrix[i][2]==idOfOppositeKing){
+            matrix[i][3]=909
+            console.log(matrix[i][3]);
         }
-      
+    }
         return matrix;
 }
 
