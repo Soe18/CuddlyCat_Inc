@@ -395,7 +395,9 @@ function move(pawn) {
             // Faccio ripartire il prossimo turno
             movingPawnState = 'ready'
             buildHypoteticalChessBoard();
-            setTimeout(() => { secondWayOfDepth(); }, 100);
+            checkTheCheckMate(playerObject.color)
+            console.log(checkTheCheckMate(cpuObject.color))
+            setTimeout(() => { secondWayOfDepth(); }, 500);
 
             uploadMoves()
             // Dai il turno all'altro player
@@ -1134,11 +1136,15 @@ function moveOfCpu(moves) {
 
 }
 
-function findTheBestMove(array) {
+function findTheBestMove(array) { 
+    var idOfOppositeKing; 
+    var moveOfOppositeKing;
+   var arrayToRespect =checkTheCheckMate(cpuObject.color)
     var arraysup = [];
     array.sort(function (a, b) {
         return b[3] - a[3];
     });
+    if(!cpuObject.check){
     if (array.length > 10) {
         for (let i = 0; i < 5; i++) {
             arraysup[i] = array[i];
@@ -1148,6 +1154,27 @@ function findTheBestMove(array) {
             arraysup[i] = array[i];
         }
     }
+}else{
+    for (let i = 0; i < 8; i++) {
+        let row = chessBoard.rows[i];
+        for (let j = 0; j < 8; j++) {
+            if (row.cells[j].className == (cpuObject.color + 'King')) {
+                moveOfOppositeKing = moveKing(row.cells[j])
+                idOfOppositeKing = row.cells[j].id
+            }
+        }
+    }
+    for (let i = 0; i < array.length; i++) {
+        for(var j =0; j< arrayToRespect.length;j++){
+            for (let k = 0; k < moveOfOppositeKing.length; k++) {
+            if(array[i][2]== arrayToRespect[j][2]|| array[i][0]== idOfOppositeKing && moveOfOppositeKing[k]==array[i][2]){
+                arraysup[i] = array[i];
+            }
+        }
+        }
+    }
+}
+
     return arraysup
 }
 
@@ -1312,18 +1339,20 @@ function checkTheCheckMate(myColor) {
         }
     }
     myMoves = moveOfCpu(myMoves)
-
+    
     for (let i = 0; i < myMoves.length; i++) {
         if (myMoves[i][2] == idOfOppositeKing) {
             vsKing = [] 
+            
             for (let k = 0; k < myMoves.length; k++) {
                 if (myMoves[i][0] == myMoves[k][0] ) {
+                    
                         let x = reversedGetLetterGivenAxisX(myMoves[i][0].slice(0, 1));//parte letteraria
                         let y = reversedGetLetterGivenAxisY(myMoves[i][0].slice(1, 2));//parte numerica
                         let xk =reversedGetLetterGivenAxisX(idOfOppositeKing.slice(0, 1));
                         let yk =reversedGetLetterGivenAxisY(idOfOppositeKing.slice(1, 2));
 
-                    if (descoveryTypeOfPiecesWithClassName(myMoves[i][1]) == 1 || descoveryTypeOfPiecesWithClassName(myMoves[i][1])==4) {
+                    if (descoveryTypeOfPiecesWithClassName(myMoves[i][1]) == 1) {
                         
                         if(x==xk){
                             if (y>yk &&  myMoves[k][2].slice(0, 1)== idOfOppositeKing.slice(0,1)) {
@@ -1344,7 +1373,7 @@ function checkTheCheckMate(myColor) {
                         }
                     }
                     if (descoveryTypeOfPiecesWithClassName(myMoves[i][1])== 2 || descoveryTypeOfPiecesWithClassName(myMoves[i][1])==4) {
-                        
+                        if(x>xk && y>yk){
                         for (let xUso=x-1; xUso>=xk; xUso--) {
                             for (let yUso = y-1; yUso <= yk; yUso++) {
                                 if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
@@ -1355,6 +1384,7 @@ function checkTheCheckMate(myColor) {
                                 
                               }
                         }
+                    }
                         
                         if(x<xk && y>yk ){
                             for (let xUso=x+1; xUso>=xk; xUso--) {
@@ -1374,6 +1404,7 @@ function checkTheCheckMate(myColor) {
                                 for (let yUso = y+1; yUso <= yk; yUso++) {
                                     if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
                                     {
+                                    console.log(myMoves[k])
                                     vsKing[index] = myMoves[k]
                                     index++ 
                                     }
@@ -1401,6 +1432,80 @@ function checkTheCheckMate(myColor) {
                         vsKing[index] = myMoves[k]
                         index++
                     }
+                    if (descoveryTypeOfPiecesWithClassName(myMoves[i][1])== 4){
+                        if(x==xk || y == yk){
+                        if(x==xk){
+                            if (y>yk &&  myMoves[k][2].slice(0, 1)== idOfOppositeKing.slice(0,1)) {
+                                vsKing[index] = myMoves[k]
+                                index++
+                            } else if(y<yk &&   myMoves[k][2].slice(0, 1)== idOfOppositeKing.slice(0,1)) {
+                                vsKing[index] = myMoves[k]
+                                index++
+                            }
+                        }else if(y==yk){
+                            if (x>xk &&  myMoves[k][2].slice(1, 2)== idOfOppositeKing.slice(1,2)) {
+                                vsKing[index] = myMoves[k]
+                                index++
+                            } else if(x<xk &&  myMoves[k][2].slice(1, 2)== idOfOppositeKing.slice(1,2)) {
+                                vsKing[index] = myMoves[k]
+                                index++
+                            }
+                        }
+                    }else  {
+                        if(x>xk && y>yk){
+                            for (let xUso=x-1; xUso>=xk; xUso--) {
+                                for (let yUso = y-1; yUso <= yk; yUso++) {
+                                    if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
+                                    {
+                                    vsKing[index] = myMoves[k]
+                                    index++ 
+                                    }
+                                    
+                                  }
+                            }
+                        }
+                            
+                            if(x<xk && y>yk ){
+                                for (let xUso=x+1; xUso>=xk; xUso--) {
+                                    for (let yUso = y-1; yUso <= yk; yUso++) {
+                                        if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
+                                        {
+                                        vsKing[index] = myMoves[k]
+                                        index++ 
+                                        }
+                                        
+                                      }
+                                }
+                            }
+                            if(x>xk && y<yk){
+                                //DA PRENDERE COME ESEMIPDJFOISDJFOIUSDBNF
+                                for (let xUso=x-1; xUso>=xk; xUso--) {
+                                    for (let yUso = y+1; yUso <= yk; yUso++) {
+                                        if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
+                                        {
+                                        console.log(myMoves[k])
+                                        vsKing[index] = myMoves[k]
+                                        index++ 
+                                        }
+                                        
+                                      }
+                                }
+                            }
+                            if(x<xk && y<yk ){
+                               
+                                for (let xUso=x+1; xUso>=xk; xUso--) {
+                                    for (let yUso = y+1; yUso <= yk; yUso++) {
+                                        if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
+                                        {
+                                        vsKing[index] = myMoves[k]
+                                        index++ 
+                                        }
+                                        
+                                      }
+                                }
+                            }
+                    }
+                    }
                     if (descoveryTypeOfPiecesWithClassName(myMoves[i][1]) == 6) {
                         if(myMoves[k][2]==idOfOppositeKing){
                             vsKing[index] = myMoves[k]
@@ -1410,9 +1515,40 @@ function checkTheCheckMate(myColor) {
                     
                 }
             }
+           setTheCheck(findTheOppositeColor(myColor)) 
         }
     }
-            
-    console.log(vsKing)
+    vsKing = fixTheDoubleValue(vsKing)
 
+    return vsKing
 }
+
+function setTheCheck(color){
+    if(color==cpuObject.color){
+        console.log("checkato")
+        cpuObject.check=true
+    }else{
+        playerObject.check=true
+    }
+}
+
+function fixTheDoubleValue(matrix){
+      const seenRows = new Set();
+      
+        // Iterate over the matrix and check for duplicate rows
+        for (let i = 0; i < matrix.length; i++) {
+          const row = matrix[i];
+          const rowString = row.toString(); // Convert row to string for comparison
+      
+          // If the row is already in the set, remove it from the matrix
+          if (seenRows.has(rowString)) {
+            matrix.splice(i, 1);
+            i--; // Adjust the loop counter as the matrix size has changed
+          } else {
+            seenRows.add(rowString);
+          }
+        }
+      
+        return matrix;
+}
+
