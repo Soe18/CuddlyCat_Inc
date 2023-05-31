@@ -1174,14 +1174,9 @@ function findTheBestMove(array) {
     for (let i = 0; i < array.length; i++) {
         for(var j =0; j< arrayToRespect.length;j++){
             for (let k = 0; k < moveOfKing.length; k++) {
-                if(array[i][0]==idOfKing && moveOfKing[k]!=arrayToRespect[j][2])
-                       {
-                        arraysup[i] = array[i];
-                       } 
-                    else if(array[i][2]==arrayToRespect[j][2] || array[i][2]==arrayToRespect[j][0] && array[i][0]!=idOfKing){
-                        arraysup[i] = array[i];
-                    
-            }
+                console.log(arrayToRespect[j][2],moveOfKing[k])
+                if(array[i][0]==idOfKing && moveOfKing[k]!=arrayToRespect[j][2]  ) {arraysup[i] = array[i];} 
+                if(array[i][0]!=idOfKing ){if(array[i][2]==arrayToRespect[j][2] || array[i][2]==arrayToRespect[j][0])arraysup[i] = array[i];}
         }
         }
     }
