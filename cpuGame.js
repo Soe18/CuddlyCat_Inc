@@ -1168,16 +1168,13 @@ function findTheBestMove(array) {
     for (let i = 0; i < array.length; i++) {
         for(var j =0; j< arrayToRespect.length;j++){
             for (let k = 0; k < moveOfKing.length; k++) {
-            if(array[i][2]==arrayToRespect[j][2] ){
-                    if(array[i][0]==idOfKing)
-                    {
-                        if(moveOfKing[k]!=arrayToRespect[j][2]){
-                            console.log(arraysup[i])
+                if(array[i][0]==idOfKing && moveOfKing[k]!=arrayToRespect[j][2])
+                       {
                         arraysup[i] = array[i];
-                        }
-                    }else{
+                       } 
+           else if(array[i][2]==arrayToRespect[j][2] && array[i][0]!=idOfKing){
                         arraysup[i] = array[i];
-                    }
+                    
             }
         }
         }
@@ -1186,7 +1183,7 @@ function findTheBestMove(array) {
         return element !== undefined;
       });
 }
-console.log(arrayToRespect)
+
     return arraysup
 }
 
@@ -1264,6 +1261,9 @@ function secondWayOfDepth() {
             hypoteticalMoves(depht1[i])
             hypoteticalMoves(depht2[j])
             depht3 = cpuMove(cpuObject.color);
+            //quando la regina vuole mangiare il cavallo il valore della mossa è undifined poreca jrfiasdhgfkjdshgflj,dmhfsvghoimhjaes w
+            console.log(depht2)
+            console.log(depht3)
             suicidio[i][4][j][4] = depht3
             for (let k = 0; k < depht3.length; k++) {
                 buildHypoteticalChessBoard();
