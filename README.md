@@ -1,6 +1,5 @@
 ![Contributors][contributors-shield]
 ![Stargazers][stars-shield]
-![License][license-shield]
 ![LastCommit][lastcommit-shield]
 
 <br />
@@ -47,7 +46,6 @@ Distribuito tramite licenza MIT. Leggere `LICENSE.txt` per ulteriori dettagli.
 
 [contributors-shield]: https://img.shields.io/github/contributors/soe18/CuddlyCat_Inc.svg?style=for-the-badge
 [stars-shield]: https://img.shields.io/github/stars/soe18/CuddlyCat_Inc.svg?style=for-the-badge
-[license-shield]: https://img.shields.io/github/license/soe18/CuddlyCat_Inc.svg?style=for-the-badge
 [lastcommit-shield]: https://img.shields.io/github/last-commit/soe18/CuddlyCat_Inc?style=for-the-badge
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
 [JQuery-url]: https://jquery.com
