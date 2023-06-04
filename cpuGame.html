@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" style="background-color: #F6F6DB;">
+<head>
+    <script src="scripts/optimalCpuGame.js"> </script>
+    <meta charset="UTF-32">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.6/dist/full.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="styles/stylegame.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/6e153d95de.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <title>Chess</title>
+</head>
+<!-- CSS temporaneo -->
+<style>
+#obscureAllForPromotion {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 999; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+#containerPawn {
+    display: flex;
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; 
+}
+
+</style>
+<body onload="ready()">
+    <!-- TITLE -->
+    <div class="header mb-4" style="background-color:#283618;">
+        <div class="navbar">
+            <div class="flex-1">
+                <a href="index.html" class="btn btn-ghost normal-case  text-x2"
+                    style="background-color: #283618; font-size: 250%; color: #F6F6DB ;border-color:#283618;font-family:'Times New Roman', Times, serif;font-size: 1;">CHESS</a>
+            </div>
+            <div>
+                <i class="fa-solid fa-chess" style="color: #F6F6DB;font-size:60px;"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- NERO -->
+    <div class="nero flex mx-2 mb-0">
+        <button id="timer_nero" class="col-span-1 btn no-animation flex-1 text-left h-2 text-sm" style="background-color: #8c1c13;">Timer pezzoNero</button>
+        <div class="flex-1"></div>
+        <button id="moves_nero" class="btn no-animation flex-1 text-right h-2 text-sm" style="background-color: #8c1c13;">Mosse pezzoNero</button>
+      </div>
+    
+    <!-- TABELLA -->
+    <div class="flex-auto my-0" style="align-items: center;">
+        <table id="chessBoard" class="chessBoard my-4" style=" margin-left:auto;margin-right:auto">
+            <tr>
+                <td id="a8" class="blackRook" onclick="move(this)"><img class="flex-auto" src="assets/Brook.png"></td>
+                <td id="b8" class="blackKnight" onclick="move(this)"><img src="assets/Bknight.png"></td>
+                <td id="c8" class="blackBishop" onclick="move(this)"><img src="assets/Bbishop.png"></td>
+                <td id="d8" class="blackQueen" onclick="move(this)"><img src="assets/Bqueen.png"></td>
+                <td id="e8" class="blackKing" onclick="move(this)"><img src="assets/Bking.png"></td>
+                <td id="f8" class="blackBishop" onclick="move(this)"><img src="assets/Bbishop.png"></td>
+                <td id="g8" class="blackKnight" onclick="move(this)"><img src="assets/Bknight.png"></td>
+                <td id="h8" class="blackRook" onclick="move(this)"><img src="assets/Brook.png"></td>
+            </tr>
+            <tr>
+                <td id="a7" class="blackPawn" onclick="move(this)"><img src="assets/Bpawn.png"></td>
+                <td id="b7" class="blackPawn" onclick="move(this)"><img src="assets/Bpawn.png"></td>
+                <td id="c7" class="blackPawn" onclick="move(this)"><img src="assets/Bpawn.png"></td>
+                <td id="d7" class="blackPawn" onclick="move(this)"><img src="assets/Bpawn.png"></td>
+                <td id="e7" class="blackPawn" onclick="move(this)"><img src="assets/Bpawn.png"></td>
+                <td id="f7" class="blackPawn" onclick="move(this)"><img src="assets/Bpawn.png"></td>
+                <td id="g7" class="blackPawn" onclick="move(this)"><img src="assets/Bpawn.png"></td>
+                <td id="h7" class="blackPawn" onclick="move(this)"><img src="assets/Bpawn.png"></td>
+            </tr>
+            <tr>
+
+                <td id="a6" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="b6" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="c6" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="d6" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="e6" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="f6" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="g6" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="h6" class="empty" onclick="move(this)">&nbsp;</td>
+            </tr>
+            <tr>
+
+                <td id="a5" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="b5" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="c5" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="d5" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="e5" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="f5" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="g5" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="h5" class="empty" onclick="move(this)">&nbsp;</td>
+            </tr>
+            <tr>
+
+                <td id="a4" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="b4" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="c4" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="d4" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="e4" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="f4" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="g4" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="h4" class="empty" onclick="move(this)">&nbsp;</td>
+            </tr>
+            <tr>
+
+                <td id="a3" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="b3" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="c3" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="d3" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="e3" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="f3" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="g3" class="empty" onclick="move(this)">&nbsp;</td>
+                <td id="h3" class="empty" onclick="move(this)">&nbsp;</td>
+            </tr>
+            <tr>
+
+                <td id="a2" class="whitePawn" onclick="move(this)"><img src="assets/Wpawn.png"></td>
+                <td id="b2" class="whitePawn" onclick="move(this)"><img src="assets/Wpawn.png"></td>
+                <td id="c2" class="whitePawn" onclick="move(this)"><img src="assets/Wpawn.png"></td>
+                <td id="d2" class="whitePawn" onclick="move(this)"><img src="assets/Wpawn.png"></td>
+                <td id="e2" class="whitePawn" onclick="move(this)"><img src="assets/Wpawn.png"></td>
+                <td id="f2" class="whitePawn" onclick="move(this)"><img src="assets/Wpawn.png"></td>
+                <td id="g2" class="whitePawn" onclick="move(this)"><img src="assets/Wpawn.png"></td>
+                <td id="h2" class="whitePawn" onclick="move(this)"><img src="assets/Wpawn.png"></td>
+            </tr>
+            <tr>
+
+                <td id="a1" class="whiteRook" onclick="move(this)"><img src="assets/Wrook.png"></td>
+                <td id="b1" class="whiteKnight" onclick="move(this)"><img src="assets/Wknight.png"></td>
+                <td id="c1" class="whiteBishop" onclick="move(this)"><img src="assets/Wbishop.png"></td>
+                <td id="d1" class="whiteQueen" onclick="move(this)"><img src="assets/Wqueen.png"></td>
+                <td id="e1" class="whiteKing" onclick="move(this)"><img src="assets/Wking.png"></td>
+                <td id="f1" class="whiteBishop" onclick="move(this)"><img src="assets/Wbishop.png"></td>
+                <td id="g1" class="whiteKnight" onclick="move(this)"><img src="assets/Wknight.png"></td>
+                <td id="h1" class="whiteRook" onclick="move(this)"><img src="assets/Wrook.png"></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- BIANCO -->
+    <div class="bianco flex mt-0 mx-2">
+        <button id="timer_bianco" class="cols-span-1 btn no-animation flex-1 text-left h-2 text-sm" style="background-color: #8c1c13;"> Timer pezzoBianco </button>
+        <div class="flex-1"></div>
+        <button id="moves_bianco" class="cols-span-1 btn no-animation flex-1 text-right h-2 text-sm" style="background-color: #8c1c13;"> Mosse PezzoBianco </button>
+    </div>
+
+    <div id="obscureAllForPromotion">
+        <div id="containerPawn">
+            <button id="queenPromotion">
+                Regina
+            </button>
+            <button id="bishopPromotion">
+                Alfiere
+            </button>
+            <button id="knightPromotion">
+                Cavallo
+            </button>
+            <button id="rookPromotion">
+                Torre
+            </button>
+        </div>
+    </div>
+</body>
+<script>
+    $(document.getElementById("queenPromotion")).click(function () {
+        $(document.getElementById("obscureAllForPromotion")).css("display", "none");
+        let pawn = onlyUseForPromotion_CurrentSelection;
+        let isWhitePawn = pawn.className == "whitePawn";
+        if(isWhitePawn) {
+            document.getElementById(pawn.id).className = "whiteQueen";
+            document.getElementById(pawn.id).innerHTML = '<img src="assets/Wqueen.png">';
+            turn = 'black';
+        }
+        else {
+            document.getElementById(pawn.id).className = "blackQueen";
+            document.getElementById(pawn.id).innerHTML = '<img src="assets/Bqueen.png">';
+            turn = 'white';
+        }
+        matrixBuilderPosition();
+        matrixBuilderTypeOfPawn();
+        securityTouch();
+    });
+
+
+    $(document.getElementById("bishopPromotion")).click(function () {
+        $(document.getElementById("obscureAllForPromotion")).css("display", "none");
+        let pawn = onlyUseForPromotion_CurrentSelection;
+        let isWhitePawn = pawn.className == "whitePawn";
+        if(isWhitePawn) {
+            document.getElementById(pawn.id).className = "whiteBishop";
+            document.getElementById(pawn.id).innerHTML = '<img src="assets/Wbishop.png">';
+            turn = 'black';
+        }
+        else {
+            document.getElementById(pawn.id).className = "blackBishop";
+            document.getElementById(pawn.id).innerHTML = '<img src="assets/Bbishop.png">';
+            turn = 'white';
+        }
+        matrixBuilderPosition();
+        matrixBuilderTypeOfPawn();
+    });
+
+
+    $(document.getElementById("knightPromotion")).click(function () {
+        $(document.getElementById("obscureAllForPromotion")).css("display", "none");
+        let pawn = onlyUseForPromotion_CurrentSelection;
+        let isWhitePawn = pawn.className == "whitePawn";
+        if(isWhitePawn) {
+            document.getElementById(pawn.id).className = "whiteKnight";
+            document.getElementById(pawn.id).innerHTML = '<img src="assets/Wknight.png">';
+            turn = 'black';
+        }
+        else {
+            document.getElementById(pawn.id).className = "blackKnight";
+            document.getElementById(pawn.id).innerHTML = '<img src="assets/Bknight.png">';
+            turn = 'white';
+        }
+        matrixBuilderPosition();
+        matrixBuilderTypeOfPawn();
+    });
+
+
+    $(document.getElementById("rookPromotion")).click(function () {
+        $(document.getElementById("obscureAllForPromotion")).css("display", "none");
+        let pawn = onlyUseForPromotion_CurrentSelection;
+        let isWhitePawn = pawn.className == "whitePawn";
+        if(isWhitePawn) {
+            document.getElementById(pawn.id).className = "whiteRook";
+            document.getElementById(pawn.id).innerHTML = '<img src="assets/Wrook.png">';
+            turn = 'black';
+        }
+        else {
+            document.getElementById(pawn.id).className = "blackRook";
+            document.getElementById(pawn.id).innerHTML = '<img src="assets/Brook.png">';
+            turn = 'white';
+        }
+        matrixBuilderPosition();
+        matrixBuilderTypeOfPawn();
+    });
+</script>
+</html>
