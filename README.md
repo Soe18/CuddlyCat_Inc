@@ -40,9 +40,6 @@ Sono state utilizzate diverse tecnologie per produrre la Web App, tra le quali:
 * [![Tailwind CSS][Tailwind Css]][Tailwind CSS-url]
 * [![Daisy UI][Daisy UI]][Daisy UI-url]
 
-## Licenza
-Distribuito tramite licenza MIT. Leggere `LICENSE.txt` per ulteriori dettagli.
-
 
 [contributors-shield]: https://img.shields.io/github/contributors/soe18/CuddlyCat_Inc.svg?style=for-the-badge
 [stars-shield]: https://img.shields.io/github/stars/soe18/CuddlyCat_Inc.svg?style=for-the-badge
