@@ -5,11 +5,10 @@
     <meta charset="UTF-32">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.6/dist/full.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <link rel="stylesheet" href="styles/stylegame.css">
-
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.0.3/dist/full.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://kit.fontawesome.com/6e153d95de.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
@@ -18,9 +17,10 @@
 <!-- CSS temporaneo -->
 <style>
 #obscureAllForPromotion {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
+    display : none; /* Hidden by default */
+    position: absolute; /* Stay in place */
     z-index: 999; /* Sit on top */
+    margin:0;
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -30,16 +30,22 @@
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 #containerPawn {
-    display: flex;
-    background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%; 
+    color: white;
+    top:20%;
+    left:50%;
+    position: absolute;
+    transform:translate(-50%,50%);
+    /* 15% from the top and centered */
 }
-
+.btn-scelta {
+    background-color: #8c1c13;
+    color: #F6F6DB;
+    border: solid 1px #F6F6DB;
+    font-size: 20px; /* Imposta la dimensione del testo del bottone */
+    padding: 10px 20px; /* Aggiunge spazio intorno al testo del bottone */
+}
 </style>
-<body onload="ready()">
+<body style="padding:0;margin:0" onload="ready()">
     <!-- TITLE -->
     <div class="header mb-4" style="background-color:#283618;">
         <div class="navbar">
@@ -55,9 +61,9 @@
 
     <!-- NERO -->
     <div class="nero flex mx-2 mb-0">
-        <button id="timer_nero" class="col-span-1 btn no-animation flex-1 text-left h-2 text-sm" style="background-color: #8c1c13;">Timer pezzoNero</button>
+        <button id="timer_nero" class="col-span-1 btn no-animation flex-1 text-left h-2 text-sm" style="background-color: #8c1c13; color: #F6F6DB;">Timer pezzoNero</button>
         <div class="flex-1"></div>
-        <button id="moves_nero" class="btn no-animation flex-1 text-right h-2 text-sm" style="background-color: #8c1c13;">Mosse pezzoNero</button>
+        <button id="moves_nero" class="btn no-animation flex-1 text-right h-2 text-sm" style="background-color: #8c1c13; color: #F6F6DB;">Mosse pezzoNero</button>
       </div>
     
     <!-- TABELLA -->
@@ -154,23 +160,23 @@
 
     <!-- BIANCO -->
     <div class="bianco flex mt-0 mx-2">
-        <button id="timer_bianco" class="cols-span-1 btn no-animation flex-1 text-left h-2 text-sm" style="background-color: #8c1c13;"> Timer pezzoBianco </button>
+        <button id="timer_bianco" class="cols-span-1 btn no-animation flex-1 text-left h-2 text-sm" style="background-color: #8c1c13;color: #F6F6DB;"> Timer pezzoBianco </button>
         <div class="flex-1"></div>
-        <button id="moves_bianco" class="cols-span-1 btn no-animation flex-1 text-right h-2 text-sm" style="background-color: #8c1c13;"> Mosse PezzoBianco </button>
+        <button id="moves_bianco" class="cols-span-1 btn no-animation flex-1 text-right h-2 text-sm" style="background-color: #8c1c13;color: #F6F6DB;"> Mosse PezzoBianco </button>
     </div>
 
-    <div id="obscureAllForPromotion">
-        <div id="containerPawn">
-            <button id="queenPromotion">
+    <div  id="obscureAllForPromotion">
+        <div class="join join-vertical" id="containerPawn">
+            <button class="btn-scelta $btn join-item" id="queenPromotion">
                 Regina
             </button>
-            <button id="bishopPromotion">
+            <button class="btn-scelta $btn join-item" id="bishopPromotion">
                 Alfiere
             </button>
-            <button id="knightPromotion">
+            <button class="btn-scelta $btn join-item" id="knightPromotion">
                 Cavallo
             </button>
-            <button id="rookPromotion">
+            <button class="btn-scelta $btn join-item" id="rookPromotion">
                 Torre
             </button>
         </div>

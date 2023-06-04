@@ -495,7 +495,6 @@ function checkKingsExistence() {
     var checkBlackKing = false;
     for (let i = 0; i < 8; i++) {
         for(let j = 0; j < 8; j++) {
-            console.log("ssas", boardMatrixTypeOfPawn[i][j]);
             if (boardMatrixTypeOfPawn[i][j]=="blackKing") {
                 checkBlackKing = true;
             }
@@ -1460,19 +1459,7 @@ function checkTheCheckMate(myColor,boardPosition) {
                     }
                     if (descoveryTypeOfPiecesWithClassName(myMoves[i][1])== 2) {
                         if(x>xk && y>yk){
-                        for (let xUso=x-1; xUso>=xk; xUso--) {
-                            for (let yUso = y-1; yUso <= yk; yUso++) {
-                                if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
-                                {
-                                vsKing[index] = myMoves[k]
-                                index++ 
-                                }
-                                
-                              }
-                        }
-                    }
-                        if(x<xk && y>yk ){
-                            for (let xUso=x+1; xUso>=xk; xUso--) {
+                            for (let xUso=x-1; xUso>=xk; xUso--) {
                                 for (let yUso = y-1; yUso <= yk; yUso++) {
                                     if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
                                     {
@@ -1483,30 +1470,41 @@ function checkTheCheckMate(myColor,boardPosition) {
                                   }
                             }
                         }
-                        if(x>xk && y<yk){
-                            for (let xUso=x-1; xUso>=xk; xUso--) {
-                                for (let yUso = y+1; yUso <= yk; yUso++) {
-                                    if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
-                                    {
-                                    vsKing[index] = myMoves[k]
-                                    index++ 
-                                    }
-                                    
-                                  }
+                            if(x<xk && y>yk ){
+                                for (let xUso=x+1; xUso>=xk; xUso--) {
+                                    for (let yUso = y-1; yUso <= yk; yUso++) {
+                                        if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
+                                        {
+                                        vsKing[index] = myMoves[k]
+                                        index++ 
+                                        }
+                                        
+                                      }
+                                }
                             }
-                        }
-                        if(x<xk && y<yk ){
-                            for (let xUso=x+1; xUso>=xk; xUso--) {
-                                for (let yUso = y+1; yUso <= yk; yUso++) {
-                                    if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
-                                    {
-                                    vsKing[index] = myMoves[k]
-                                    index++ 
-                                    }
-                                    
-                                  }
+                            if(x>xk && y<yk){
+                                for (let xUso=x-1; xUso>=xk; xUso--) {
+                                    for (let yUso = y+1; yUso <= yk; yUso++) {
+                                        if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
+                                        {
+                                        vsKing[index] = myMoves[k]
+                                        index++ 
+                                        }
+                                      }
+                                }
                             }
-                        }
+                            if(x<xk && y<yk ){
+                                for (let xUso=x+1; xUso<=xk; xUso++) {
+                                    for (let yUso = y+1; yUso <= yk; yUso++) {
+                                        if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
+                                        {
+                                        vsKing[index] = myMoves[k]
+                                        index++ 
+                                        }
+                                        
+                                      }
+                                }
+                            }
                     }
                     if (descoveryTypeOfPiecesWithClassName(myMoves[i][1]) == 3) {
                         vsKing[index] = myMoves[k]
