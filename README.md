@@ -6,7 +6,7 @@
 <div align="center">
   <a href="https://github.com/Soe18/CuddlyCat_Inc">
     <!-- Logo lì sotto -->
-    <img src="assets/Wking.png" alt="Logo" width="80" height="80">
+    <img src="assets/checkmates.png" alt="Logo" width="180" height="180">
   </a>
 
   <h3 align="center"> CuddlyCat Inc. Chess </h3>
