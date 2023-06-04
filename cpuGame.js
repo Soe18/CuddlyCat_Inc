@@ -21,6 +21,7 @@ function swapper(a, b) {
     a.before(tmp);
     b.before(a);
     tmp.replaceWith(b);
+    
 }
 
 class Cpu {
@@ -57,6 +58,8 @@ let valueOfRook = 50;
 let valueOfQueen = 90;
 let valueOfKing = 900;
 
+var onlyUseForPromotion_CurrentSelection;
+
 // Matrice della scacchiera, build iniziale che verra' subito cambiata
 var boardMatrixPosition = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],
 [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7],];
@@ -72,28 +75,38 @@ var hypoteticalBoardMatrixTypeOfPawn = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4
 
 var existingChessBoard = document.createElement('table')
 var hypoteticalChessBoard = document.createElement('table')
+var forThinkingClassName;
+var forThinkingId;
+var onlyCpuClassName;
+var onlyCpuId;
+var supPromo=false;
 // vado a creare una tabella solo per il pensiero ipotetico della mossa 
 // la vedo abbastanza greve]
 function buildHypoteticalChessBoard() {
+    forThinkingClassName = [];
+    forThinkingId = [];
+    onlyCpuClassName=Array.from({ length: 8 }, () => Array(8).fill(null));
 
-    hypoteticalChessBoard = document.createElement('table')
-    var row;
-    var hypoteticalRow;
-    var hypoteticalCell;
-    for (let i = 0; i < 8; i++) {
-        hypoteticalRow = document.createElement('tr');
-        row = chessBoard.rows[i];
-        // Aggiungi le colonne alla nuova riga
+    onlyCpuId=Array.from({ length: 8 }, () => Array(8).fill(null));
+
+    for (let i = 7; i >=0; i--) {
+        forThinkingClassName[i] = [];
+        forThinkingId[i] = [];
+
         for (let j = 0; j < 8; j++) {
-            hypoteticalCell = document.createElement('td');
-            hypoteticalCell.id = row.cells[j].id;
-            hypoteticalCell.classList.add(row.cells[j].className);
-            hypoteticalCell.innerText = row.cells[j].innerText;
-            hypoteticalRow.appendChild(hypoteticalCell);
+            let getID = getLetterGivenAxisX(j) + getLetterGivenAxisY(i);
+            forThinkingClassName[i][j] = document.getElementById(getID).className;
+            forThinkingId[i][j] = document.getElementById(getID).id
+            onlyCpuClassName[7 - i][j] =  document.getElementById(getID).className;
+            onlyCpuId[7 - i][j] =  document.getElementById(getID).id
         }
-        hypoteticalChessBoard.appendChild(hypoteticalRow)
     }
+
+
+   
+
 }
+
 function buildExistingChessBoard() {
     existingChessBoard = document.createElement('table')
     var row;
@@ -223,7 +236,6 @@ function uploadMoves() {
 // Creatore della matrice, da ricostruire ad ogni fine movePawn()
 // Questa ci consentira' di gestire i movimenti
 function matrixBuilderPosition() {
-    console.log("reloading board");
 
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
@@ -236,9 +248,6 @@ function matrixBuilderPosition() {
 }
 
 function matrixBuilderTypeOfPawn() {
-    console.log("reloading board");
-
-
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
             // getID ci servira' per salvare i valori dell'id
@@ -255,85 +264,93 @@ function findTheOppositeColor(myColor) {
 function getLetterGivenAxisY(axisY) {
     switch (axisY) {
         case 0:
-            return '1';
-        case 1:
-            return '2';
-        case 2:
-            return '3';
-        case 3:
-            return '4';
-        case 4:
-            return '5';
-        case 5:
-            return '6';
-        case 6:
-            return '7';
-        case 7:
             return '8';
+        case 1:
+            return '7';
+        case 2:
+            return '6';
+        case 3:
+            return '5';
+        case 4:
+            return '4';
+        case 5:
+            return '3';
+        case 6:
+            return '2';
+        case 7:
+            return '1';
+        default:
+            return 69;
     }
 }
 
 function reversedGetLetterGivenAxisY(axisY) {
     switch (axisY) {
         case '1':
-            return 0;
-        case '2':
-            return 1;
-        case '3':
-            return 2;
-        case '4':
-            return 3;
-        case '5':
-            return 4;
-        case '6':
-            return 5;
-        case '7':
-            return 6;
-        case '8':
             return 7;
+        case '2':
+            return 6;
+        case '3':
+            return 5;
+        case '4':
+            return 4;
+        case '5':
+            return 3;
+        case '6':
+            return 2;
+        case '7':
+            return 1;
+        case '8':
+            return 0;
+        default:
+            return 69;
     }
 }
 
 // Per ottenere lettera dell'asse x
 function getLetterGivenAxisX(axisX) {
     switch (axisX) {
-        case 0:
-            return 'a';
-        case 1:
-            return 'b';
-        case 2:
-            return 'c';
-        case 3:
-            return 'd';
-        case 4:
-            return 'e';
-        case 5:
-            return 'f';
-        case 6:
-            return 'g';
         case 7:
+            return 'a';
+        case 6:
+            return 'b';
+        case 5:
+            return 'c';
+        case 4:
+            return 'd';
+        case 3:
+            return 'e';
+        case 2:
+            return 'f';
+        case 1:
+            return 'g';
+        case 0:
             return 'h';
+        default:
+            return 69;
     }
 }
 
 function reversedGetLetterGivenAxisX(axisX) {
     switch (axisX) {
         case 'a':
-            return 0;
-        case 'b':
-            return 1;
-        case 'c':
-            return 2;
-        case 'd':
-            return 3;
-        case 'e':
-            return 4;
-        case 'f':
-            return 5;
-        case 'g':
-            return 6;
-        case 'h':
             return 7;
+        case 'b':
+            return 6;
+        case 'c':
+            return 5;
+        case 'd':
+            return 4;
+        case 'e':
+            return 3;
+        case 'f':
+            return 2;
+        case 'g':
+            return 1;
+        case 'h':
+            return 0;
+        default:
+            return 69;
     }
 }
 //funzione per capire di che tipo di pedina si tratta
@@ -360,14 +377,16 @@ function descoveryTypeOfPiecesWithClassName(className) {
 }
 
 // Funzione chiamata ogni volta che viene premuto un elemento nella scacchiera
-function move(pawn) {
+async function move(pawn) {
+    matrixBuilderPosition();
+    matrixBuilderTypeOfPawn();
     //Problema a trovare il tipo del pe4zzo
-    if (descoveryTypeOfPieces(pawn) == 1) { moveRook(pawn) }
-    if (descoveryTypeOfPieces(pawn) == 2) { moveBishop(pawn) }
-    if (descoveryTypeOfPieces(pawn) == 3) { moveKnight(pawn) }
-    if (descoveryTypeOfPieces(pawn) == 4) { moveQueen(pawn) }
-    if (descoveryTypeOfPieces(pawn) == 5) { moveKing(pawn) }
-    if (descoveryTypeOfPieces(pawn) == 6) { movePawn(pawn) }
+    if (descoveryTypeOfPieces(pawn) == 1) { moveRook(pawn.id) }
+    if (descoveryTypeOfPieces(pawn) == 2) { moveBishop(pawn.id) }
+    if (descoveryTypeOfPieces(pawn) == 3) { moveKnight(pawn.id) }
+    if (descoveryTypeOfPieces(pawn) == 4) { moveQueen(pawn.id) }
+    if (descoveryTypeOfPieces(pawn) == 5) { moveKing(pawn.id) }
+    if (descoveryTypeOfPieces(pawn) == 6) { movePawn(pawn.id) }
 
 
     // Scelta della pedina
@@ -391,14 +410,22 @@ function move(pawn) {
                 else { $(pawn).removeClass('blackPawn').addClass('blackpawn'); }
             }
             swapper(currentSelection, tmp);
-
+            
+            const waitUntilReady = async () => {
+                while (supPromo) {
+                  await new Promise((resolve) => setTimeout(resolve, 100));
+                }
+              };
+              promotionDone(currentSelection)
+              await waitUntilReady();
+              
             // Faccio ripartire il prossimo turno
             movingPawnState = 'ready'
-            buildHypoteticalChessBoard();
             checkTheCheckMate(playerObject.color)
+            
             console.log(checkTheCheckMate(cpuObject.color))
             setTimeout(() => { secondWayOfDepth(); }, 500);
-
+            buildHypoteticalChessBoard();
             uploadMoves()
             // Dai il turno all'altro player
         }
@@ -534,13 +561,18 @@ function resetChessBoard() {
 }
 
 
-function vvalidMove(arrayWithValidMove, pawn) {
+function vvalidMove(arrayWithValidMove, id) {
+
+    const x = reversedGetLetterGivenAxisX(String(id).slice(0, 1));
+    const y = reversedGetLetterGivenAxisY(String(id).slice(1, 2));
+
     for (let i = 0; i < 8; i++) {
         //riga della scacchiera in cui si trova il ciclo
         let row = chessBoard.rows[i];
         for (let j = 0; j < 8; j++) {
             for (let k = 0; k < arrayWithValidMove.length; k++) {
-                if (row.cells[j].id == arrayWithValidMove[k] && row.cells[j].className.slice(0, 5) != pawn.className.slice(0, 5)) {
+                if (row.cells[j].id == arrayWithValidMove[k] && row.cells[j].className.slice(0, 5) != forThinkingClassName[y][x].slice(0, 5)) {
+
                     $(row.cells[j]).css("pointer-events", "auto");
                     $(row.cells[j]).css("background-color", "grey");//COLORE
                 }
@@ -548,324 +580,370 @@ function vvalidMove(arrayWithValidMove, pawn) {
         }
     }
 }
-
-function moveBishop(pawn) {
-    let idBishop = pawn.id;
-    let x = reversedGetLetterGivenAxisX(idBishop.slice(0, 1));//parte letteraria
-    let y = reversedGetLetterGivenAxisY(idBishop.slice(1, 2));//parte numerica
-
-    var xUso = 0;
-    var validMove = [];
-    var sup;
-
-    xUso = x + 1;//prendo le posizioni che mi interessano
-    yUso = y + 1;
-
-    for (let i = 0; i < 8; i++) {
-        if (xUso >= 8 || yUso >= 8) { i = 9; } else {//controllo che le mosse siano fattibili per la pedina 
-            sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso);//creo l'id della casella in cui puo andare
-            validMove.push(sup);
-            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') { i = 9; } //controllo che la casella sia vuota
-            yUso++;
-            xUso++;  //lo faccio muovere in diagonale 
-        }
-    }
-
-    // il resto si appplica per per le altre 3 casistiche
-
-    xUso = x + 1;
-    yUso = y - 1;
-    for (let i = 0; i < 8; i++) {
-        if (xUso >= 8 || yUso < 0) { i = 9 } else {
-            sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
-            validMove.push(sup);
-            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') { i = 9; }
-            yUso--;
-            xUso++;
-        }
-    }
-
-    xUso = x - 1;
-    yUso = y + 1;
-    for (let i = y; i < 8; i++) {
-        if (xUso < 0 || yUso >= 8) { i = 9; } else {
-            sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
-            validMove.push(sup);
-            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') { i = 9; }
-            yUso++;
-            xUso--;
-        }
-    }
-
-    xUso = x - 1;
-    yUso = y - 1;
-    for (let i = y; i < 8; i++) {
-        if (xUso < 0 || yUso < 0) { i = 9; } else {
-            sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
-            validMove.push(sup);
-            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') { i = 9; }
-            yUso--;
-            xUso--;
-        }
-    }
-    vvalidMove(validMove, pawn)
-    return validMove;
-}
-
-function moveRook(pawn) {
-    var row;//riga della scacchiera in cui si trova il ciclo
-    let idBishop = pawn.id;
-    let x = reversedGetLetterGivenAxisX(idBishop.slice(0, 1));//parte letteraria
-    let y = reversedGetLetterGivenAxisY(idBishop.slice(1, 2));//parte numerica
-
-    var xUso = 0;
-    var yUso = 0;
-    var validMove = [];
-    var sup;
-
-    xUso = x + 1;//prendo le posizioni attuali
-    yUso = y;
-
-    for (let i = 0; i < 8; i++) {
-        if (xUso >= 8) { i = 9; } else {//controllo che le mosse siano fattibili per la pedina
-            sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
-            validMove.push(sup);
-            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') { i = 9; }
-            xUso++;  //lo faccio muovere una posizione in più sull'asse x 
-        }
-    }
-
-    xUso = x - 1;//prendo le posizioni attuali
-    yUso = y;
-
-    for (let i = 0; i < 8; i++) {
-        if (xUso < 0) { i = 9; } else {//controllo che le mosse siano fattibili per la pedina DEVO TENERE CONTO ANCHE DELLO 0
-            sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
-            validMove.push(sup);
-            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') { i = 9; }
-            xUso--;  //lo faccio muovere di una posizione in meno sull'asse x 
-        }
-    }
-
-    xUso = x;//prendo le posizioni attuali
-    yUso = y + 1;
-
-    for (let i = 0; i < 8; i++) {
-        if (yUso >= 8) { i = 9; } else {//controllo che le mosse siano fattibili per la pedina
-            sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
-            validMove.push(sup);
-            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') { i = 9; }
-            yUso++; //lo faccio muovere di una posizione in più sull'asse y
-        }
-    }
-
-    xUso = x;//prendo le posizioni attuali
-    yUso = y - 1;
-
-    for (let i = 0; i < 8; i++) {
-        if (yUso < 0) { i = 9; } else {//controllo che le mosse siano fattibili per la pedina
-            sup = getLetterGivenAxisX(xUso) + getLetterGivenAxisY(yUso); //creo l'id della casella in cui puo andare
-            validMove.push(sup);
-            if (boardMatrixTypeOfPawn[yUso][xUso] != 'empty') { i = 9; }
-            yUso--; //lo faccio muovere una posizione in meno sull'asse y 
-        }
-    }
-
-    vvalidMove(validMove, pawn)
-    return validMove;
-}
-
-function movePawn(pawn) {
-    let idBishop = pawn.id;
-    let x = reversedGetLetterGivenAxisX(idBishop.slice(0, 1));//parte letteraria
-    let y = reversedGetLetterGivenAxisY(idBishop.slice(1, 2));//parte numerica
-    var validMove = [];
-    var sup;
-    if (pawn.className.slice(0, 5) == 'white') {//controllo il colore
-        if (pawn.className.slice(5, 9) == 'Pawn') {// controll che sia la sua prima mossa
-            if (y < 6) {
-                if (boardMatrixTypeOfPawn[y + 1][x] == 'empty') {
-                    sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 1);// prendo le 2 caselle che dopo faro colorare e rendere disponibile per il movimento
-                    validMove.push(sup);
-                    if (boardMatrixTypeOfPawn[y + 2][x] == 'empty') {
-                        sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 2);
-                        validMove.push(sup);
-                    }
-                }
-            }
-        } else {//prendo solo una casella se non è la sua prima mossa
-            if (y < 7) {
-                if (boardMatrixTypeOfPawn[y + 1][x] == 'empty') {
-                    sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 1);
-                    validMove.push(sup);
-                }
-            }
-        }
-        if (y < 7 && x < 7) {
-            if (boardMatrixTypeOfPawn[y + 1][x + 1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0, 5))) {// controllo se posso mangiare o meno tramite il classname
-                sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y + 1);
-                validMove.push(sup);
-
-            }
-        }
-        if (y < 7 && x > 0) {
-            if (boardMatrixTypeOfPawn[y + 1][x - 1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0, 5))) {
-                sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y + 1);
-                validMove.push(sup)
-
-            }
-        }
-    }
-    else {// stessa cosa del ciclo sopra
-        if (pawn.className.slice(5, 9) == 'Pawn') {
-            if (y > 1) {
-                if (boardMatrixTypeOfPawn[y - 1][x] == 'empty') {
-                    sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 1);
-                    validMove.push(sup);
-                    if (boardMatrixTypeOfPawn[y - 2][x] == 'empty') {
-                        sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 2);
-                        validMove.push(sup);
-                    }
-                }
-            }
-        } else {
-            if (y > 0) {
-                if (boardMatrixTypeOfPawn[y - 1][x] == 'empty') {
-                    sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 1);
-                    validMove.push(sup);
-                }
-            }
-
-        }
-
-        if (y > 0 && x < 7) {
-            if (boardMatrixTypeOfPawn[y - 1][x + 1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0, 5))) {
-                sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y - 1);
-                validMove.push(sup)
-            }
-        }
-        if (y > 0 && x > 0) {
-            if (boardMatrixTypeOfPawn[y - 1][x - 1].slice(0, 5) == findTheOppositeColor(pawn.className.slice(0, 5))) {
-                sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y - 1);
-                validMove.push(sup)
-            }
-        }
-    }
-
-    vvalidMove(validMove, pawn)
-    return validMove;
+function isInBoard(x, y) {
+    return x >= 0 && x < 8 && y >= 0 && y < 8;
 }
 
 
 
+function moveBishop(id) {
+
+    const x = reversedGetLetterGivenAxisX(String(id).slice(0, 1));
+    const y = reversedGetLetterGivenAxisY(String(id).slice(1, 2));
+
+    const validMoves = [];
+    const directions = [
+        { dx: 1, dy: 1 },
+        { dx: 1, dy: -1 },
+        { dx: -1, dy: 1 },
+        { dx: -1, dy: -1 },
+    ];
+
+    for (const direction of directions) {
+        let newX = x + direction.dx;
+        let newY = y + direction.dy;
+
+        while (isInBoard(newX, newY)) {
+            const move = getLetterGivenAxisX(newX) + getLetterGivenAxisY(newY);
+            if (isLegalMove([id, move])) {
+                validMoves.push(move);
+            }
 
 
-function moveKnight(pawn) {
-    let idBishop = pawn.id;
-    let x = reversedGetLetterGivenAxisX(idBishop.slice(0, 1));//parte letteraria
-    let y = reversedGetLetterGivenAxisY(idBishop.slice(1, 2));//parte numerica
-    var validMove = [];
+            if (forThinkingClassName[newY][newX] !== 'empty') break;
+            newX += direction.dx;
+            newY += direction.dy;
+
+        }
+    }
+
+    vvalidMove(validMoves, id);
+    return validMoves;
+}
+function moveRook(id) {
+    const x = reversedGetLetterGivenAxisX(String(id).slice(0, 1));
+    const y = reversedGetLetterGivenAxisY(String(id).slice(1, 2));
+
+    const validMoves = [];
+    const directions = [
+        { dx: 1, dy: 0 },
+        { dx: -1, dy: 0 },
+        { dx: 0, dy: 1 },
+        { dx: 0, dy: -1 }
+    ];
+
+    for (const direction of directions) {
+        let newX = x + direction.dx;
+        let newY = y + direction.dy;
+
+        while (isInBoard(newX, newY)) {
+
+            const moveId = getLetterGivenAxisX(newX) + getLetterGivenAxisY(newY);
+
+            if (isLegalMove([id, moveId])) {
+                validMoves.push(moveId);
+            }
+            if (forThinkingClassName[newY][newX] !== 'empty') break;
+            newX += direction.dx;
+            newY += direction.dy;
+        }
+    }
+
+    vvalidMove(validMoves, id);
+    return validMoves;
+}
+function movePawn(id) {
+    matrixBuilderPosition();
+    matrixBuilderTypeOfPawn();
+
+    var x = reversedGetLetterGivenAxisX(String(id).slice(0, 1));
+    var y = reversedGetLetterGivenAxisY(String(id).slice(1, 2));
+    var validMoves = [];
     var sup;
-    if (x <= 7) {//essendo che si muove ad L ho calcolato manualmente le sue 8 posizioni e ho controllato che non andassero fuori dalla scacchiera 
-        sup = getLetterGivenAxisX(x + 2) + getLetterGivenAxisY(y - 1);
-        validMove.push(sup)
-        sup = getLetterGivenAxisX(x + 2) + getLetterGivenAxisY(y + 1);
-        validMove.push(sup)
+    if (forThinkingClassName[y][x].slice(0, 5) == 'black') {
+        sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 1);
+        if (isLegalMove([id, sup])) {
+            validMoves.push(sup);
+        }
+        sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 2);
+        if (isLegalMove([id, sup])) {
+            validMoves.push(sup);
+        }
+
+        sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y + 1);
+        if (isLegalMove([id, sup])) {
+            validMoves.push(sup);
+        }
+        sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y+1);
+        if (isLegalMove([id, sup])) {
+            validMoves.push(sup);
+        }
+
+        // Include all capture moves, regardless of color
+    } else {
+        sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 1);
+            if (isLegalMove([id, sup])) {       
+                    validMoves.push(sup);
+              }  
+        
+        
+          sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 2);
+          if (isLegalMove([id, sup])) {       
+            validMoves.push(sup);
+      }
+    
+      sup = getLetterGivenAxisX(x-1) + getLetterGivenAxisY(y - 1);
+      if (isLegalMove([id, sup])) {       
+          validMoves.push(sup);
+    } 
+    sup = getLetterGivenAxisX(x+1) + getLetterGivenAxisY(y-1);
+    if (isLegalMove([id, sup])) {       
+        validMoves.push(sup);
+  }  
     }
-    if (y <= 7) {
-        sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y + 2);
-        validMove.push(sup)
-        sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y + 2);
-        validMove.push(sup)
+    vvalidMove(validMoves, id)
+    return validMoves;
+}
+function promotionDone(pawn) {
+    let pawnAxisY = (pawn.id).substring(1);
+    /*  Non differenzio perche' pedone bianco non potra' mai
+        stare su asse y = 1 e pedone nero su asse y = 8. */
+    var needsPromotion = (pawn.className == "blackpawn" || pawn.className == "whitepawn") && pawnAxisY == "1" || pawnAxisY == "8";
+    if (needsPromotion) {
+        $(document.getElementById("obscureAllForPromotion")).css("display", "block");
+        onlyUseForPromotion_CurrentSelection = pawn;
+        supPromo=true 
     }
-    if (x >= 2) {
-        sup = getLetterGivenAxisX(x - 2) + getLetterGivenAxisY(y - 1);
-        validMove.push(sup)
-        sup = getLetterGivenAxisX(x - 2) + getLetterGivenAxisY(y + 1);
-        validMove.push(sup)
-    }
-    if (y >= 2) {
-        sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y - 2);
-        validMove.push(sup)
-        sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y - 2);
-        validMove.push(sup)
-    }
-    vvalidMove(validMove, pawn)
-    return validMove;
 }
 
-function moveQueen(pawn) {
-    var validMoveV1 = moveBishop(pawn)
-    var validMoveV2 = moveRook(pawn)
-    for (let index = 0; index < validMoveV1.length; index++) {
-        validMoveV2.push(validMoveV1[index])
+function promotionForCpu(pawn){
+    let pawnAxisY = (pawn.id).substring(1);
+    var needsPromotion = (pawn.className == "blackpawn" || pawn.className == "whitepawn") && pawnAxisY == "1" || pawnAxisY == "8";
+    if (needsPromotion) {
+        $(pawn).removeClass(pawn.className).addClass(pawn.className.slice(0,5)+'Queen');
+        $(pawn).text(pawn.className.slice(0,1)+'q');
     }
+}
+function moveKnight(id) {
+    
+    const x = reversedGetLetterGivenAxisX(String(id).slice(0, 1)); // letter part
+    const y = reversedGetLetterGivenAxisY(String(id).slice(1, 2)); // numeric part
+
+    const validMoves = [];
+
+    // Possible knight moves as (dx, dy) pairs
+    const knightMoves = [
+        [-2, -1], [-2, 1], [-1, -2], [-1, 2],
+        [1, -2], [1, 2], [2, -1], [2, 1]
+    ];
+
+    for (const [dx, dy] of knightMoves) {
+        const newX = x + dx;
+        const newY = y + dy;
+
+        const move = getLetterGivenAxisX(newX) + getLetterGivenAxisY(newY);
+        if (isLegalMove([id, move])) {
+
+            validMoves.push(move);
+        }
+    }
+    vvalidMove(validMoves, id);
+    console.log(validMoves, id)
+    return validMoves;
+
+}
+function moveQueen(id) {
+    var validMoveV1 = moveBishop(id)
+    var validMoveV2 = moveRook(id)
+    validMoveV2 = validMoveV1.concat(validMoveV2);
     return validMoveV2
 }
+function moveKing(id) {
+    const x = reversedGetLetterGivenAxisX(String(id).slice(0, 1)); // letter part
+    const y = reversedGetLetterGivenAxisY(String(id).slice(1, 2)); // numeric part
 
-function moveKing(pawn) {
-    let idBishop = pawn.id;
-    let x = reversedGetLetterGivenAxisX(idBishop.slice(0, 1));//parte letteraria
-    let y = reversedGetLetterGivenAxisY(idBishop.slice(1, 2));//parte numerica
-    var validMove = [];
-    var sup;
-    //controllo se il re non si trovi ai confini della scacchiera per vedere le mosse disponibile poi le metto una a una 
-    if (x > 0) {
-        sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y + 1);
-        if (checkTheMoev(sup, pawn)) {
-            validMove.push(sup)
-        }
-        sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y);
-        if (checkTheMoev(sup, pawn)) {
-            validMove.push(sup)
-        }
-    }
-    if (x > 0 && y > 0) {
-        sup = getLetterGivenAxisX(x - 1) + getLetterGivenAxisY(y - 1);
-        if (checkTheMoev(sup, pawn)) {
-            validMove.push(sup)
-        }
-    }
-    if (y > 0) {
-        sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y - 1);
-        if (checkTheMoev(sup, pawn)) {
-            validMove.push(sup)
-        }
-        sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y - 1);
-        if (checkTheMoev(sup, pawn)) {
-            validMove.push(sup)
-        }
-    }
-    if (y < 8) {
-        sup = getLetterGivenAxisX(x) + getLetterGivenAxisY(y + 1);
-        if (checkTheMoev(sup, pawn)) {
-            validMove.push(sup)
-        }
-    }
-    if (x < 8) {
-        sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y);
-        if (checkTheMoev(sup, pawn)) {
-            validMove.push(sup)
-        }
-    }
-    if (x < 8 && y < 8) {
-        sup = getLetterGivenAxisX(x + 1) + getLetterGivenAxisY(y + 1);
-        if (checkTheMoev(sup, pawn)) {
-            validMove.push(sup)
-        }
+    const validMoves = [];
 
+    // Possible king moves as (dx, dy) pairs
+    const kingMoves = [
+        [-1, -1], [-1, 0], [-1, 1],
+        [0, -1], [0, 1],
+        [1, -1], [1, 0], [1, 1]
+    ];
+
+    for (const [dx, dy] of kingMoves) {
+        const newX = x + dx;
+        const newY = y + dy;
+
+        if (isInBoard(newX, newY)) {
+            const moveId = getLetterGivenAxisX(newX) + getLetterGivenAxisY(newY);
+            const move = getLetterGivenAxisX(newX) + getLetterGivenAxisY(newY);
+            if (isLegalMove([id, move])) {
+                validMoves.push(move);
+            }
+        }
     }
 
-    vvalidMove(validMove, pawn)
-    return validMove;
+    vvalidMove(validMoves, id);
+    return validMoves;
 }
 
-function checkTheMoev(id, pawn) {
+
+function isLegalMove(move) {
+    const xFrom = reversedGetLetterGivenAxisX(move[0].slice(0, 1));
+    const yFrom = reversedGetLetterGivenAxisY(move[0].slice(1, 2));
+    const xTo = reversedGetLetterGivenAxisX(String(move[1]).slice(0, 1));
+    const yTo = reversedGetLetterGivenAxisY(String(move[1]).slice(1, 2));
+    // La pedina non può muoversi fuori dalla scacchiera
+    if (!isInBoard(xTo, yTo)) return false;
+
+
+    // La pedina non può passare su un altro pedone dello stesso colore     
+    if (forThinkingClassName[yFrom][xFrom].slice(0, 5) === forThinkingClassName[yTo][xTo].slice(0, 5)) return false;
+    switch (descoveryTypeOfPiecesWithClassName(forThinkingClassName[yFrom][xFrom])) {
+        case 6: // Pedone    ))
+            return isPawnMoveLegal(xFrom, yFrom, xTo, yTo);
+        case 1: // Torre  
+            return isRookMoveLegal(xFrom, yFrom, xTo, yTo);
+        case 2: // Alfiere    
+            return isBishopMoveLegal(xFrom, yFrom, xTo, yTo);
+        case 3: // Cavallo 
+            return isKnightMoveLegal(xFrom, yFrom, xTo, yTo);
+        case 4: // Regina
+            return isRookMoveLegal(xFrom, yFrom, xTo, yTo) ||
+                isBishopMoveLegal(xFrom, yFrom, xTo, yTo);
+        case 5: // Re    
+            return isKingMoveLegal(xFrom, yFrom, xTo, yTo);
+    }
+
+}
+function isRookMoveLegal(xFrom, yFrom, xTo, yTo) {
+    // La mossa deve essere lungo la stessa riga o colonna    
+    if (xFrom !== xTo && yFrom !== yTo) return false;
+
+    const xDelta = xTo - xFrom;
+    const yDelta = yTo - yFrom;
+
+    // La mossa deve essere solo verticale o orizzontale, non diagonale      
+    if (xDelta * yDelta !== 0) return false;
+
+    let x = xFrom;
+    let y = yFrom;
+
+    // Controllare se la mossa passa su un altro pezzo   
+    while (x != xTo || y != yTo) {
+        x = x + xDelta;
+        y = y + yDelta;
+
+        if (forThinkingClassName[y][x].slice(0, 5) === forThinkingClassName[yFrom][xFrom].slice(0, 5)) return false;
+    }
+
+    return true;
+}
+function isBishopMoveLegal(xFrom, yFrom, xTo, yTo) {
+
+    const xDelta = xTo - xFrom;
+    const yDelta = yTo - yFrom;
+
+    // La mossa deve essere diagonale 
+    if (xDelta != yDelta && xDelta != -yDelta) return false;
+
+    let x = xFrom;
+    let y = yFrom;
+
+    // Controllare se la mossa passa su un altro pezzo  
+    while (x != xTo || y != yTo) {
+        x = x + xDelta;
+        y = y + yDelta;
+
+        if (forThinkingClassName[y][x].slice(0, 5) === forThinkingClassName[yFrom][xFrom].slice(0, 5)) return false;
+    }
+
+    return true;
+}
+function isPawnMoveLegal(xFrom, yFrom, xTo, yTo) {
+
+    const yDelta = yTo - yFrom;
+    
+    if (forThinkingClassName[yFrom][xFrom].slice(0, 5) == 'black') {
+
+        // Mosse legali per un pedone bianco
+
+        if (yFrom == 1 && yDelta == 2 && forThinkingClassName[yTo][xTo]=='empty' && forThinkingClassName[yTo-1][xTo]=='empty') {
+            // Prima mossa, può avanzare di due caselle
+            return true;
+        }
+
+        if (yDelta == 1 && xTo == xFrom && forThinkingClassName[yTo][xTo]=='empty' ) {
+            // Movimento normale in avanti di una casella
+            return true;
+        }
+        
+        if (yDelta == 1 && (xTo == xFrom + 1 || xTo == xFrom - 1) && forThinkingClassName[yTo][xTo]!='empty') {
+            // Cattura diagonale     
+            return true;
+        }
+
+    } else {
+        if (yFrom == 6 && yDelta == -2 && forThinkingClassName[yTo][xTo]=='empty'&& forThinkingClassName[yTo-1][xTo]=='empty') {
+            // Prima mossa, può retrocedere di due caselle
+            return true;
+        }
+
+        if (yDelta == -1 && xTo == xFrom  && forThinkingClassName[yTo][xTo]=='empty') {
+            // Movimento normale indietro di una casella       
+            return true;
+        }
+
+        if (yDelta == -1 && (xTo == xFrom + 1 || xTo == xFrom - 1) && forThinkingClassName[yTo][xTo]!='empty') {
+            // Cattura diagonale
+            return true
+        }
+    }
+
+    return false;
+}
+function isKingMoveLegal(xFrom, yFrom, xTo, yTo) {
+
+    const xDelta = Math.abs(xTo - xFrom);
+    const yDelta = Math.abs(yTo - yFrom);
+
+    // Il re può muoversi solo di una casella per volta   
+    if (xDelta > 1 || yDelta > 1) return false;
+
+    // Il re non può passare su pezzi dello stesso colore
+    if (forThinkingClassName[yTo][xTo].slice(0, 5) === forThinkingClassName[yFrom][xFrom].slice(0, 5)) {
+        return false;
+    }
+
+    return true;
+}
+function isKnightMoveLegal(xFrom, yFrom, xTo, yTo) {
+
+    const xDelta = Math.abs(xTo - xFrom);
+    const yDelta = Math.abs(yTo - yFrom);
+    // Il cavallo può muoversi solo di 2 e 1 o 1 e 2 caselle   
+    if (xDelta != 2 && xDelta != 1) return false;
+    if (yDelta != 2 && yDelta != 1) return false;
+
+    // Controllare che la cella di destinazione sia vuota  
+    if (forThinkingClassName[yTo][xTo].slice(0, 5) === forThinkingClassName[yFrom][xFrom].slice(0, 5)) return false;
+
+    return true;
+}
+function isQueenMoveLegal(xFrom, yFrom, xTo, yTo) {
+
+    return isBishopMoveLegal(xFrom, yFrom, xTo, yTo) ||
+        isRookMoveLegal(xFrom, yFrom, xTo, yTo);
+}
+function checkTheMoev(id) {
+    const x = reversedGetLetterGivenAxisX(String(id).slice(0, 1)); // letter part
+    const y = reversedGetLetterGivenAxisY(String(id).slice(1, 2))
     for (let i = 0; i < 8; i++) {
         //riga della scacchiera in cui si trova il ciclo
         let row = chessBoard.rows[i];
         for (let j = 0; j < 8; j++) {
-            if (row.cells[j].id == id && row.cells[j].className.slice(0, 5) != pawn.className.slice(0, 5)) {
+            if (row.cells[j].id == id && row.cells[j].className.slice(0, 5) != forThinkingClassName[y][x].slice(0, 5)) {
                 return true
             }
         }
@@ -873,180 +951,44 @@ function checkTheMoev(id, pawn) {
 }
 
 
-function valueOfOneMove(hypoteticalPosition, pawn) {
-    let x = reversedGetLetterGivenAxisX(hypoteticalPosition.slice(0, 1));//parte letteraria
-    let y = reversedGetLetterGivenAxisY(hypoteticalPosition.slice(1, 2));//parte numerica
+function getPieceValue(pieceType, targetPieceType, color) {
+    const pieceValues = {
+        1: 50,
+        2: 30,
+        3: 30,
+        4: 90,
+        5: 900,
+        6: 10,
+    };
 
-
-
-    //controllo che la casella sia dell'avversario
-    if (idToClass(hypoteticalPosition).slice(0, 5) != pawn.className.slice(0,5)) {
-        //trovo la riga della tabella dellavversario
-        for (let i = 0; i < 8; i++) {
-            let row = chessBoard.rows[i];
-            for (var j = 0; j < 8; j++) {
-                    
-                if (hypoteticalPosition == row.cells[j].id) {
-
-                    let sup = row.cells[j]
-
-                    //in base al mio tipo di pedina cambiera il valore
-                    if (descoveryTypeOfPieces(pawn) == 1) {
-                        //in base da che pedina ha l'avversario in quella casella il valroe cambia
-                        if (descoveryTypeOfPieces(sup) == 1) {
-                            //controllo il colore che ha la cpu perche il valore cambiera
-                            if (pawn.className.slice(0,5) == 'white') { return rookEvalWhite + 50[y][x] }
-                            else { return rookEvalBlack[y][x] + 50 }
-                        }
-
-                        if (descoveryTypeOfPieces(sup) == 2 || descoveryTypeOfPieces(sup) == 3) {
-                            if (pawn.className.slice(0,5) == 'white') { return rookEvalWhite[y][x] + 30 }
-                            else { return rookEvalBlack[y][x] + 30 }
-                        }
-
-                        if (descoveryTypeOfPieces(sup) == 4) {
-                            if (pawn.className.slice(0,5) == 'white') { return rookEvalWhite[y][x] + 90 }
-                            else { return rookEvalBlack[y][x] + 90 }
-                        }
-
-                        if (descoveryTypeOfPieces(sup) == 5) {
-                            if (pawn.className.slice(0,5) == 'white') { return rookEvalWhite[y][x] + 900 }
-                            else { return rookEvalBlack[y][x] + 900 }
-                        }
-
-                        if (descoveryTypeOfPieces(sup) == 6) {
-                            if (pawn.className.slice(0,5) == 'white') { return rookEvalWhite[y][x] + 10 }
-                            else { return rookEvalBlack[y][x] + 10 }
-                        }
-
-                        if (descoveryTypeOfPieces(sup) == 0) {
-                            if (pawn.className.slice(0,5) == 'white') { return rookEvalWhite[y][x] }
-                            else { return rookEvalBlack[y][x] }
-                        }
-                    }
-                    if (descoveryTypeOfPieces(pawn) == 2) {
-                        if (descoveryTypeOfPieces(sup) == 1) {
-                            //controllo il colore che ha la cpu perche il valore cambiera
-                            if (pawn.className.slice(0,5) == 'white') { return bishopEvalWhite[y][x] + 50 }
-                            else { return bishopEvalBlack[y][x] + 50 }
-                        }
-                        if (descoveryTypeOfPieces(sup) == 2 || descoveryTypeOfPieces(sup) == 3) {
-                            if (pawn.className.slice(0,5) == 'white') { return bishopEvalWhite[y][x] + 30 }
-                            else { return bishopEvalBlack[y][x] + 30 }
-                        }
-
-                        if (descoveryTypeOfPieces(sup) == 4) {
-                            if (pawn.className.slice(0,5) == 'white') { return bishopEvalWhite[y][x] + 90 }
-                            else { return bishopEvalBlack[y][x] + 90 }
-                        }
-
-                        if (descoveryTypeOfPieces(sup) == 5) {
-                            if (pawn.className.slice(0,5) == 'white') { return bishopEvalWhite[y][x] + 900 }
-                            else { return bishopEvalBlack[y][x] + 900 }
-                        }
-
-                        if (descoveryTypeOfPieces(sup) == 6) {
-                            if (pawn.className.slice(0,5) == 'white') { return bishopEvalWhite[y][x] + 10 }
-                            else { return bishopEvalBlack[y][x] + 10 }
-                        }
-                        if (descoveryTypeOfPieces(sup) == 0) {
-                            if (pawn.className.slice(0,5) == 'white') { return bishopEvalWhite[y][x] }
-                            else { return bishopEvalBlack[y][x] }
-                        }
-
-                    } if (descoveryTypeOfPieces(pawn) == 3) {
-                        //valore mossa del cavallo 
-                        if (descoveryTypeOfPieces(sup) == 1) { return knightEval[y][x] + 50 }
-                        if (descoveryTypeOfPieces(sup) == 2) { return knightEval[y][x] + 30 }
-                        if (descoveryTypeOfPieces(sup) == 3) { return knightEval[y][x] + 30 }
-                        if (descoveryTypeOfPieces(sup) == 4) { return knightEval[y][x] + 90 }
-                        if (descoveryTypeOfPieces(sup) == 5) { return knightEval[y][x] + 900 }
-                        if (descoveryTypeOfPieces(sup) == 6) { return knightEval[y][x] + 10 }
-                        if (descoveryTypeOfPieces(sup) == 0) { return knightEval[y][x]; }
-                        
-
-                    }  if (descoveryTypeOfPieces(pawn) == 4) {
-                        //valore mossa della regina
-                        if (descoveryTypeOfPieces(sup) == 1) { return queenEval[y][x] + 50 }
-                        else if (descoveryTypeOfPieces(sup) == 2) { return queenEval[y][x] + 30 }
-                        else if (descoveryTypeOfPieces(sup) == 3) { return queenEval[y][x] + 30 }
-                        else if (descoveryTypeOfPieces(sup) == 4) { return queenEval[y][x] + 90 }
-                        else if (descoveryTypeOfPieces(sup) == 5) { return queenEval[y][x] + 900 }
-                        else if (descoveryTypeOfPieces(sup) == 6) { return queenEval[y][x] + 10 }
-                        else if (descoveryTypeOfPieces(sup) == 0) { return queenEval[y][x] }
-                        
-                    }
-                     if (descoveryTypeOfPieces(pawn) == 5) {
-                        if (descoveryTypeOfPieces(sup) == 1) {
-                            //controllo il colore che ha la cpu perche il valore cambiera
-                            if (pawn.className.slice(0,5) == 'white') { return kingEvalWhite[y][x] + 50 }
-                            else { return kingEvalBlack[y][x] + 50 }
-                        }
-
-                        if (descoveryTypeOfPieces(sup) == 2 || descoveryTypeOfPieces(sup) == 3) {
-                            if (pawn.className.slice(0,5) == 'white') { return kingEvalWhite[y][x] + 30 }
-                            else { return kingEvalBlack[y][x] + 30 }
-                        }
-
-                        if (descoveryTypeOfPieces(sup) == 4) {
-                            if (pawn.className.slice(0,5) == 'white') { return kingEvalWhite[y][x] + 90 }
-                            else { return kingEvalBlack[y][x] + 90 }
-                        }
-
-                        if (descoveryTypeOfPieces(sup) == 5) {
-                            if (pawn.className.slice(0,5) == 'white') { return kingEvalWhite[y][x] + 900 }
-                            else { return kingEvalBlack[y][x] + 900 }
-                        }
-
-                        if (descoveryTypeOfPieces(sup) == 6) {
-                            if (pawn.className.slice(0,5) == 'white') { return kingEvalWhite[y][x] + 10 }
-                            else { return kingEvalBlack[y][x] + 10 }
-                        }
-                        if (descoveryTypeOfPieces(sup) == 0) {
-                            if (pawn.className.slice(0,5) == 'white') { return kingEvalWhite[y][x] }
-                            else { return kingEvalBlack[y][x] }
-
-                        }
-                    }
-                     if (descoveryTypeOfPieces(pawn) == 6) {
-
-                        if (descoveryTypeOfPieces(sup) == 1) {
-                            //controllo il colore che ha la cpu perche il valore cambiera
-                            if (cpuObject.color == 'white') { return pawnEvalWhite[y][x] + 50 }
-                            else { return pawnEvalBlack[y][x] + 50 }
-                        }
-                        if (descoveryTypeOfPieces(sup) == 2 || descoveryTypeOfPieces(sup) == 3) {
-                            if (cpuObject.color == 'white') { return pawnEvalWhite[y][x] + 30 }
-                            else { return pawnEvalBlack[y][x] + 30 }
-                        }
-                        if (descoveryTypeOfPieces(sup) == 4) {
-                            if (cpuObject.color == 'white') { return pawnEvalWhite[y][x] + 90 }
-                            else { return pawnEvalBlack[y][x] + 90 }
-                        }
-
-                        if (descoveryTypeOfPieces(sup) == 5) {
-                            if (cpuObject.color == 'white') { return pawnEvalWhite[y][x] + 900 }
-                            else { return pawnEvalBlack[y][x] + 900 }
-                        }
-
-                        if (descoveryTypeOfPieces(sup) == 6) {
-                            if (cpuObject.color == 'white') { return pawnEvalWhite[y][x] + 10 }
-                            else { return pawnEvalBlack[y][x] + 10 }
-                        }
-
-                        if (descoveryTypeOfPieces(sup) == 0) {
-                            if (cpuObject.color == 'white') { return pawnEvalWhite[y][x] }
-                            else { return pawnEvalBlack[y][x]; }
-                        }
-                    }
-                }
-            }
-        }
-    }
+    return pieceValues[targetPieceType] || 0;
 }
+function getEvaluationMatrix(pieceType, color) {
+    const matrices = {
+        1: color === 'white' ? rookEvalWhite : rookEvalBlack,
+        2: color === 'white' ? bishopEvalWhite : bishopEvalBlack,
+        3: knightEval,
+        4: queenEval,
+        5: color === 'white' ? kingEvalWhite : kingEvalBlack,
+        6: color === 'white' ? pawnEvalWhite : pawnEvalBlack,
+    };
 
+    return matrices[pieceType];
+}
+function valueOfOneMove(hypoteticalPosition, pawn) {
+ 
+    let x = reversedGetLetterGivenAxisX(hypoteticalPosition.slice(0, 1));
+    let y = reversedGetLetterGivenAxisY(hypoteticalPosition.slice(1, 2));
+    let color = pawn.className.slice(0, 5);
 
+    let targetCell = forThinkingClassName[y][x];
+    let pieceType = descoveryTypeOfPieces(pawn);
+    let targetPieceType = descoveryTypeOfPiecesWithClassName(targetCell);
 
+    let pieceValue = getPieceValue(pieceType, targetPieceType, color);
+    let evalMatrix = getEvaluationMatrix(pieceType, color);
+    return evalMatrix[y][x] + pieceValue;
+}
 function idToClass(id) {
     let x = reversedGetLetterGivenAxisX(id.slice(0, 1));//parte letteraria
     let y = reversedGetLetterGivenAxisY(id.slice(1, 2));//parte numerica
@@ -1054,6 +996,7 @@ function idToClass(id) {
 }
 
 function cpuMove(colorIWant) {
+    buildHypoteticalChessBoard();
     //ARRAY TRIDIMENSIONALE MI SA 
     //[TIPO_PEDINA]-[POSIZIONE ATTUALE]-[[MOSSA1,MOSSA2,MOSSA3,ETC]]-[[VALOREMOSSA1,VALOREMOSSA2,VALOREMOSSA3,ETC]]
     var moveOfOnePieces = [];
@@ -1061,47 +1004,44 @@ function cpuMove(colorIWant) {
     var index = 0;
 
     for (let i = 0; i < 8; i++) {
-        let row = hypoteticalChessBoard.rows[i];
         for (let j = 0; j < 8; j++) {
 
-            if (row.cells[j].className.slice(0, 5) == colorIWant) {
-
+            let className = onlyCpuClassName[i][j];
+            if (className.slice(0, 5) == colorIWant) {
+             
                 moves[index] = []
-                moves[index][0] = row.cells[j].id;
-                moves[index][1] = row.cells[j].className;
-                if (descoveryTypeOfPiecesWithClassName(row.cells[j].className) == 1) {
-                    moveOfOnePieces = moveRook(row.cells[j])
+                moves[index][0] = onlyCpuId[i][j];
+                moves[index][1] = className;
+                if (descoveryTypeOfPiecesWithClassName(className) == 1) {
+                    moveOfOnePieces = moveRook(row.cells[j].id)
                 }
-                if (descoveryTypeOfPiecesWithClassName(row.cells[j].className) == 2) {
-                    moveOfOnePieces = moveBishop(row.cells[j])
+                if (descoveryTypeOfPiecesWithClassName(className) == 2) {
+                    moveOfOnePieces = moveBishop(row.cells[j].id)
                 }
-                if (descoveryTypeOfPiecesWithClassName(row.cells[j].className) == 3) {
-                    moveOfOnePieces = moveKnight(row.cells[j])
+                if (descoveryTypeOfPiecesWithClassName(className) == 3) {
+                    moveOfOnePieces = moveKnight(row.cells[j].id)
+                    console.log(row.cells[j].id,moveOfOnePieces)
                 }
-                if (descoveryTypeOfPiecesWithClassName(row.cells[j].className) == 4) {
-                    moveOfOnePieces = moveQueen(row.cells[j])
-                   
+                if (descoveryTypeOfPiecesWithClassName(className) == 4) {
+                    moveOfOnePieces = moveQueen(row.cells[j].id)
+
                 }
-                if (descoveryTypeOfPiecesWithClassName(row.cells[j].className) == 5) {
-                    moveOfOnePieces = moveKing(row.cells[j])
+                if (descoveryTypeOfPiecesWithClassName(className) == 5) {
+                    moveOfOnePieces = moveKing(row.cells[j].id)
                 }
-                if (descoveryTypeOfPiecesWithClassName(row.cells[j].className) == 6) {
-                    moveOfOnePieces = movePawn(row.cells[j])
-                    $(row.cells[j]).removeClass(colorIWant + 'pawn').addClass(colorIWant + 'Pawn');
+                if (descoveryTypeOfPiecesWithClassName(className) == 6) {
+                    moveOfOnePieces = movePawn(row.cells[j].id)
+
                 }
                 moves[index][2] = [];
                 moves[index][3] = [];
 
                 for (let k = 0; k < moveOfOnePieces.length; k++) {
-
-                    if (moveOfOnePieces[k].length == 2 && idToClass(moveOfOnePieces[k]).slice(0, 5) != colorIWant) {
+                     if (moveOfOnePieces[k].length == 2 &&  idToClass(moveOfOnePieces[k]).slice(0, 5) == findTheOppositeColor(colorIWant)) {
                         moves[index][2].push(moveOfOnePieces[k]);
                         moves[index][3].push(valueOfOneMove(moveOfOnePieces[k], row.cells[j]))
-                        if (descoveryTypeOfPiecesWithClassName(row.cells[j].className) == 4) {
-                            console.log(row.cells[j].className,moveOfOnePieces[k],valueOfOneMove(moveOfOnePieces[k], row.cells[j]), descoveryTypeOfPieces(row.cells[j]))
-                           
-                        }
-                        //console.log(moves[index])
+
+
                     }
 
                 }
@@ -1113,14 +1053,13 @@ function cpuMove(colorIWant) {
 
     }
 
-    
+
     moves = moveOfCpu(moves)
-   // console.log(moves)
+    // console.log(moves)
     moves = findTheBestMove(moves)
-    
+
     return moves
 }
-
 function moveOfCpu(moves) {
     let realMoves = moves;
     var sup;
@@ -1141,53 +1080,51 @@ function moveOfCpu(moves) {
     }
     return FinalMove
 }
-
-function findTheBestMove(array) { 
-    var idOfKing; 
+function findTheBestMove(array) {
+    var idOfKing;
     var moveOfKing;
-   var arrayToRespect=checkTheCheckMate(playerObject.color)
+    var arrayToRespect = checkTheCheckMate(playerObject.color)
 
     var arraysup = [];
     array.sort(function (a, b) {
         return b[3] - a[3];
     });
-    if(!cpuObject.check){
-    if (array.length > 10) {
-        for (let i = 0; i < 5; i++) {
-            arraysup[i] = array[i];
-        }
-    } else {
-        for (let i = 0; i < array.length; i++) {
-            arraysup[i] = array[i];
-        }
-    }
-}else{
-    for (let i = 0; i < 8; i++) {
-        let row = chessBoard.rows[i];
-        for (let j = 0; j < 8; j++) {
-            if (row.cells[j].className == (cpuObject.color + 'King')) {
-                moveOfKing = moveKing(row.cells[j])
-                idOfKing = row.cells[j].id
+    if (!cpuObject.check) {
+        if (array.length > 10) {
+            for (let i = 0; i < 5; i++) {
+                arraysup[i] = array[i];
+            }
+        } else {
+            for (let i = 0; i < array.length; i++) {
+                arraysup[i] = array[i];
             }
         }
-    }
-    for (let i = 0; i < array.length; i++) {
-        for(var j =0; j< arrayToRespect.length;j++){
-            for (let k = 0; k < moveOfKing.length; k++) {
-                console.log(arrayToRespect[j][2],moveOfKing[k])
-                if(array[i][0]==idOfKing && moveOfKing[k]!=arrayToRespect[j][2]  ) {arraysup[i] = array[i];} 
-                if(array[i][0]!=idOfKing ){if(array[i][2]==arrayToRespect[j][2] || array[i][2]==arrayToRespect[j][0])arraysup[i] = array[i];}
+    } else {
+        for (let i = 0; i < 8; i++) {
+            let row = chessBoard.rows[i];
+            for (let j = 0; j < 8; j++) {
+                if (row.cells[j].className == (cpuObject.color + 'King')) {
+                    moveOfKing = moveKing(row.cells[j])
+                    idOfKing = row.cells[j].id
+                }
+            }
         }
+        for (let i = 0; i < array.length; i++) {
+            for (var j = 0; j < arrayToRespect.length; j++) {
+                for (let k = 0; k < moveOfKing.length; k++) {
+
+                    if (array[i][0] == idOfKing && moveOfKing[k] != arrayToRespect[j][2]) { arraysup[i] = array[i]; }
+                    if (array[i][0] != idOfKing) { if (array[i][2] == arrayToRespect[j][2] || array[i][2] == arrayToRespect[j][0]) arraysup[i] = array[i]; }
+                }
+            }
         }
+        arraysup = arraysup.filter(function (element) {
+            return element !== undefined;
+        });
     }
-    arraysup =arraysup.filter(function(element) {
-        return element !== undefined;
-      });
-}
-    cpuObject.check=false;
+    cpuObject.check = false;
     return arraysup
 }
-
 function moveToCellsTable(theBestMove) {
     var row;
     var row2;
@@ -1203,7 +1140,6 @@ function moveToCellsTable(theBestMove) {
                             if (row2.cells[k].className.slice((0, 5)) != findTheOppositeColor(row.cells[j].className.slice(0.5))) {
                                 $(row.cells[j]).removeClass(row.cells[j].className).addClass('empty');
                                 document.getElementById(row.cells[j].id).innerHTML = '<td id="' + row.cells[j].id + '"; class="empty" onclick="move(this)">&nbsp;</td>';
-                               // console.log("polkaholixc")
                             }
                             resetColor();
                             checkTheCheckMate('black')
@@ -1214,23 +1150,18 @@ function moveToCellsTable(theBestMove) {
         }
     }
 }
-
 function hypoteticalMoves(move) {
-    var row;
-    var row2;
     for (let i = 0; i < 8; i++) {
-        row = hypoteticalChessBoard.rows[i];
         for (let j = 0; j < 8; j++) {
-            if (row.cells[j].id == move[0]) {
+            if (forThinkingId[i][j] == move[0]) {
                 for (let m = 0; m < 8; m++) {
-                    row2 = hypoteticalChessBoard.rows[m];
                     for (let k = 0; k < 8; k++) {
-                        if (row2.cells[k].id == move[2]) {
-                            swapper(row.cells[j], row2.cells[k])
-                            if (row2.cells[k].className.slice((0, 5)) == findTheOppositeColor(row.cells[j].className.slice(0.5))) {
-                                $(row.cells[j]).removeClass(row.cells[j].className).addClass('empty');
-                                document.getElementById(row.cells[j].id).innerHTML = '<td id="' + row.cells[j].id + '"; class="empty" onclick="move(this)">' + row.cells[j].innerText + '</td>';
+                        if (forThinkingId[m][k] == move[2]) {
+                            shuffleTwoElements(i, j, m, k)
+                            if (forThinkingClassName[m][k].slice(0, 5) !== forThinkingClassName[i][j].slice(0.5)) {
+                                forThinkingClassName[i][j] = 'empty';
                             }
+                            if (forThinkingClassName[m][k].slice(5, 9) === "Pawn") { forThinkingClassName[m][k] = forThinkingClassName[m][k].slice(0, 5) + "pawn" }
                         }
                     }
                 }
@@ -1238,24 +1169,40 @@ function hypoteticalMoves(move) {
         }
     }
 }
+function shuffleTwoElements(index1, index2, indexV21, indexV22) {
+    const shuffledMatrix = forThinkingClassName.map(row => row.slice());
+    const shuffledMatrixv2 = forThinkingId.map(row => row.slice());
+    // Get the elements to be shuffled
+    const element1 = shuffledMatrix[index1][index2];
+    const element2 = shuffledMatrix[indexV21][indexV22];
+    const elementv21 = shuffledMatrixv2[index1][index2]
+    const elementv22 = shuffledMatrixv2[indexV21][indexV22];
+    // Shuffle the elements
+    shuffledMatrix[index1][index1] = element2;
+    shuffledMatrix[indexV21][indexV22] = element1;
+    shuffledMatrixv2[index1][index2] = elementv22;
+    shuffledMatrixv2[indexV21][indexV22] = elementv21;
+    forThinkingClassName = shuffledMatrix;
+    forThinkingId = shuffledMatrixv2
+}
 
 
 function secondWayOfDepth() {
     // MATRICE QUADRIDIMENSIONALE 
     // [MOSSACPU[RISPOSTA PLAYER[RISPOSTA CPU[RISPOSTA PLAYER, ETC],[]],[]],[]]
     var actualValue = 0
-    var depht1 = cpuMove(cpuObject.color);1
+    var depht1 = cpuMove(cpuObject.color); 
+
     var suicidio = depht1 //[[][][][][[]]][]
     var depht2;
     var depht3;
     var depht4;
-   
+    var val;
     for (let i = 0; i < depht1.length; i++) {
         console.log(suicidio)
         buildHypoteticalChessBoard();
         hypoteticalMoves(depht1[i])
         depht2 = cpuMove(colorPlayer);
-         console.log(suicidio)
         suicidio[i][4] = depht2
         for (let j = 0; j < depht2.length; j++) {
             buildHypoteticalChessBoard();
@@ -1263,22 +1210,22 @@ function secondWayOfDepth() {
             hypoteticalMoves(depht2[j])
             depht3 = cpuMove(cpuObject.color);
             //quando la regina vuole mangiare il cavallo il valore della mossa è undifined poreca jrfiasdhgfkjdshgflj,dmhfsvghoimhjaes w
-           // console.log(depht2)
+            // console.log(depht2)
             suicidio[i][4][j][4] = depht3
             for (let k = 0; k < depht3.length; k++) {
                 buildHypoteticalChessBoard();
                 hypoteticalMoves(depht1[i])
                 hypoteticalMoves(depht2[j])
                 hypoteticalMoves(depht3[k])
-               // console.log(suicidio)
-                actualValue = suicidio[i][3] - suicidio[i][4][j][3] + suicidio[i][4][j][4][k][3] 
-                    if (suicidio[i][3] > actualValue) {
-                        suicidio[i][3] = actualValue
-                    }
+                
+                val = suicidio[i][3] - suicidio[i][4][j][3] + suicidio[i][4][j][4][k][3]
+                if (actualValue > val) {
+                    actualValue = val
+                }
 
             }
         }
-
+        suicidio[i][3] = actualValue
     }
 
 
@@ -1288,13 +1235,14 @@ function secondWayOfDepth() {
 
         }
     }
-
+    console.log(forThinkingClassName)
     console.log(chessBoard)
     console.log(suicidio)
     var FinalMove = findTheBestMove(suicidio)
-   
+
 
     moveToCellsTable(FinalMove[0], FinalMove)
+    buildHypoteticalChessBoard()
 
 }
 
@@ -1323,23 +1271,23 @@ function checkTheCheckMate(myColor) {
                 myMoves[index2][0] = row2.cells[j].id;
                 myMoves[index2][1] = row2.cells[j].className;
                 if (descoveryTypeOfPiecesWithClassName(row2.cells[j].className) == 1) {
-                    moveOfOnePieces = moveRook(row2.cells[j])
+                    moveOfOnePieces = moveRook(row2.cells[j].id)
                 }
                 if (descoveryTypeOfPiecesWithClassName(row2.cells[j].className) == 2) {
-                    moveOfOnePieces = moveBishop(row2.cells[j])
+                    moveOfOnePieces = moveBishop(row2.cells[j].id)
                 }
                 if (descoveryTypeOfPiecesWithClassName(row2.cells[j].className) == 3) {
-                    moveOfOnePieces = moveKnight(row2.cells[j])
+                    moveOfOnePieces = moveKnight(row2.cells[j].id)
                 }
                 if (descoveryTypeOfPiecesWithClassName(row2.cells[j].className) == 4) {
-                    moveOfOnePieces = moveQueen(row2.cells[j])
+                    moveOfOnePieces = moveQueen(row2.cells[j].id)
                 }
                 if (descoveryTypeOfPiecesWithClassName(row2.cells[j].className) == 5) {
-                    moveOfOnePieces = moveKing(row2.cells[j])
+                    moveOfOnePieces = moveKing(row2.cells[j].id)
                 }
                 if (descoveryTypeOfPiecesWithClassName(row2.cells[j].className) == 6) {
-                    moveOfOnePieces = movePawn(row2.cells[j])
-                    $(row2.cells[j]).removeClass(myColor + 'pawn').addClass(myColor + 'Pawn');
+                    moveOfOnePieces = movePawn(row2.cells[j].id)
+
                 }
                 myMoves[index2][2] = [];
                 myMoves[index2][3] = [];
@@ -1348,7 +1296,7 @@ function checkTheCheckMate(myColor) {
 
                     if (moveOfOnePieces[k].length == 2 && idToClass(moveOfOnePieces[k]).slice(0, 5) != myColor) {
                         myMoves[index2][2].push(moveOfOnePieces[k]);
-                       
+
                         myMoves[index2][3].push(valueOfOneMove(moveOfOnePieces[k], row.cells[j]))
                     }
                 }
@@ -1358,88 +1306,84 @@ function checkTheCheckMate(myColor) {
         }
     }
     myMoves = moveOfCpu(myMoves)
-    
+
     for (let i = 0; i < myMoves.length; i++) {
         if (myMoves[i][2] == idOfOppositeKing) {
             vsKing = []
 
             for (let k = 0; k < myMoves.length; k++) {
-                
-                if (myMoves[i][0] == myMoves[k][0] ) {
-                    
-                        let x = reversedGetLetterGivenAxisX(myMoves[i][0].slice(0, 1));//parte letteraria
-                        let y = reversedGetLetterGivenAxisY(myMoves[i][0].slice(1, 2));//parte numerica
-                        let xk =reversedGetLetterGivenAxisX(idOfOppositeKing.slice(0, 1));
-                        let yk =reversedGetLetterGivenAxisY(idOfOppositeKing.slice(1, 2));
+
+                if (myMoves[i][0] == myMoves[k][0]) {
+
+                    let x = reversedGetLetterGivenAxisX(myMoves[i][0].slice(0, 1));//parte letteraria
+                    let y = reversedGetLetterGivenAxisY(myMoves[i][0].slice(1, 2));//parte numerica
+                    let xk = reversedGetLetterGivenAxisX(idOfOppositeKing.slice(0, 1));
+                    let yk = reversedGetLetterGivenAxisY(idOfOppositeKing.slice(1, 2));
 
                     if (descoveryTypeOfPiecesWithClassName(myMoves[i][1]) == 1) {
-                        
-                        if(x==xk){
-                            if (y>yk &&  myMoves[k][2].slice(0, 1)== idOfOppositeKing.slice(0,1)) {
+
+                        if (x == xk) {
+                            if (y > yk && myMoves[k][2].slice(0, 1) == idOfOppositeKing.slice(0, 1)) {
                                 vsKing[index] = myMoves[k]
                                 index++
-                            } else if(y<yk &&   myMoves[k][2].slice(0, 1)== idOfOppositeKing.slice(0,1)) {
+                            } else if (y < yk && myMoves[k][2].slice(0, 1) == idOfOppositeKing.slice(0, 1)) {
                                 vsKing[index] = myMoves[k]
                                 index++
                             }
-                        }else if(y==yk){
-                            if (x>xk &&  myMoves[k][2].slice(1, 2)== idOfOppositeKing.slice(1,2)) {
+                        } else if (y == yk) {
+                            if (x > xk && myMoves[k][2].slice(1, 2) == idOfOppositeKing.slice(1, 2)) {
                                 vsKing[index] = myMoves[k]
                                 index++
-                            } else if(x<xk &&  myMoves[k][2].slice(1, 2)== idOfOppositeKing.slice(1,2)) {
+                            } else if (x < xk && myMoves[k][2].slice(1, 2) == idOfOppositeKing.slice(1, 2)) {
                                 vsKing[index] = myMoves[k]
                                 index++
                             }
                         }
                     }
-                    if (descoveryTypeOfPiecesWithClassName(myMoves[i][1])== 2) {
-                        if(x>xk && y>yk){
-                        for (let xUso=x-1; xUso>=xk; xUso--) {
-                            for (let yUso = y-1; yUso <= yk; yUso++) {
-                                if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
-                                {
-                                vsKing[index] = myMoves[k]
-                                index++ 
+                    if (descoveryTypeOfPiecesWithClassName(myMoves[i][1]) == 2) {
+                        if (x > xk && y > yk) {
+                            for (let xUso = x - 1; xUso >= xk; xUso--) {
+                                for (let yUso = y - 1; yUso <= yk; yUso++) {
+                                    if (reversedGetLetterGivenAxisX(myMoves[k][2].slice(0, 1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1, 2)) == yUso) {
+                                        vsKing[index] = myMoves[k]
+                                        index++
+                                    }
+
                                 }
-                                
-                              }
-                        }
-                    }
-                        if(x<xk && y>yk ){
-                            for (let xUso=x+1; xUso>=xk; xUso--) {
-                                for (let yUso = y-1; yUso <= yk; yUso++) {
-                                    if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
-                                    {
-                                    vsKing[index] = myMoves[k]
-                                    index++ 
-                                    }
-                                    
-                                  }
                             }
                         }
-                        if(x>xk && y<yk){
+                        if (x < xk && y > yk) {
+                            for (let xUso = x + 1; xUso >= xk; xUso--) {
+                                for (let yUso = y - 1; yUso <= yk; yUso++) {
+                                    if (reversedGetLetterGivenAxisX(myMoves[k][2].slice(0, 1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1, 2)) == yUso) {
+                                        vsKing[index] = myMoves[k]
+                                        index++
+                                    }
+
+                                }
+                            }
+                        }
+                        if (x > xk && y < yk) {
                             //DA PRENDERE COME ESEMIPDJFOISDJFOIUSDBNF
-                            for (let xUso=x-1; xUso>=xk; xUso--) {
-                                for (let yUso = y+1; yUso <= yk; yUso++) {
-                                    if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
-                                    {
-                                    vsKing[index] = myMoves[k]
-                                    index++ 
+                            for (let xUso = x - 1; xUso >= xk; xUso--) {
+                                for (let yUso = y + 1; yUso <= yk; yUso++) {
+                                    if (reversedGetLetterGivenAxisX(myMoves[k][2].slice(0, 1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1, 2)) == yUso) {
+                                        vsKing[index] = myMoves[k]
+                                        index++
                                     }
-                                    
-                                  }
+
+                                }
                             }
                         }
-                        if(x<xk && y<yk ){
-                            for (let xUso=x+1; xUso>=xk; xUso--) {
-                                for (let yUso = y+1; yUso <= yk; yUso++) {
-                                    if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
-                                    {
-                                    vsKing[index] = myMoves[k]
-                                    index++ 
+                        if (x < xk && y < yk) {
+                            for (let xUso = x + 1; xUso >= xk; xUso--) {
+                                for (let yUso = y + 1; yUso <= yk; yUso++) {
+                                    if (reversedGetLetterGivenAxisX(myMoves[k][2].slice(0, 1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1, 2)) == yUso) {
+                                        vsKing[index] = myMoves[k]
+                                        index++
                                     }
-                                    
-                                  }
+
+                                }
                             }
                         }
                     }
@@ -1447,124 +1391,120 @@ function checkTheCheckMate(myColor) {
                         vsKing[index] = myMoves[k]
                         index++
                     }
-                    if (descoveryTypeOfPiecesWithClassName(myMoves[i][1])== 4){
-                        if(x==xk || y == yk){
-                        if(x==xk){
-                            if (y>yk &&  myMoves[k][2].slice(0, 1)== idOfOppositeKing.slice(0,1)) {
-                                vsKing[index] = myMoves[k]
-                                index++
-                            } else if(y<yk &&   myMoves[k][2].slice(0, 1)== idOfOppositeKing.slice(0,1)) {
-                                vsKing[index] = myMoves[k]
-                                index++
-                            }
-                        }else if(y==yk){
-                            if (x>xk &&  myMoves[k][2].slice(1, 2)== idOfOppositeKing.slice(1,2)) {
-                                vsKing[index] = myMoves[k]
-                                index++
-                            } else if(x<xk &&  myMoves[k][2].slice(1, 2)== idOfOppositeKing.slice(1,2)) {
-                                vsKing[index] = myMoves[k]
-                                index++
-                            }
-                        }
-                    }else{
-                        if(x>xk && y>yk){
-                            for (let xUso=x-1; xUso>=xk; xUso--) {
-                                for (let yUso = y-1; yUso <= yk; yUso++) {
-                                    if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
-                                    {
+                    if (descoveryTypeOfPiecesWithClassName(myMoves[i][1]) == 4) {
+                        if (x == xk || y == yk) {
+                            if (x == xk) {
+                                if (y > yk && myMoves[k][2].slice(0, 1) == idOfOppositeKing.slice(0, 1)) {
                                     vsKing[index] = myMoves[k]
-                                    index++ 
+                                    index++
+                                } else if (y < yk && myMoves[k][2].slice(0, 1) == idOfOppositeKing.slice(0, 1)) {
+                                    vsKing[index] = myMoves[k]
+                                    index++
+                                }
+                            } else if (y == yk) {
+                                if (x > xk && myMoves[k][2].slice(1, 2) == idOfOppositeKing.slice(1, 2)) {
+                                    vsKing[index] = myMoves[k]
+                                    index++
+                                } else if (x < xk && myMoves[k][2].slice(1, 2) == idOfOppositeKing.slice(1, 2)) {
+                                    vsKing[index] = myMoves[k]
+                                    index++
+                                }
+                            }
+                        } else {
+                            if (x > xk && y > yk) {
+                                for (let xUso = x - 1; xUso >= xk; xUso--) {
+                                    for (let yUso = y - 1; yUso <= yk; yUso++) {
+                                        if (reversedGetLetterGivenAxisX(myMoves[k][2].slice(0, 1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1, 2)) == yUso) {
+                                            vsKing[index] = myMoves[k]
+                                            index++
+                                        }
+
                                     }
-                                    
-                                  }
+                                }
+                            }
+                            if (x < xk && y > yk) {
+                                for (let xUso = x + 1; xUso >= xk; xUso--) {
+                                    for (let yUso = y - 1; yUso <= yk; yUso++) {
+                                        if (reversedGetLetterGivenAxisX(myMoves[k][2].slice(0, 1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1, 2)) == yUso) {
+                                            vsKing[index] = myMoves[k]
+                                            index++
+                                        }
+
+                                    }
+                                }
+                            }
+                            if (x > xk && y < yk) {
+                                //DA PRENDERE COME ESEMIPDJFOISDJFOIUSDBNF
+                                for (let xUso = x - 1; xUso >= xk; xUso--) {
+                                    for (let yUso = y + 1; yUso <= yk; yUso++) {
+                                        if (reversedGetLetterGivenAxisX(myMoves[k][2].slice(0, 1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1, 2)) == yUso) {
+                                            vsKing[index] = myMoves[k]
+                                            index++
+                                        }
+                                    }
+                                }
+                            }
+                            if (x < xk && y < yk) {
+                                for (let xUso = x + 1; xUso >= xk; xUso--) {
+                                    for (let yUso = y + 1; yUso <= yk; yUso++) {
+                                        if (reversedGetLetterGivenAxisX(myMoves[k][2].slice(0, 1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1, 2)) == yUso) {
+                                            vsKing[index] = myMoves[k]
+                                            index++
+                                        }
+
+                                    }
+                                }
                             }
                         }
-                            if(x<xk && y>yk ){
-                                for (let xUso=x+1; xUso>=xk; xUso--) {
-                                    for (let yUso = y-1; yUso <= yk; yUso++) {
-                                        if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
-                                        {
-                                        vsKing[index] = myMoves[k]
-                                        index++ 
-                                        }
-                                        
-                                      }
-                                }
-                            }
-                            if(x>xk && y<yk){
-                                //DA PRENDERE COME ESEMIPDJFOISDJFOIUSDBNF
-                                for (let xUso=x-1; xUso>=xk; xUso--) {
-                                    for (let yUso = y+1; yUso <= yk; yUso++) {
-                                        if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
-                                        {
-                                        vsKing[index] = myMoves[k]
-                                        index++ 
-                                        }
-                                      }
-                                }
-                            }
-                            if(x<xk && y<yk ){
-                                for (let xUso=x+1; xUso>=xk; xUso--) {
-                                    for (let yUso = y+1; yUso <= yk; yUso++) {
-                                        if( reversedGetLetterGivenAxisX(myMoves[k][2].slice(0,1)) == xUso && reversedGetLetterGivenAxisY(myMoves[k][2].slice(1,2)) == yUso)
-                                        {
-                                        vsKing[index] = myMoves[k]
-                                        index++ 
-                                        }
-                                        
-                                      }
-                                }
-                            }
-                    }
                     }
                     if (descoveryTypeOfPiecesWithClassName(myMoves[i][1]) == 6) {
-                        if(myMoves[k][2]==idOfOppositeKing){
+                        if (myMoves[k][2] == idOfOppositeKing) {
                             vsKing[index] = myMoves[k]
                             index++
                         }
                     }
-                    
+
                 }
             }
-           setTheCheck(findTheOppositeColor(myColor)) 
+            setTheCheck(findTheOppositeColor(myColor))
         }
     }
-    vsKing = fixTheDoubleValue(vsKing,idOfOppositeKing)
+    vsKing = fixTheDoubleValue(vsKing, idOfOppositeKing)
 
     return vsKing
 }
 
-function setTheCheck(color){
-    if(color==cpuObject.color){
-       // console.log("checkato")
-        cpuObject.check=true
-    }else{
-        playerObject.check=true
+function setTheCheck(color) {
+    if (color == cpuObject.color) {
+        // console.log("checkato")
+        cpuObject.check = true
+    } else {
+        playerObject.check = true
     }
 }
 
-function fixTheDoubleValue(matrix,idOfOppositeKing){
-      const seenRows = new Set();
-       // console.log(idOfOppositeKing)
-        // Iterate over the matrix and check for duplicate rows
-        for (let i = 0; i < matrix.length; i++) {
-          const row = matrix[i];
-          const rowString = row.toString(); // Convert row to string for comparison
-      
-          // If the row is already in the set, remove it from the matrix
-          if (seenRows.has(rowString)) {
+function fixTheDoubleValue(matrix, idOfOppositeKing) {
+    const seenRows = new Set();
+    // console.log(idOfOppositeKing)
+    // Iterate over the matrix and check for duplicate rows
+    for (let i = 0; i < matrix.length; i++) {
+        const row = matrix[i];
+        const rowString = row.toString(); // Convert row to string for comparison
+
+        // If the row is already in the set, remove it from the matrix
+        if (seenRows.has(rowString)) {
             matrix.splice(i, 1);
             i--; // Adjust the loop counter as the matrix size has changed
-          } else {
+        } else {
             seenRows.add(rowString);
-          }
-          
-         if(matrix[i][2]==idOfOppositeKing){
-            matrix[i][3]=909
+        }
+
+        if (matrix[i][2] == idOfOppositeKing) {
+            matrix[i][3] = 909
             //console.log(matrix[i][3]);
         }
     }
-        return matrix;
+    return matrix;
 }
 
 //problema nella mossa in diagonale della regiona quando trov auna pedina di mezzo
