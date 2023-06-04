@@ -1,0 +1,100 @@
+.supp {
+    border: 0;
+    text-align: center;
+    background-color: white;
+}
+
+td {
+    border: 1px solid;
+    font-size: 32px;
+    width: 70px;
+    height: 70px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+td img {
+    display: block;
+    margin: 0 auto;
+  }
+
+.chessBoard {
+    width: fit-content;
+    height: auto;
+}
+
+.nero {
+    padding-left: 10px;
+    padding-right: 10px;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    margin-bottom: 0px;
+}
+
+.bianco {
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    margin-bottom: 0px;
+}
+/*---------------------------------- STILE ----------------------------------*/
+
+html,
+body {
+    height: 100%;
+}
+
+[data-theme="mytheme"] .btn {
+    background-color: #C4DEA4;
+    border-color: #F6F6DB;
+    color: #7B6B50;
+    font-size: 150%;
+}
+
+[data-theme="mytheme"] label {
+    color: #7B6B50;
+    color: #7B6B50;
+    font-size: 160%;
+    font-weight: bold;
+    margin-left: 25px;
+}
+
+.btn-group>input[type=radio]:checked.btn,
+.btn-group>.btn-active {
+    background-color: #7A8965;
+    border-color: #F6F6DB;
+}
+
+div.header {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    position: relative;
+    box-shadow: 0px 0px 10px 10px #7B6B50;
+}
+
+div.body-color {
+    height: 100%;
+}
+
+div.components {
+    padding: 5%;
+}
+
+div.btn-group {
+    margin-bottom: 12%;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+
+button.btn {
+    display: block;
+    margin: 0 auto;
+}
+
+#btn-play {
+    background-color: #8c1c13;
+    color: #F6F6DB;
+}
