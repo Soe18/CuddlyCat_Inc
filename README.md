@@ -14,7 +14,7 @@
   <p align="center">
     Project Work n.3 proposto da Adawen.
     <br />
-    <a href=""><strong>Visualizza Documento SRS »</strong></a>
+    <a href="https://github.com/Soe18/CuddlyCat_Inc/blob/main/Documentazione%20SRS%20CuddlyCat%20Inc.pdf"><strong>Visualizza Documento SRS »</strong></a>
     <br />
     <br />
     <a href="https://soe18.github.io/CuddlyCat_Inc/">Vai alla Web App</a>
