@@ -882,8 +882,9 @@ function moveKing(id) {
             
         }
     }
+    
 
-    if (hypoteticalBoardMatrixTypeOfPawn[x][y].slice(0,5)==colorPlayer) {
+    if (hypoteticalBoardMatrixTypeOfPawn[y][x].slice(0,5)==playerObject.color) {
         
          const canCastle = checkCastlingConditions(x, y); // Implementa questa funzione
 
@@ -1260,10 +1261,10 @@ function moveToCellsTable(theBestMove) {
                             if (row2.cells[k].className.slice((0, 5)) != findTheOppositeColor(row.cells[j].className.slice(0.5))) {
                                 $(row.cells[j]).removeClass(row.cells[j].className).addClass('empty');
                                 document.getElementById(row.cells[j].id).innerHTML = '<td id="' + row.cells[j].id + '"; class="empty" onclick="move(this)">&nbsp;</td>';
-                                if(y==1 && y2<1){
+                                if(y==1 && y2<1 && row2.cells[k].className.slice(5,9)=='Pawn'){
                                     promotionForCpu(row2.cells[k])
                                 }
-                                if(y==6 && y2>6){
+                                if(y==6 && y2>6 && row2.cells[k].className.slice(5,9)=='Pawn'){
                                     promotionForCpu(row2.cells[k])
                                 }
 

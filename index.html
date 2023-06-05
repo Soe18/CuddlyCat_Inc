@@ -41,8 +41,22 @@
     <div class="body-color" style="background-color:#fefae0;">
         <div class="components">
 
+            
+            <!-- BUTTON GROUP FOR SELECTION OF MODE -->
+            <div class="mode mt-36">
+                <label>MODE:</label>
+                <div class="btn-group flex">
+                    <button id="player" onclick="againstCPU = false,changeColor(this,cpu), document.getElementById('hideOnMode').style.display = 'none', document.getElementById('showOnMode').style.display= 'block'" type="radio" name="options2"
+                        class="btn flex-auto" style="background-color: #465d2b;"><i class="fa-solid fa-user icon"></i>
+                        VS <i class="fa-solid fa-user icon"></i></i></button>
+                    <button id="cpu" onclick="againstCPU = true,changeColor(this,player), document.getElementById('hideOnMode').style.display = 'block', document.getElementById('showOnMode').style.display= 'none'" type="radio" name="options2"
+                        class="btn flex-auto"><i class="fa-solid fa-user icon"></i> VS <i
+                            class="fa-solid fa-computer"></i></button>
+                </div>
+            </div>
+
             <!-- BUTTON GROUP FOR SELECTION OF TIMER -->
-            <div class="timer mt-12">
+            <div id="showOnMode" class="timer mt-12" style="display: block">
                 <label>TIMER:</label>
                 <div class="btn-group flex">
                     <button id="five" onclick="changeColor(this,ten,infinity)" type="radio" name="options1"
@@ -54,21 +68,8 @@
                 </div>
             </div>
 
-            <!-- BUTTON GROUP FOR SELECTION OF MODE -->
-            <div class="mode">
-                <label>MODE:</label>
-                <div class="btn-group flex">
-                    <button id="player" onclick="againstCPU = false,changeColor(this,cpu)" type="radio" name="options2"
-                        class="btn flex-auto" style="background-color: #465d2b;"><i class="fa-solid fa-user icon"></i>
-                        VS <i class="fa-solid fa-user icon"></i></i></button>
-                    <button id="cpu" onclick="againstCPU = true,changeColor(this,player)" type="radio" name="options2"
-                        class="btn flex-auto"><i class="fa-solid fa-user icon"></i> VS <i
-                            class="fa-solid fa-computer"></i></button>
-                </div>
-            </div>
-
             <!-- BUTTON GROUP FOR THE SELECTION OF WHO BEGINS -->
-            <div class="player">
+            <div id="hideOnMode" class="player", style="display: none;">
                 <label>PLAYER:</label>
                 <div class="btn-group flex">
                     <button id="pezzoBianco" onclick="changeColor(this,pezzoNero,random)" type="radio" name="options3"
@@ -84,7 +85,7 @@
 
             <!-- BUTTON FOR PLAY -->
             <div class="play" align='center'>
-                <button class="btn sm:btn-sm md:btn-md lg:btn-lg mt-4" id="btn-play">PLAY</button>
+                <button class="btn sm:btn-md md:btn-md lg:btn-lg mt-4" id="btn-play">PLAY</button>
             </div>
 
         </div>
